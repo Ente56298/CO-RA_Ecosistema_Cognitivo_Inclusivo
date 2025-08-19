@@ -1,0 +1,33 @@
+{
+  "generado": "2024-01-15T10:30:00",
+  "carpeta_origen": "UMED",
+  "total_archivos": 15,
+  "archivos_sensibles": 2,
+  "categoria": "academico",
+  "metadatos": [
+    {
+      "nombre_archivo": "proyecto_final_ia.pdf",
+      "extension": ".pdf",
+      "tamaño_kb": 2048.5,
+      "fecha_modificacion": "2024-01-10T14:20:00",
+      "ruta_relativa": "trabajos/proyecto_final_ia.pdf",
+      "es_sensible": false
+    },
+    {
+      "nombre_archivo": "recursos_python.md",
+      "extension": ".md",
+      "tamaño_kb": 45.2,
+      "fecha_modificacion": "2024-01-08T09:15:00",
+      "ruta_relativa": "recursos/recursos_python.md",
+      "es_sensible": false
+    },
+    {
+      "nombre_archivo": "datos_personales_curp.pdf",
+      "extension": ".pdf",
+      "tamaño_kb": 156.8,
+      "fecha_modificacion": "2024-01-05T16:45:00",
+      "ruta_relativa": "personal/datos_personales_curp.pdf",
+      "es_sensible": true
+    }
+  ]
+}

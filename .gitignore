@@ -32,6 +32,16 @@ respaldo_ente56/archivos_sensibles/
 *.ost
 *.msg
 
+# Generador de Videos
+generador_videos/output/
+generador_videos/.env
+generador_videos/temp-audio.m4a
+generador_videos/**/*.mp4
+generador_videos/**/*.mp3
+generador_videos/**/*.wav
+generador_videos/**/*.png
+generador_videos/**/*.jpg
+
 # Logs
 *.log
 logs/

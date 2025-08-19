@@ -1,0 +1,25 @@
+# Generador Automático de Videos CO-RA
+# Dependencias principales
+
+# OpenAI API
+openai>=1.0.0
+
+# Web scraping y procesamiento
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+tldextract>=3.4.0
+
+# Procesamiento de datos
+pandas>=2.0.0
+
+# Edición de video
+moviepy>=1.0.3
+
+# Variables de entorno
+python-dotenv>=1.0.0
+
+# Procesamiento de imágenes (opcional)
+Pillow>=10.0.0
+
+# Audio processing
+pydub>=0.25.1

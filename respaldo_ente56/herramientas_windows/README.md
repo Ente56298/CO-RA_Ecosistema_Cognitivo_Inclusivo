@@ -6,6 +6,22 @@ Conjunto de scripts de PowerShell para auditoría y gestión de almacenamiento e
 
 ## 📂 Scripts Incluidos
 
+### 🎯 Escaneo-Maestro.ps1 ⭐
+**Función**: Diagnóstico completo en una sola ejecución
+**Características**:
+- 📊 Auditoría completa de unidades
+- 🔍 Localización de proyectos por palabras clave
+- ⚠️ Alertas de espacio crítico
+- 📈 Resumen ejecutivo visual
+- 📁 3 reportes CSV automáticos
+
+**Uso rápido**:
+```powershell
+# Opción 1: Doble clic en EJECUTAR_AHORA.bat
+# Opción 2: PowerShell manual
+.\Escaneo-Maestro.ps1 -IgnorarOcultas
+```
+
 ### 🔍 Auditoria-Almacenamiento.ps1
 **Función**: Auditoría completa de espacio en disco y papelera
 **Características**:
@@ -51,10 +67,21 @@ Conjunto de scripts de PowerShell para auditoría y gestión de almacenamiento e
 
 ## 🚀 Flujo de Trabajo Recomendado
 
-### 1️⃣ Auditoría Inicial
+### ⚡ OPCIÓN RÁPIDA (Recomendada)
+```batch
+# Doble clic en:
+EJECUTAR_AHORA.bat
+```
+
+### 1️⃣ Escaneo Maestro Completo
 ```powershell
-# Ejecutar con permisos de administrador
-Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+# Diagnóstico completo en una ejecución
+.\Escaneo-Maestro.ps1 -IgnorarOcultas
+```
+
+### 1️⃣ Auditoría Individual (Alternativa)
+```powershell
+# Solo auditoría de discos
 .\Auditoria-Almacenamiento.ps1 -Drives C,D,G,H,I -ThresholdGB 10
 ```
 

@@ -43,14 +43,25 @@
 
 ## 🔧 HERRAMIENTAS LISTAS
 
-### Generar inventario rápido:
+### 🐍 Python (Linux/Mac):
 ```bash
+# Generar inventario rápido
 python3 scripts/inventario_rapido.py /ruta/respaldo_local
+
+# Clasificar por urgencia
+python3 scripts/clasificar_urgencia.py
 ```
 
-### Clasificar por urgencia:
-```bash
-python3 scripts/clasificar_urgencia.py
+### 🪟 PowerShell (Windows):
+```powershell
+# Auditoría completa de discos
+.\herramientas_windows\Auditoria-Almacenamiento.ps1 -Drives C,D,G,H,I -ThresholdGB 10
+
+# Programar monitoreo automático
+.\herramientas_windows\Programar-Auditoria.ps1
+
+# Migrar archivos grandes (SOLO después del rescate)
+.\herramientas_windows\Mover-Archivos-Grandes.ps1 -DoIt
 ```
 
 ---

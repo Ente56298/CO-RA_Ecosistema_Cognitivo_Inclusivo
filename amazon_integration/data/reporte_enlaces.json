@@ -1,0 +1,104 @@
+{
+  "fecha_generacion": "2025-08-19T19:22:19.906197",
+  "total_enlaces": 11,
+  "tag_afiliado": "cora-20",
+  "enlaces": [
+    {
+      "asin": "B08N5WRWNW",
+      "enlace_afiliado": "https://www.amazon.com/dp/B08N5WRWNW?tag=cora-20",
+      "archivo_origen": "amazon_integration/templates/ejemplo_producto.md",
+      "tipo": "asin_directo",
+      "fecha_generacion": "2025-08-19T19:22:19.905901",
+      "tag_afiliado": "cora-20"
+    },
+    {
+      "asin": "B07FNJB8TT",
+      "enlace_afiliado": "https://www.amazon.com/dp/B07FNJB8TT?tag=cora-20",
+      "archivo_origen": "amazon_integration/templates/ejemplo_producto.md",
+      "tipo": "asin_directo",
+      "fecha_generacion": "2025-08-19T19:22:19.905912",
+      "tag_afiliado": "cora-20"
+    },
+    {
+      "asin": "B0863TXGM3",
+      "enlace_afiliado": "https://www.amazon.com/dp/B0863TXGM3?tag=cora-20",
+      "archivo_origen": "amazon_integration/templates/ejemplo_producto.md",
+      "tipo": "asin_directo",
+      "fecha_generacion": "2025-08-19T19:22:19.905914",
+      "tag_afiliado": "cora-20"
+    },
+    {
+      "asin": "B07TC2BK1X",
+      "enlace_afiliado": "https://www.amazon.com/dp/B07TC2BK1X?tag=cora-20",
+      "archivo_origen": "amazon_integration/templates/ejemplo_producto.md",
+      "tipo": "asin_directo",
+      "fecha_generacion": "2025-08-19T19:22:19.905916",
+      "tag_afiliado": "cora-20"
+    },
+    {
+      "asin": "B009UKZV0A",
+      "enlace_afiliado": "https://www.amazon.com/dp/B009UKZV0A?tag=cora-20",
+      "archivo_origen": "amazon_integration/templates/ejemplo_producto.md",
+      "tipo": "asin_directo",
+      "fecha_generacion": "2025-08-19T19:22:19.905918",
+      "tag_afiliado": "cora-20"
+    },
+    {
+      "asin": "B006JH8T3S",
+      "enlace_afiliado": "https://www.amazon.com/dp/B006JH8T3S?tag=cora-20",
+      "archivo_origen": "amazon_integration/templates/ejemplo_producto.md",
+      "tipo": "asin_directo",
+      "fecha_generacion": "2025-08-19T19:22:19.905919",
+      "tag_afiliado": "cora-20"
+    },
+    {
+      "asin": "B08F7PTF53",
+      "enlace_afiliado": "https://www.amazon.com/dp/B08F7PTF53?tag=cora-20",
+      "archivo_origen": "amazon_integration/templates/ejemplo_producto.md",
+      "tipo": "asin_directo",
+      "fecha_generacion": "2025-08-19T19:22:19.905921",
+      "tag_afiliado": "cora-20"
+    },
+    {
+      "asin": "B01AX8YRJY",
+      "enlace_afiliado": "https://www.amazon.com/dp/B01AX8YRJY?tag=cora-20",
+      "archivo_origen": "amazon_integration/templates/ejemplo_producto.md",
+      "tipo": "asin_directo",
+      "fecha_generacion": "2025-08-19T19:22:19.905922",
+      "tag_afiliado": "cora-20"
+    },
+    {
+      "asin": "B07FNJB8TT",
+      "enlace_afiliado": "https://www.amazon.com/dp/B07FNJB8TT?tag=cora-20",
+      "archivo_origen": "amazon_integration/templates/ejemplo_producto.md",
+      "tipo": "url_amazon",
+      "fecha_generacion": "2025-08-19T19:22:19.905924",
+      "tag_afiliado": "cora-20"
+    },
+    {
+      "asin": "B009UKZV0A",
+      "enlace_afiliado": "https://www.amazon.com/dp/B009UKZV0A?tag=cora-20",
+      "archivo_origen": "amazon_integration/templates/ejemplo_producto.md",
+      "tipo": "url_amazon",
+      "fecha_generacion": "2025-08-19T19:22:19.905925",
+      "tag_afiliado": "cora-20"
+    },
+    {
+      "asin": "B01AX8YRJY",
+      "enlace_afiliado": "https://www.amazon.com/dp/B01AX8YRJY?tag=cora-20",
+      "archivo_origen": "amazon_integration/templates/ejemplo_producto.md",
+      "tipo": "url_amazon",
+      "fecha_generacion": "2025-08-19T19:22:19.905927",
+      "tag_afiliado": "cora-20"
+    }
+  ],
+  "estadisticas": {
+    "por_tipo": {
+      "asin_directo": 8,
+      "url_amazon": 3
+    },
+    "por_archivo": {
+      "amazon_integration/templates/ejemplo_producto.md": 11
+    }
+  }
+}

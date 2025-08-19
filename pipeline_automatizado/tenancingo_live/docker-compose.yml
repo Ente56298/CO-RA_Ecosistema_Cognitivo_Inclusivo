@@ -1,0 +1,76 @@
+# Docker Compose - TenancingoLive Streaming
+# Infraestructura completa RTMP/HLS con pagos y tokens
+
+version: "3.8"
+
+services:
+  # Servidor RTMP/HLS
+  rtmp:
+    image: alfg/nginx-rtmp:latest
+    container_name: tenancingo_rtmp
+    ports:
+      - "1935:1935"  # RTMP
+      - "8081:8080"   # HLS
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./vod:/vod
+      - ./hls:/hls
+    restart: unless-stopped
+    networks:
+      - tenancingo_net
+
+  # Aplicación web
+  web:
+    image: node:20-alpine
+    container_name: tenancingo_web
+    working_dir: /app
+    command: sh -c "npm ci && npm run start"
+    volumes:
+      - ./web:/app
+    environment:
+      - NODE_ENV=production
+      - JWT_SECRET=${JWT_SECRET:-default_secret_change_me}
+      - PAYMENT_PROVIDER=${PAYMENT_PROVIDER:-stripe}
+      - RTMP_URL=rtmp://rtmp:1935/live
+      - HLS_URL=http://rtmp:8080/hls
+    ports:
+      - "8080:8080"
+    depends_on:
+      - rtmp
+    restart: unless-stopped
+    networks:
+      - tenancingo_net
+
+  # Base de datos (opcional)
+  db:
+    image: postgres:15-alpine
+    container_name: tenancingo_db
+    environment:
+      - POSTGRES_DB=tenancingo
+      - POSTGRES_USER=tenancingo
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-changeme}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - tenancingo_net
+
+  # Redis para sesiones (opcional)
+  redis:
+    image: redis:7-alpine
+    container_name: tenancingo_redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - tenancingo_net
+
+volumes:
+  db_data:
+
+networks:
+  tenancingo_net:
+    driver: bridge

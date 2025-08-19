@@ -1,0 +1,37 @@
+{
+  "name": "tenancingo-live-web",
+  "version": "1.0.0",
+  "description": "TenancingoLive - Sistema de streaming con pagos y tokens",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5",
+    "dotenv": "^16.3.1",
+    "pg": "^8.11.3",
+    "redis": "^4.6.10",
+    "stripe": "^14.7.0",
+    "nodemailer": "^6.9.7",
+    "yaml": "^2.3.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "keywords": [
+    "streaming",
+    "rtmp",
+    "hls",
+    "payments",
+    "events"
+  ],
+  "author": "CO-RA Team",
+  "license": "MIT"
+}

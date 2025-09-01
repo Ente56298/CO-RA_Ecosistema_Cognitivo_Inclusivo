@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CO•RA - Espacio Ritual</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #ffffff;
+            overflow: hidden;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            cursor: none;
+        }
+        
+        #contenedor3d {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        
+        .campo-intencion-3d {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 1.2em;
+            color: #333;
+            text-align: center;
+            width: 400px;
+            max-width: 85vw;
+            padding: 0.8rem;
+            font-family: inherit;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            z-index: 100;
+        }
+        
+        .campo-intencion-3d:focus {
+            border: 1px solid rgba(93, 211, 255, 0.1);
+            box-shadow: 0 0 0 2px rgba(93, 211, 255, 0.05);
+        }
+        
+        .invitacion-3d {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #555;
+            font-size: 1.2em;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            opacity: 0;
+            animation: aparecer 6s ease-in-out 3s forwards;
+            z-index: 99;
+        }
+        
+        .punto-3d {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 3px;
+            height: 3px;
+            background: #000;
+            border-radius: 50%;
+            opacity: 0;
+            z-index: 101;
+            cursor: pointer;
+        }
+        
+        .cuestionamiento-3d {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #aaa;
+            font-size: 1em;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+            opacity: 0;
+            transition: opacity 4s ease;
+            z-index: 98;
+        }
+        
+        @keyframes aparecer {
+            from { opacity: 0; transform: translate(-50%, -50%) translateY(10px); }
+            to { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
+        }
+        
+        @keyframes manifestacion3d {
+            0% { 
+                opacity: 0; 
+                transform: translate(-50%, -50%) scale(0) rotateZ(0deg);
+                filter: blur(3px);
+            }
+            50% { 
+                opacity: 0.5; 
+                transform: translate(-50%, -50%) scale(2) rotateZ(180deg);
+                filter: blur(1px);
+            }
+            100% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1) rotateZ(360deg);
+                filter: blur(0);
+            }
+        }
+        
+        .manifestacion-punto-3d { 
+            animation: manifestacion3d 4s ease-out forwards; 
+        }
+        
+        /* Efectos de profundidad */
+        .profundidad-1 { transform: translateZ(100px); }
+        .profundidad-2 { transform: translateZ(200px); }
+        .profundidad-3 { transform: translateZ(300px); }
+        
+        @media (prefers-reduced-motion: reduce) {
+            * { animation: none !important; transition: none !important; }
+            .invitacion-3d, .cuestionamiento-3d { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div id="contenedor3d">
+        <!-- Espacio 3D se renderizará aquí -->
+    </div>
+    
+    <div class="invitacion-3d">Escribe con intención.</div>
+    <input type="text" class="campo-intencion-3d" id="intencion3d" 
+           aria-label="Campo de intención en espacio ritual" 
+           autocomplete="off" 
+           spellcheck="false"
+           autofocus>
+    <div class="punto-3d" id="punto3d"></div>
+    <div class="cuestionamiento-3d" id="cuestionamiento3d">¿Sabes por qué lo estás viendo?</div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="bitacora-presencias.js"></script>
+    <script src="constancia-ritual.js"></script>
+    <script>
+        // Configuración del espacio 3D
+        let escena, camara, renderizador, controles;
+        let espacioBlanco, particulasLuz;
+        
+        function inicializarEspacio3D() {
+            // Escena
+            escena = new THREE.Scene();
+            escena.background = new THREE.Color(0xffffff);
+            
+            // Cámara
+            camara = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camara.position.z = 5;
+            
+            // Renderizador
+            renderizador = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderizador.setSize(window.innerWidth, window.innerHeight);
+            renderizador.setClearColor(0xffffff, 1);
+            document.getElementById('contenedor3d').appendChild(renderizador.domElement);
+            
+            // Geometría del espacio infinito
+            const geometriaEspacio = new THREE.SphereGeometry(500, 32, 32);
+            const materialEspacio = new THREE.MeshBasicMaterial({ 
+                color: 0xffffff, 
+                side: THREE.BackSide,
+                transparent: true,
+                opacity: 0.95
+            });
+            espacioBlanco = new THREE.Mesh(geometriaEspacio, materialEspacio);
+            escena.add(espacioBlanco);
+            
+            // Partículas de luz sutil
+            crearParticulasLuz();
+            
+            // Controles de cámara
+            agregarControles();
+            
+            // Animación
+            animar();
+        }
+        
+        function crearParticulasLuz() {
+            const geometriaParticulas = new THREE.BufferGeometry();
+            const posiciones = [];
+            
+            for (let i = 0; i < 50; i++) {
+                posiciones.push(
+                    (Math.random() - 0.5) * 100,
+                    (Math.random() - 0.5) * 100,
+                    (Math.random() - 0.5) * 100
+                );
+            }
+            
+            geometriaParticulas.setAttribute('position', new THREE.Float32BufferAttribute(posiciones, 3));
+            
+            const materialParticulas = new THREE.PointsMaterial({
+                color: 0xf8f8f8,
+                size: 0.1,
+                transparent: true,
+                opacity: 0.3
+            });
+            
+            particulasLuz = new THREE.Points(geometriaParticulas, materialParticulas);
+            escena.add(particulasLuz);
+        }
+        
+        function agregarControles() {
+            // Controles de mouse/touch simples
+            let mouseX = 0, mouseY = 0;
+            
+            document.addEventListener('mousemove', (evento) => {
+                mouseX = (evento.clientX / window.innerWidth) * 2 - 1;
+                mouseY = -(evento.clientY / window.innerHeight) * 2 + 1;
+            });
+            
+            document.addEventListener('touchmove', (evento) => {
+                if (evento.touches.length > 0) {
+                    mouseX = (evento.touches[0].clientX / window.innerWidth) * 2 - 1;
+                    mouseY = -(evento.touches[0].clientY / window.innerHeight) * 2 + 1;
+                }
+            });
+            
+            // Rotación sutil de la cámara
+            function actualizarCamara() {
+                camara.position.x = Math.sin(mouseX * 0.1) * 2;
+                camara.position.y = Math.sin(mouseY * 0.1) * 2;
+                camara.lookAt(0, 0, 0);
+            }
+            
+            setInterval(actualizarCamara, 16);
+        }
+        
+        function animar() {
+            requestAnimationFrame(animar);
+            
+            // Rotación sutil de partículas
+            if (particulasLuz) {
+                particulasLuz.rotation.y += 0.001;
+            }
+            
+            renderizador.render(escena, camara);
+        }
+        
+        // Lógica ritual en 3D
+        const intencion3d = document.getElementById('intencion3d');
+        const punto3d = document.getElementById('punto3d');
+        const cuestionamiento3d = document.getElementById('cuestionamiento3d');
+        
+        let secuenciaIniciada3d = false;
+        
+        const palabrasResonantes = [
+            'ayuda', 'acompañar', 'entender', 'escuchar', 'comprender',
+            'incluir', 'accesible', 'familia', 'aprender', 'crecer',
+            'colaborar', 'juntos', 'diversidad', 'respeto', 'empatía',
+            'cuidar', 'proteger', 'sanar', 'transformar', 'evolucionar',
+            'necesito', 'busco', 'quiero', 'siento', 'espero', 'dolor',
+            'solo', 'perdido', 'confundido', 'miedo', 'esperanza'
+        ];
+        
+        intencion3d.addEventListener('input', function(e) {
+            const texto = e.target.value.toLowerCase().trim();
+            
+            if (texto.length > 4 && !secuenciaIniciada3d) {
+                const tieneResonancia = palabrasResonantes.some(palabra => 
+                    texto.includes(palabra)
+                );
+                
+                const tieneAutenticidad = texto.length > 10 && 
+                                        !texto.includes('test') && 
+                                        !texto.includes('hola') &&
+                                        !texto.includes('demo') &&
+                                        !texto.includes('prueba') &&
+                                        texto.split(' ').length > 2;
+                
+                if (tieneResonancia || tieneAutenticidad) {
+                    activarSecuencia3D(texto);
+                }
+            }
+        });
+        
+        function activarSecuencia3D(textoIntencion) {
+            if (secuenciaIniciada3d) return;
+            secuenciaIniciada3d = true;
+            
+            // Registrar en sistemas
+            window.constanciaRitual.registrarEscritura(textoIntencion);
+            window.bitacora.registrarUmbral(textoIntencion);
+            
+            // Efecto en el espacio 3D
+            if (espacioBlanco) {
+                espacioBlanco.material.opacity = 0.98;
+            }
+            
+            // Suspender cursor
+            intencion3d.style.caretColor = 'transparent';
+            
+            setTimeout(() => {
+                // Manifestación del punto en 3D
+                punto3d.classList.add('manifestacion-punto-3d');
+                punto3d.style.opacity = '1';
+                
+                setTimeout(() => {
+                    cuestionamiento3d.style.opacity = '1';
+                }, 5000);
+            }, 3000);
+        }
+        
+        punto3d.addEventListener('click', function() {
+            if (secuenciaIniciada3d) {
+                const constancia = window.constanciaRitual.evaluarConstancia();
+                
+                punto3d.style.transform = 'translate(-50%, -50%) scale(0)';
+                setTimeout(() => {
+                    if (constancia.nivel === 'habitante_constante') {
+                        cuestionamiento3d.innerHTML = 'La constancia te ha preparado. Ahora sabes dónde mirar.';
+                    } else {
+                        cuestionamiento3d.innerHTML = 'Ahora sabes dónde mirar.';
+                    }
+                }, 1000);
+            }
+        });
+        
+        // Inicializar cuando cargue
+        window.addEventListener('load', inicializarEspacio3D);
+        
+        // Redimensionar
+        window.addEventListener('resize', () => {
+            if (camara && renderizador) {
+                camara.aspect = window.innerWidth / window.innerHeight;
+                camara.updateProjectionMatrix();
+                renderizador.setSize(window.innerWidth, window.innerHeight);
+            }
+        });
+        
+        // Prevenir menú contextual
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('selectstart', e => e.preventDefault());
+    </script>
+</body>
+</html>

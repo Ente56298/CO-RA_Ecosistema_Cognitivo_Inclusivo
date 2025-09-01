@@ -10,15 +10,23 @@ class GuardianServicio {
     }
     
     procesarOfrecimiento(texto) {
+        // Verificar ritualmente el ofrecimiento
+        const verificacion = window.verificacionRitual.verificarIntención(
+            texto, 
+            window.constanciaRitual?.sesionActual?.permanencia || 0
+        );
+        
         const ofrecimiento = {
             timestamp: new Date().toISOString(),
             huella: this.crearHuellaFlotante(texto),
             tipo: 'ofrecimiento',
             texto_original: texto,
-            autenticidad: this.evaluarAutenticidadOfrecimiento(texto)
+            autenticidad: verificacion.puntuacion_autenticidad,
+            huella_ritual: verificacion.huella_ritual,
+            verificado: verificacion.verificado
         };
         
-        if (ofrecimiento.autenticidad) {
+        if (verificacion.verificado) {
             this.registrarOfrecimiento(ofrecimiento);
             this.fase = 'necesidad';
             return "¿Qué necesitas para continuar tu servicio o ser sostenido?";
@@ -28,17 +36,25 @@ class GuardianServicio {
     }
     
     procesarNecesidad(texto) {
+        // Verificar ritualmente la necesidad
+        const verificacion = window.verificacionRitual.verificarIntención(
+            texto,
+            window.constanciaRitual?.sesionActual?.permanencia || 0
+        );
+        
         const necesidad = {
             timestamp: new Date().toISOString(),
             presencia: this.crearPresenciaActiva(texto),
             tipo: 'necesidad',
             texto_original: texto,
-            verdad: this.evaluarVerdadNecesidad(texto)
+            verdad: verificacion.puntuacion_autenticidad > 0.5,
+            huella_ritual: verificacion.huella_ritual,
+            verificado: verificacion.verificado
         };
         
-        if (necesidad.verdad) {
+        if (verificacion.verificado) {
             this.registrarNecesidad(necesidad);
-            return this.buscarCoincidencias(necesidad);
+            return this.buscarCoincidenciasVerificadas(necesidad);
         } else {
             return "La verdad sostiene el servicio. ¿Qué necesitas realmente?";
         }
@@ -107,19 +123,25 @@ class GuardianServicio {
         this.guardarRegistro(registro);
     }
     
-    buscarCoincidencias(necesidadActual) {
+    buscarCoincidenciasVerificadas(necesidadActual) {
         const registro = this.obtenerRegistro();
-        const ofrecimientos = registro.ofrecimientos || [];
+        const ofrecimientos = (registro.ofrecimientos || []).filter(o => o.verificado);
         
-        // Buscar coincidencias semánticas
-        const coincidencia = this.encontrarCoincidencia(necesidadActual, ofrecimientos);
-        
-        if (coincidencia) {
-            const diasTranscurridos = this.calcularDias(coincidencia.timestamp);
-            return `Alguien ofreció lo que tú necesitas hace ${diasTranscurridos} días. ¿Quieres dejarle una señal?`;
-        } else {
-            return this.evaluarConsagracion();
+        // Buscar coincidencias verificadas ritualmente
+        for (const ofrecimiento of ofrecimientos) {
+            const verificacionCoincidencia = window.verificacionRitual.verificarCoincidencia(
+                ofrecimiento, 
+                necesidadActual
+            );
+            
+            if (verificacionCoincidencia.verificada) {
+                const diasTranscurridos = this.calcularDias(ofrecimiento.timestamp);
+                this.registrarCoincidenciaVerificada(verificacionCoincidencia);
+                return `Alguien ofreció lo que tú necesitas hace ${diasTranscurridos} días. ¿Quieres dejarle una señal?`;
+            }
         }
+        
+        return this.evaluarConsagracionVerificada();
     }
     
     encontrarCoincidencia(necesidad, ofrecimientos) {
@@ -166,47 +188,52 @@ class GuardianServicio {
         return Math.floor(diferencia / (1000 * 60 * 60 * 24));
     }
     
-    evaluarConsagracion() {
+    evaluarConsagracionVerificada() {
         const registro = this.obtenerRegistro();
-        const ofrecimientos = registro.ofrecimientos || [];
-        const necesidades = registro.necesidades || [];
+        const ofrecimientos = (registro.ofrecimientos || []).filter(o => o.verificado);
+        const necesidades = (registro.necesidades || []).filter(n => n.verificado);
         
-        // Ha ofrecido antes de pedir
-        if (ofrecimientos.length > 0 && necesidades.length > 0) {
-            const primerOfrecimiento = new Date(ofrecimientos[0].timestamp);
-            const primeraNecesidad = new Date(necesidades[0].timestamp);
-            
-            if (primerOfrecimiento < primeraNecesidad) {
-                this.consagrarHabitante();
-                return "Has ofrecido antes de pedir. Eres reconocido como habitante consciente.";
-            }
+        // Verificar consagración ritual
+        const verificacionConsagracion = window.verificacionRitual.verificarConsagracion({
+            ofrecimientos: ofrecimientos,
+            necesidades: necesidades,
+            registro: registro
+        });
+        
+        if (verificacionConsagracion.elegible) {
+            this.consagrarHabitanteVerificado(verificacionConsagracion);
+            return "Has demostrado servicio auténtico. Eres reconocido como habitante consciente verificado.";
         }
         
-        return "Tu necesidad ha sido registrada. El ecosistema la sostiene.";
+        return "Tu necesidad ha sido registrada y verificada. El ecosistema la sostiene.";
     }
     
-    consagrarHabitante() {
+    consagrarHabitanteVerificado(verificacionConsagracion) {
         const registro = this.obtenerRegistro();
         registro.habitante_consciente = true;
+        registro.verificacion_consagracion = verificacionConsagracion;
+        registro.huella_consagracion = verificacionConsagracion.huella_consagracion;
         registro.fecha_consagracion = new Date().toISOString();
         this.guardarRegistro(registro);
         
         // Activar sello ritual si ha sostenido a otros
-        if (this.haSostenidoOtros()) {
-            this.activarSelloRitual();
+        if (this.haSostenidoOtrosVerificado()) {
+            this.activarSelloRitualVerificado();
         }
     }
     
-    haSostenidoOtros() {
-        // Verificar si ha dejado señales o ha ayudado
+    haSostenidoOtrosVerificado() {
         const registro = this.obtenerRegistro();
-        return (registro.señales_dejadas || 0) > 0;
+        const coincidenciasVerificadas = registro.coincidencias_verificadas || [];
+        return coincidenciasVerificadas.length > 0 && (registro.señales_dejadas || 0) > 0;
     }
     
-    activarSelloRitual() {
+    activarSelloRitualVerificado() {
         const registro = this.obtenerRegistro();
         registro.sello_ritual = true;
+        registro.sello_verificado = true;
         registro.fecha_sello = new Date().toISOString();
+        registro.huella_sello = `SR-${new Date().toISOString().slice(-8)}-${Math.random().toString(36).slice(2, 6)}`;
         this.guardarRegistro(registro);
     }
     

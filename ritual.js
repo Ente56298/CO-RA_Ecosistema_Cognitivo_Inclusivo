@@ -82,6 +82,13 @@ punto.addEventListener('click', function() {
             } else {
                 cuestionamiento.innerHTML = 'Ahora sabes dónde mirar.';
             }
+            
+            // Mostrar invitación de pertenencia después del reconocimiento
+            setTimeout(() => {
+                if (window.pertenenciaConsciente && !window.pertenenciaConsciente.esHabitanteReconocido()) {
+                    window.pertenenciaConsciente.mostrarInvitacionPertenencia();
+                }
+            }, 3000);
         }, 1000);
     }
 });

@@ -48,22 +48,22 @@ function activarSecuencia(textoIntencion) {
         ritual_completado: true
     }));
     
+    // Vibración del entorno - el blanco respira
     document.body.classList.add('vibrar');
     
+    // Suspender cursor
+    intencion.style.caretColor = 'transparent';
+    
     setTimeout(() => {
-        document.body.classList.remove('vibrar');
-        punto.classList.add('destello-momento');
+        // Manifestación del punto desde el fondo
+        punto.classList.add('manifestacion-punto');
+        punto.style.opacity = '1';
         
         setTimeout(() => {
-            punto.classList.remove('destello-momento');
-            punto.style.opacity = '1';
-            
-            setTimeout(() => {
-                cuestionamiento.style.opacity = '1';
-                cuestionamiento.setAttribute('aria-live', 'assertive');
-            }, 3000);
-        }, 800);
-    }, 400);
+            cuestionamiento.style.opacity = '1';
+            cuestionamiento.setAttribute('aria-live', 'assertive');
+        }, 4000);
+    }, 2000);
 }
 
 punto.addEventListener('click', function() {

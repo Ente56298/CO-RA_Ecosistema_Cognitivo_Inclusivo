@@ -126,18 +126,37 @@
         }
         
         @keyframes vibracion {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.02); }
+            0%, 100% { background: #ffffff; }
+            50% { background: #fefefe; }
         }
         
-        @keyframes destello {
-            0% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
-            50% { opacity: 0.6; transform: translate(-50%, -50%) scale(3); }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+        @keyframes respiracion {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.001); }
         }
         
-        .vibrar { animation: vibracion 0.4s ease-in-out; }
-        .destello-momento { animation: destello 0.8s ease-out; }
+        @keyframes manifestacion {
+            0% { 
+                opacity: 0; 
+                transform: translate(-50%, -50%) scale(0);
+                filter: blur(2px);
+            }
+            70% { 
+                opacity: 0.3; 
+                transform: translate(-50%, -50%) scale(0.5);
+                filter: blur(1px);
+            }
+            100% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1);
+                filter: blur(0);
+            }
+        }
+        
+        .vibrar { 
+            animation: vibracion 2s ease-in-out, respiracion 3s ease-in-out infinite; 
+        }
+        .manifestacion-punto { animation: manifestacion 3s ease-out forwards; }
     </style>
 </head>
 <body>

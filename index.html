@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CO•RA</title>
+    <meta name="description" content="Conciencia + Raíz — Donde la IA no sustituye, sino acompaña">
+    <style>
+        body {
+            margin: 0;
+            background: #ffffff;
+            overflow: hidden;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            height: 100vh;
+            cursor: none;
+            transition: all 2s ease;
+        }
+        
+        .umbral {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 100%;
+        }
+        
+        .invitacion {
+            color: #e8e8e8;
+            font-size: 1.1em;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: aparecer 3s ease-in-out 1s forwards;
+        }
+        
+        .campo-intencion {
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 1.2em;
+            color: #333;
+            text-align: center;
+            width: 400px;
+            max-width: 80vw;
+            padding: 0.5rem;
+            font-family: inherit;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+        
+        .punto {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 3px;
+            height: 3px;
+            background: #000;
+            border-radius: 50%;
+            opacity: 0;
+            cursor: pointer;
+            transition: all 0.8s ease;
+        }
+        
+        .cuestionamiento {
+            color: #d0d0d0;
+            font-size: 0.95em;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+            margin-top: 3rem;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+        
+        @keyframes aparecer {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes vibracion {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            25% { transform: translate(-50%, -50%) scale(1.05); }
+            75% { transform: translate(-50%, -50%) scale(0.95); }
+        }
+        
+        @keyframes destello {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(2); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+        }
+        
+        .vibrar { animation: vibracion 0.3s ease-in-out; }
+        .destello-momento { animation: destello 0.6s ease-out; }
+    </style>
+</head>
+<body>
+    <div class="umbral">
+        <div class="invitacion">Escribe con intención.</div>
+        <input type="text" class="campo-intencion" id="intencion" autofocus>
+        <div class="cuestionamiento" id="cuestionamiento">¿Sabes por qué lo estás viendo?</div>
+    </div>
+    
+    <div class="punto" id="punto"></div>
+
+    <script>
+        const intencion = document.getElementById('intencion');
+        const punto = document.getElementById('punto');
+        const cuestionamiento = document.getElementById('cuestionamiento');
+        
+        let secuenciaIniciada = false;
+        
+        // Palabras que resuenan con CO•RA
+        const palabrasResonantes = [
+            'ayuda', 'acompañar', 'entender', 'escuchar', 'comprender',
+            'incluir', 'accesible', 'familia', 'aprender', 'crecer',
+            'colaborar', 'juntos', 'diversidad', 'respeto', 'empatía',
+            'cuidar', 'proteger', 'sanar', 'transformar', 'evolucionar'
+        ];
+        
+        intencion.addEventListener('input', function(e) {
+            const texto = e.target.value.toLowerCase().trim();
+            
+            if (texto.length > 3 && !secuenciaIniciada) {
+                const tieneResonancia = palabrasResonantes.some(palabra => 
+                    texto.includes(palabra)
+                );
+                
+                const tieneAutenticidad = texto.length > 8 && 
+                                        !texto.includes('test') && 
+                                        !texto.includes('hola') &&
+                                        texto.split(' ').length > 1;
+                
+                if (tieneResonancia || tieneAutenticidad) {
+                    activarSecuencia();
+                }
+            }
+        });
+        
+        function activarSecuencia() {
+            if (secuenciaIniciada) return;
+            secuenciaIniciada = true;
+            
+            // Vibración sutil
+            document.body.classList.add('vibrar');
+            
+            setTimeout(() => {
+                document.body.classList.remove('vibrar');
+                
+                // Destello
+                punto.classList.add('destello-momento');
+                
+                setTimeout(() => {
+                    punto.classList.remove('destello-momento');
+                    punto.style.opacity = '1';
+                    
+                    setTimeout(() => {
+                        cuestionamiento.style.opacity = '1';
+                        
+                        // Registrar momento ritual
+                        localStorage.setItem('cora_umbral_cruzado', JSON.stringify({
+                            momento: new Date().toISOString(),
+                            intencion: intencion.value,
+                            ritual_completado: true
+                        }));
+                        
+                    }, 1500);
+                }, 600);
+            }, 300);
+        }
+        
+        // Transición al ecosistema
+        punto.addEventListener('click', function() {
+            if (secuenciaIniciada) {
+                document.body.style.background = 'linear-gradient(135deg, #0f4c81 0%, #1a365d 100%)';
+                
+                setTimeout(() => {
+                    // Aquí se conectaría con el ecosistema completo
+                    alert('🌱 Bienvenido al ecosistema CO•RA\n\nConciencia + Raíz\nDonde la IA no sustituye, sino acompaña');
+                }, 2000);
+            }
+        });
+        
+        // Prevenir disrupciones del ritual
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('selectstart', e => e.preventDefault());
+    </script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CO•RA - Activación QR</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #ffffff;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 3em;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            letter-spacing: 3px;
+        }
+        
+        .mensaje-activacion {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            margin-bottom: 2rem;
+            max-width: 500px;
+            line-height: 1.6;
+        }
+        
+        .qr-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-size: 0.9em;
+            margin: 0 auto 1rem;
+        }
+        
+        .codigo-activacion {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            color: #495057;
+            background: #f8f9fa;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        
+        .instrucciones {
+            color: #6c757d;
+            font-size: 0.9em;
+            line-height: 1.5;
+            max-width: 400px;
+            margin: 0 auto 2rem;
+        }
+        
+        .boton-continuar {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 1rem 2rem;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .boton-continuar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.3);
+        }
+        
+        .info-oficina {
+            background: #f8f9fa;
+            border-left: 4px solid #28a745;
+            padding: 1rem;
+            margin: 2rem auto;
+            max-width: 400px;
+            text-align: left;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .oficina-titulo {
+            font-weight: 600;
+            color: #28a745;
+            margin-bottom: 0.5rem;
+        }
+        
+        .oficina-detalle {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">CO•RA</div>
+    
+    <div class="mensaje-activacion">
+        Has sido activado desde un espacio de servicio consciente.
+    </div>
+    
+    <div class="qr-container">
+        <div class="qr-code" id="qr-display">
+            Código QR de Activación
+        </div>
+        <div class="codigo-activacion" id="codigo-activacion">
+            Generando código...
+        </div>
+    </div>
+    
+    <div class="instrucciones">
+        Este código te conecta directamente con el umbral ritual de CO•RA.
+        Úsalo para acceder al ecosistema de servicio consciente.
+    </div>
+    
+    <div class="info-oficina" id="info-oficina" style="display: none;">
+        <div class="oficina-titulo">Oficina Simbólica</div>
+        <div class="oficina-detalle" id="oficina-detalle"></div>
+    </div>
+    
+    <a href="index.html" class="boton-continuar" id="boton-continuar">
+        Ingresar al Umbral
+    </a>
+    
+    <script src="nichos-servicio.js"></script>
+    
+    <script>
+        // Procesar activación QR
+        function procesarActivacionQR() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const codigoActivacion = urlParams.get('activacion');
+            const oficinaId = urlParams.get('oficina');
+            
+            if (codigoActivacion) {
+                document.getElementById('codigo-activacion').textContent = codigoActivacion;
+                
+                // Simular QR code (en implementación real usaría librería QR)
+                const qrDisplay = document.getElementById('qr-display');
+                qrDisplay.innerHTML = `
+                    <div style="font-size: 0.8em; color: #495057;">
+                        QR: ${codigoActivacion.slice(0, 8)}...
+                    </div>
+                `;
+                
+                // Registrar activación
+                registrarActivacion(codigoActivacion, oficinaId);
+                
+                // Actualizar enlace de continuación
+                const botonContinuar = document.getElementById('boton-continuar');
+                botonContinuar.href = `index.html?activacion=${codigoActivacion}`;
+            } else {
+                // Generar nueva activación
+                generarNuevaActivacion();
+            }
+            
+            if (oficinaId) {
+                mostrarInfoOficina(oficinaId);
+            }
+        }
+        
+        function generarNuevaActivacion() {
+            const codigo = `ACT-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
+            document.getElementById('codigo-activacion').textContent = codigo;
+            
+            const qrDisplay = document.getElementById('qr-display');
+            qrDisplay.innerHTML = `
+                <div style="font-size: 0.8em; color: #495057;">
+                    QR: ${codigo.slice(0, 8)}...
+                </div>
+            `;
+            
+            const botonContinuar = document.getElementById('boton-continuar');
+            botonContinuar.href = `index.html?activacion=${codigo}`;
+        }
+        
+        function registrarActivacion(codigo, oficinaId) {
+            // Registrar en localStorage para tracking
+            const activaciones = JSON.parse(localStorage.getItem('cora_activaciones_qr') || '[]');
+            activaciones.push({
+                codigo: codigo,
+                oficina_id: oficinaId,
+                timestamp: new Date().toISOString(),
+                usado: false
+            });
+            
+            localStorage.setItem('cora_activaciones_qr', JSON.stringify(activaciones));
+        }
+        
+        function mostrarInfoOficina(oficinaId) {
+            if (window.nichosServicio) {
+                const oficina = window.nichosServicio.obtenerOficina(oficinaId);
+                if (oficina) {
+                    document.getElementById('info-oficina').style.display = 'block';
+                    document.getElementById('oficina-detalle').innerHTML = `
+                        <strong>Ubicación:</strong> ${oficina.ubicacion}<br>
+                        <strong>Activaciones:</strong> ${oficina.activaciones_realizadas + 1}
+                    `;
+                }
+            }
+        }
+        
+        // Generar QR visual simple (placeholder)
+        function generarQRVisual(codigo) {
+            // En implementación real, usar librería como qrcode.js
+            const canvas = document.createElement('canvas');
+            canvas.width = 200;
+            canvas.height = 200;
+            const ctx = canvas.getContext('2d');
+            
+            // Patrón simple de cuadrados
+            ctx.fillStyle = '#000';
+            for (let i = 0; i < 10; i++) {
+                for (let j = 0; j < 10; j++) {
+                    if ((i + j + codigo.length) % 3 === 0) {
+                        ctx.fillRect(i * 20, j * 20, 18, 18);
+                    }
+                }
+            }
+            
+            return canvas;
+        }
+        
+        // Inicializar al cargar
+        document.addEventListener('DOMContentLoaded', () => {
+            procesarActivacionQR();
+            
+            // Generar QR visual después de un momento
+            setTimeout(() => {
+                const codigo = document.getElementById('codigo-activacion').textContent;
+                if (codigo && codigo !== 'Generando código...') {
+                    const qrCanvas = generarQRVisual(codigo);
+                    const qrDisplay = document.getElementById('qr-display');
+                    qrDisplay.innerHTML = '';
+                    qrDisplay.appendChild(qrCanvas);
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

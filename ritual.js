@@ -117,7 +117,43 @@ punto.addEventListener('click', function() {
         setTimeout(() => {
             // Activar módulo visual de servicio
             window.moduloServicioVisual.activar();
+            
+            // Verificar si puede ser registrado como oferente
+            setTimeout(() => {
+                const estado = window.guardianServicio.obtenerEstado();
+                if (estado.habitante_consciente && estado.ofrecimientos_verificados > 0) {
+                    mostrarInvitacionOferente();
+                }
+            }, 5000);
         }, 1000);
+        
+        function mostrarInvitacionOferente() {
+            const invitacion = document.createElement('div');
+            invitacion.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: rgba(52, 152, 219, 0.9);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                font-size: 0.9em;
+                cursor: pointer;
+                z-index: 1000;
+                transition: all 0.3s ease;
+            `;
+            invitacion.innerHTML = '¿Quieres registrarte como oferente de servicio?';
+            
+            invitacion.addEventListener('click', () => {
+                window.location.href = 'mapa-nichos.html';
+            });
+            
+            document.body.appendChild(invitacion);
+            
+            setTimeout(() => {
+                invitacion.remove();
+            }, 10000);
+        }
     }
 });
 

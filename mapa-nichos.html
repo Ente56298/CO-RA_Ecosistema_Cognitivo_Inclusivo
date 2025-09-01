@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CO•RA - Mapa de Nichos de Servicio</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: #333;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .titulo {
+            font-size: 2.5em;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+        
+        .subtitulo {
+            font-size: 1.1em;
+            color: #7f8c8d;
+            font-weight: 400;
+        }
+        
+        .mapa-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .nicho-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid #3498db;
+        }
+        
+        .nicho-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        
+        .nicho-titulo {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            text-transform: capitalize;
+        }
+        
+        .nicho-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-numero {
+            display: block;
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #3498db;
+        }
+        
+        .habilidades-lista {
+            margin-top: 1rem;
+        }
+        
+        .habilidad-item {
+            background: #f8f9fa;
+            padding: 0.5rem 1rem;
+            margin: 0.3rem 0;
+            border-radius: 20px;
+            font-size: 0.85em;
+            color: #495057;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+        
+        .oficinas-section {
+            margin-top: 4rem;
+            text-align: center;
+        }
+        
+        .oficinas-titulo {
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+        }
+        
+        .oficinas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .oficina-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 3px solid #27ae60;
+        }
+        
+        .oficina-ubicacion {
+            font-weight: 600;
+            color: #27ae60;
+            margin-bottom: 0.5rem;
+        }
+        
+        .oficina-activaciones {
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+        
+        .estadisticas-generales {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 3rem auto;
+            max-width: 600px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        
+        .boton-registro {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 1rem 2rem;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .boton-registro:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.3);
+        }
+        
+        .vacio {
+            text-align: center;
+            color: #95a5a6;
+            font-style: italic;
+            padding: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .titulo { font-size: 2em; }
+            .mapa-container { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="titulo">CO•RA</h1>
+        <p class="subtitulo">Mapa de Nichos de Servicio Consciente</p>
+    </div>
+    
+    <div class="estadisticas-generales">
+        <h2>Ecosistema Activo</h2>
+        <div class="stats-grid" id="stats-generales">
+            <div class="stat-item">
+                <span class="stat-numero" id="total-oferentes">0</span>
+                <span>Oferentes Activos</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-numero" id="total-nichos">0</span>
+                <span>Nichos Activos</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-numero" id="total-oficinas">0</span>
+                <span>Oficinas Simbólicas</span>
+            </div>
+        </div>
+        <a href="index.html" class="boton-registro">Unirse al Ecosistema</a>
+    </div>
+    
+    <div class="mapa-container" id="mapa-nichos">
+        <div class="vacio">
+            Cargando nichos de servicio...
+        </div>
+    </div>
+    
+    <div class="oficinas-section">
+        <h2 class="oficinas-titulo">Oficinas Simbólicas de Distribución</h2>
+        <div class="oficinas-grid" id="oficinas-grid">
+            <div class="vacio">
+                No hay oficinas registradas aún.
+            </div>
+        </div>
+    </div>
+    
+    <script src="bitacora-presencias.js"></script>
+    <script src="constancia-ritual.js"></script>
+    <script src="guardian-servicio.js"></script>
+    <script src="verificacion-ritual.js"></script>
+    <script src="nichos-servicio.js"></script>
+    
+    <script>
+        // Cargar y mostrar mapa de nichos
+        function cargarMapaNichos() {
+            const mapa = window.nichosServicio.obtenerMapaNichos();
+            
+            // Actualizar estadísticas generales
+            document.getElementById('total-oferentes').textContent = mapa.total_oferentes;
+            document.getElementById('total-nichos').textContent = Object.keys(mapa.nichos_activos).length;
+            document.getElementById('total-oficinas').textContent = mapa.oficinas_simbolicas;
+            
+            // Mostrar nichos
+            const container = document.getElementById('mapa-nichos');
+            
+            if (Object.keys(mapa.nichos_activos).length === 0) {
+                container.innerHTML = '<div class="vacio">Aún no hay nichos de servicio activos.<br>Sé el primero en ofrecer tu ayuda.</div>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            Object.entries(mapa.nichos_activos).forEach(([nichoId, datos]) => {
+                const nichoCard = document.createElement('div');
+                nichoCard.className = 'nicho-card';
+                
+                const nombreNicho = nichoId.replace('nicho_', '').replace('_', ' ');
+                const habilidadesUnicas = [...new Set(datos.habilidades_disponibles)].slice(0, 6);
+                
+                nichoCard.innerHTML = `
+                    <h3 class="nicho-titulo">${nombreNicho}</h3>
+                    <div class="nicho-stats">
+                        <div class="stat-item">
+                            <span class="stat-numero">${datos.oferentes}</span>
+                            <span>Oferentes</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-numero">${habilidadesUnicas.length}</span>
+                            <span>Habilidades</span>
+                        </div>
+                    </div>
+                    <div class="habilidades-lista">
+                        ${habilidadesUnicas.map(h => `<span class="habilidad-item">${h}</span>`).join('')}
+                    </div>
+                `;
+                
+                container.appendChild(nichoCard);
+            });
+        }
+        
+        // Cargar oficinas simbólicas
+        function cargarOficinas() {
+            const oficinas = window.nichosServicio.obtenerOficinasActivas();
+            const container = document.getElementById('oficinas-grid');
+            
+            if (oficinas.length === 0) {
+                container.innerHTML = '<div class="vacio">No hay oficinas simbólicas registradas aún.</div>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            oficinas.forEach(oficina => {
+                const oficinaCard = document.createElement('div');
+                oficinaCard.className = 'oficina-card';
+                
+                oficinaCard.innerHTML = `
+                    <div class="oficina-ubicacion">${oficina.ubicacion}</div>
+                    <div class="oficina-activaciones">${oficina.activaciones_realizadas} activaciones realizadas</div>
+                `;
+                
+                container.appendChild(oficinaCard);
+            });
+        }
+        
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarMapaNichos();
+            cargarOficinas();
+            
+            // Actualizar cada 30 segundos
+            setInterval(() => {
+                cargarMapaNichos();
+                cargarOficinas();
+            }, 30000);
+        });
+    </script>
+</body>
+</html>

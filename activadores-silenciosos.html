@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>•</title>
+    <style>
+        body {
+            margin: 0;
+            background: #ffffff;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .activador {
+            text-align: center;
+            opacity: 0;
+            animation: aparecer 2s ease-in-out 0.5s forwards;
+        }
+        
+        .punto-activador {
+            width: 8px;
+            height: 8px;
+            background: #000;
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .punto-activador:hover {
+            transform: scale(1.5);
+        }
+        
+        .mensaje {
+            color: #d0d0d0;
+            font-size: 0.9em;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+        }
+        
+        @keyframes aparecer {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .revelado {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        
+        .revelado.mostrar {
+            opacity: 1;
+        }
+        
+        .enlace-umbral {
+            display: inline-block;
+            color: #333;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border: 1px solid #eee;
+            border-radius: 25px;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .enlace-umbral:hover {
+            background: #f9f9f9;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body onclick="revelar()">
+    <div class="activador" id="activador">
+        <div class="punto-activador"></div>
+        <div class="mensaje">Si estás listo, toca.</div>
+    </div>
+    
+    <div class="revelado" id="revelado">
+        <p style="color: #666; margin-bottom: 1rem;">No hay explicación.</p>
+        <p style="color: #666; margin-bottom: 2rem;">Solo entrada.</p>
+        <a href="https://ente56298.github.io/CO-RA_Ecosistema_Cognitivo_Inclusivo/" class="enlace-umbral">
+            Entrar
+        </a>
+    </div>
+
+    <script>
+        let revelacionActivada = false;
+        
+        function revelar() {
+            if (revelacionActivada) return;
+            revelacionActivada = true;
+            
+            const activador = document.getElementById('activador');
+            const revelado = document.getElementById('revelado');
+            
+            activador.style.opacity = '0';
+            
+            setTimeout(() => {
+                activador.style.display = 'none';
+                revelado.classList.add('mostrar');
+            }, 500);
+        }
+        
+        // Prevenir disrupciones
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('selectstart', e => e.preventDefault());
+    </script>
+</body>
+</html>

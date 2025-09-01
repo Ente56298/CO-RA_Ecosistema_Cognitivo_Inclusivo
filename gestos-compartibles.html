@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestos</title>
+    <style>
+        body { 
+            margin: 0; 
+            background: #ffffff; 
+            font-family: 'Helvetica Neue', Arial, sans-serif; 
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .gesto {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .gesto:hover { background: #fafafa; }
+        
+        .punto-minimal {
+            width: 3px;
+            height: 3px;
+            background: #000;
+            border-radius: 50%;
+        }
+        
+        .frase-flotante {
+            color: #e8e8e8;
+            font-size: 1.1em;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+        
+        .enlace-silencioso {
+            color: #d0d0d0;
+            font-size: 0.9em;
+            text-decoration: none;
+            font-weight: 300;
+        }
+        
+        .qr-placeholder {
+            width: 60px;
+            height: 60px;
+            border: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            color: #ccc;
+        }
+        
+        .copiado {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8em;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .copiado.mostrar { opacity: 1; }
+    </style>
+</head>
+<body>
+    <div class="gesto" onclick="copiar('•')">
+        <div class="punto-minimal"></div>
+        <div class="copiado" id="copiado1">Punto copiado</div>
+    </div>
+    
+    <div class="gesto" onclick="copiar('Escribe con intención.')">
+        <div class="frase-flotante">Escribe con intención.</div>
+        <div class="copiado" id="copiado2">Frase copiada</div>
+    </div>
+    
+    <div class="gesto" onclick="copiar('¿Sabes por qué lo estás viendo?')">
+        <div class="frase-flotante">¿Sabes por qué lo estás viendo?</div>
+        <div class="copiado" id="copiado3">Pregunta copiada</div>
+    </div>
+    
+    <div class="gesto" onclick="copiar('https://ente56298.github.io/CO-RA_Ecosistema_Cognitivo_Inclusivo/')">
+        <a href="#" class="enlace-silencioso">Si estás listo, entra.</a>
+        <div class="copiado" id="copiado4">Enlace copiado</div>
+    </div>
+    
+    <div class="gesto" onclick="generarQR()">
+        <div class="qr-placeholder">QR</div>
+        <div class="copiado" id="copiado5">QR generado</div>
+    </div>
+
+    <script>
+        function copiar(texto) {
+            navigator.clipboard.writeText(texto).then(() => {
+                const copiado = event.currentTarget.querySelector('.copiado');
+                copiado.classList.add('mostrar');
+                setTimeout(() => copiado.classList.remove('mostrar'), 1500);
+            });
+        }
+        
+        function generarQR() {
+            const url = 'https://ente56298.github.io/CO-RA_Ecosistema_Cognitivo_Inclusivo/';
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`;
+            
+            const img = document.createElement('img');
+            img.src = qrUrl;
+            img.style.width = '200px';
+            img.style.height = '200px';
+            
+            const ventana = window.open('', '_blank', 'width=250,height=250');
+            ventana.document.body.appendChild(img);
+            ventana.document.body.style.margin = '0';
+            ventana.document.body.style.display = 'flex';
+            ventana.document.body.style.alignItems = 'center';
+            ventana.document.body.style.justifyContent = 'center';
+            
+            const copiado = document.getElementById('copiado5');
+            copiado.classList.add('mostrar');
+            setTimeout(() => copiado.classList.remove('mostrar'), 1500);
+        }
+        
+        // Prevenir disrupciones
+        document.addEventListener('contextmenu', e => e.preventDefault());
+    </script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presencias</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #fafafa;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            padding: 2rem;
+            cursor: none;
+        }
+        
+        .contemplacion {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .titulo {
+            color: #666;
+            font-size: 1.1em;
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: aparecer 3s ease-in-out 1s forwards;
+        }
+        
+        .constelacion {
+            margin-bottom: 4rem;
+            opacity: 0;
+            animation: aparecer 4s ease-in-out 2s forwards;
+        }
+        
+        .presencia {
+            background: rgba(255,255,255,0.7);
+            border: 1px solid #f0f0f0;
+            border-radius: 3px;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            color: #777;
+            font-size: 0.95em;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+            line-height: 1.6;
+            text-align: left;
+            transition: all 0.5s ease;
+        }
+        
+        .presencia:hover {
+            background: rgba(255,255,255,0.9);
+            border-color: #e8e8e8;
+        }
+        
+        .huella {
+            color: #999;
+            font-style: italic;
+        }
+        
+        .momento {
+            color: #bbb;
+            font-size: 0.8em;
+            text-align: right;
+            margin-top: 0.5rem;
+        }
+        
+        .vacio {
+            color: #ccc;
+            font-size: 0.9em;
+            font-style: italic;
+            margin: 3rem 0;
+        }
+        
+        .regreso {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 8px;
+            height: 8px;
+            background: #ddd;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: aparecer 2s ease-in-out 4s forwards;
+        }
+        
+        .regreso:hover {
+            background: #999;
+            transform: scale(1.5);
+        }
+        
+        @keyframes aparecer {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            * { animation: none !important; transition: none !important; }
+            .titulo, .constelacion, .regreso { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="contemplacion">
+        <div class="titulo">PRESENCIAS</div>
+        
+        <div class="constelacion" id="constelacion">
+            <div class="vacio">El silencio aún no ha sido habitado.</div>
+        </div>
+    </div>
+    
+    <div class="regreso" id="regreso" title="Regresar al umbral"></div>
+    
+    <script src="bitacora-presencias.js"></script>
+    <script>
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('selectstart', e => e.preventDefault());
+        
+        function mostrarPresencias() {
+            const presencias = window.bitacora.obtenerPresencias();
+            const constelacion = document.getElementById('constelacion');
+            
+            if (presencias.length === 0) {
+                return;
+            }
+            
+            constelacion.innerHTML = '';
+            
+            presencias
+                .filter(p => p.tipo === 'umbral' && p.resonancia === 'autentica')
+                .slice(-10) // Últimas 10 presencias auténticas
+                .forEach((presencia, index) => {
+                    const elemento = document.createElement('div');
+                    elemento.className = 'presencia';
+                    elemento.style.animationDelay = `${3 + index * 0.5}s`;
+                    
+                    const fecha = new Date(presencia.timestamp);
+                    const momento = fecha.toLocaleDateString('es', { 
+                        month: 'short', 
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    
+                    elemento.innerHTML = `
+                        <div class="huella">${presencia.huella}</div>
+                        <div class="momento">${momento}</div>
+                    `;
+                    
+                    constelacion.appendChild(elemento);
+                });
+        }
+        
+        document.getElementById('regreso').addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+        
+        // Mostrar presencias al cargar
+        setTimeout(mostrarPresencias, 2000);
+    </script>
+</body>
+</html>

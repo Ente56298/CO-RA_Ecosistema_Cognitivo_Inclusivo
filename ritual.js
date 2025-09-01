@@ -70,7 +70,7 @@ punto.addEventListener('click', function() {
     if (secuenciaIniciada) {
         punto.style.transform = 'translate(-50%, -50%) scale(0)';
         setTimeout(() => {
-            cuestionamiento.innerHTML = 'Ahora sabes.';
+            cuestionamiento.innerHTML = 'Ahora sabes dónde mirar.';
         }, 1000);
     }
 });

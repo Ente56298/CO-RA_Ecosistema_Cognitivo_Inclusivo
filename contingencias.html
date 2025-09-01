@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CO•RA - Protocolo de Contingencias</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: white;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .titulo {
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+        
+        .subtitulo {
+            font-size: 1.1em;
+            opacity: 0.9;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .alerta-contingencia {
+            background: rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nivel-urgencia {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+        
+        .urgencia-critica { background: #e74c3c; }
+        .urgencia-alta { background: #f39c12; }
+        .urgencia-media { background: #3498db; }
+        
+        .formulario-contingencia {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .campo-grupo {
+            margin-bottom: 1.5rem;
+        }
+        
+        .campo-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+        
+        .campo-input, .campo-select, .campo-textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1em;
+            font-family: inherit;
+        }
+        
+        .campo-input::placeholder,
+        .campo-textarea::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .campo-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .boton-activar {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.5);
+            border-radius: 8px;
+            padding: 1rem 2rem;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .boton-activar:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .contingencias-activas {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem auto;
+            max-width: 1200px;
+        }
+        
+        .contingencia-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .contingencia-tipo {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: capitalize;
+        }
+        
+        .contingencia-ubicacion {
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+        
+        .contingencia-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 0.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+        }
+        
+        .stat-numero {
+            display: block;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+        
+        .stat-label {
+            font-size: 0.8em;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .convocatorias-pendientes {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .convocatoria-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #f1c40f;
+        }
+        
+        .convocatoria-tipo {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .convocatoria-habilidades {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+        
+        .boton-responder {
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9em;
+            cursor: pointer;
+            margin-right: 0.5rem;
+        }
+        
+        .boton-declinar {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+        
+        .mensaje-resultado {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 6px;
+            display: none;
+        }
+        
+        .resultado-exito {
+            background: rgba(39, 174, 96, 0.3);
+            border: 1px solid rgba(39, 174, 96, 0.5);
+        }
+        
+        .resultado-error {
+            background: rgba(231, 76, 60, 0.3);
+            border: 1px solid rgba(231, 76, 60, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="titulo">CO•RA</h1>
+        <p class="subtitulo">
+            Protocolo de Contingencias - Respuesta ética en crisis a través de presencias conscientes
+        </p>
+    </div>
+    
+    <div class="formulario-contingencia">
+        <h3 style="margin-bottom: 1.5rem;">Activar Protocolo de Contingencia</h3>
+        
+        <div class="campo-grupo">
+            <label class="campo-label" for="tipo-contingencia">Tipo de Contingencia:</label>
+            <select class="campo-select" id="tipo-contingencia">
+                <option value="desastre_natural">Desastre Natural</option>
+                <option value="crisis_comunitaria">Crisis Comunitaria</option>
+                <option value="emergencia_personal">Emergencia Personal</option>
+            </select>
+        </div>
+        
+        <div class="campo-grupo">
+            <label class="campo-label" for="ubicacion-contingencia">Ubicación:</label>
+            <input type="text" class="campo-input" id="ubicacion-contingencia" 
+                   placeholder="Ciudad, estado o región afectada">
+        </div>
+        
+        <div class="campo-grupo">
+            <label class="campo-label" for="urgencia-contingencia">Nivel de Urgencia:</label>
+            <select class="campo-select" id="urgencia-contingencia">
+                <option value="media">Media</option>
+                <option value="alta">Alta</option>
+                <option value="critica">Crítica</option>
+            </select>
+        </div>
+        
+        <div class="campo-grupo">
+            <label class="campo-label" for="descripcion-contingencia">Descripción:</label>
+            <textarea class="campo-textarea" id="descripcion-contingencia" 
+                      placeholder="Describe la situación y el tipo de ayuda necesaria..."></textarea>
+        </div>
+        
+        <button class="boton-activar" onclick="activarContingencia()">
+            Activar Protocolo
+        </button>
+        
+        <div class="mensaje-resultado" id="resultado-activacion"></div>
+    </div>
+    
+    <div class="convocatorias-pendientes" id="convocatorias-section" style="display: none;">
+        <h3 style="margin-bottom: 1.5rem;">Convocatorias Pendientes</h3>
+        <div id="lista-convocatorias"></div>
+    </div>
+    
+    <div class="contingencias-activas" id="contingencias-activas">
+        <div style="grid-column: 1/-1; text-align: center; opacity: 0.7;">
+            No hay contingencias activas
+        </div>
+    </div>
+    
+    <script src="bitacora-presencias.js"></script>
+    <script src="constancia-ritual.js"></script>
+    <script src="guardian-servicio.js"></script>
+    <script src="verificacion-ritual.js"></script>
+    <script src="nichos-servicio.js"></script>
+    <script src="escenarios-rituales.js"></script>
+    <script src="protocolo-contingencias.js"></script>
+    
+    <script>
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarContingenciasActivas();
+            cargarConvocatoriasPendientes();
+            
+            // Actualizar cada 30 segundos
+            setInterval(() => {
+                cargarContingenciasActivas();
+                cargarConvocatoriasPendientes();
+            }, 30000);
+        });
+        
+        function activarContingencia() {
+            const tipo = document.getElementById('tipo-contingencia').value;
+            const ubicacion = document.getElementById('ubicacion-contingencia').value.trim();
+            const urgencia = document.getElementById('urgencia-contingencia').value;
+            const descripcion = document.getElementById('descripcion-contingencia').value.trim();
+            
+            if (!ubicacion || !descripcion) {
+                mostrarResultado('Por favor completa todos los campos.', false);
+                return;
+            }
+            
+            const parametros = {
+                urgencia: urgencia,
+                descripcion: descripcion
+            };
+            
+            try {
+                const contingencia = window.protocoloContingencias.activarContingencia(
+                    tipo, ubicacion, parametros
+                );
+                
+                mostrarResultado(
+                    `Protocolo activado. ID: ${contingencia.id}. ` +
+                    `${contingencia.habitantes_convocados.length} habitantes convocados.`,
+                    true
+                );
+                
+                // Limpiar formulario
+                document.getElementById('ubicacion-contingencia').value = '';
+                document.getElementById('descripcion-contingencia').value = '';
+                
+                // Recargar contingencias
+                setTimeout(cargarContingenciasActivas, 1000);
+                
+            } catch (error) {
+                mostrarResultado('Error al activar protocolo: ' + error.message, false);
+            }
+        }
+        
+        function cargarContingenciasActivas() {
+            const estadisticas = window.protocoloContingencias.obtenerEstadisticasContingencias();
+            const container = document.getElementById('contingencias-activas');
+            
+            if (estadisticas.contingencias_activas === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; opacity: 0.7;">
+                        No hay contingencias activas
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            // Mostrar estadísticas generales
+            const statsCard = document.createElement('div');
+            statsCard.className = 'contingencia-card';
+            statsCard.innerHTML = `
+                <div class="contingencia-tipo">Estadísticas Generales</div>
+                <div class="contingencia-stats">
+                    <div class="stat-item">
+                        <span class="stat-numero">${estadisticas.contingencias_activas}</span>
+                        <span class="stat-label">Activas</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-numero">${estadisticas.nichos_moviles_desplegados}</span>
+                        <span class="stat-label">Nichos Móviles</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-numero">${estadisticas.habitantes_convocados}</span>
+                        <span class="stat-label">Convocados</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-numero">${estadisticas.necesidades_emergencia}</span>
+                        <span class="stat-label">Necesidades</span>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(statsCard);
+        }
+        
+        function cargarConvocatoriasPendientes() {
+            const convocatorias = window.protocoloContingencias.obtenerConvocatorias()
+                .filter(c => c.estado === 'pendiente');
+            
+            const section = document.getElementById('convocatorias-section');
+            const lista = document.getElementById('lista-convocatorias');
+            
+            if (convocatorias.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+            
+            section.style.display = 'block';
+            lista.innerHTML = '';
+            
+            convocatorias.forEach(convocatoria => {
+                const item = document.createElement('div');
+                item.className = 'convocatoria-item';
+                item.innerHTML = `
+                    <div class="convocatoria-tipo">
+                        ${convocatoria.tipo_contingencia.replace('_', ' ')} - ${convocatoria.ubicacion}
+                    </div>
+                    <div class="nivel-urgencia urgencia-${convocatoria.urgencia}">
+                        ${convocatoria.urgencia}
+                    </div>
+                    <div class="convocatoria-habilidades">
+                        Habilidades solicitadas: ${convocatoria.habilidades_solicitadas.join(', ')}
+                    </div>
+                    <button class="boton-responder" onclick="responderConvocatoria('${convocatoria.id}', 'acepto')">
+                        Acepto Servir
+                    </button>
+                    <button class="boton-declinar" onclick="responderConvocatoria('${convocatoria.id}', 'declino')">
+                        No Disponible
+                    </button>
+                `;
+                
+                lista.appendChild(item);
+            });
+        }
+        
+        function responderConvocatoria(convocatoriaId, respuesta) {
+            const habitante = window.guardianServicio.obtenerEstado();
+            
+            if (!habitante.habitante_consciente) {
+                mostrarResultado('Solo habitantes consagrados pueden responder a convocatorias.', false);
+                return;
+            }
+            
+            const resultado = window.protocoloContingencias.responderConvocatoria(
+                convocatoriaId, respuesta, habitante
+            );
+            
+            if (resultado) {
+                mostrarResultado(resultado.mensaje, true);
+                setTimeout(cargarConvocatoriasPendientes, 1000);
+            } else {
+                mostrarResultado('Error al procesar respuesta.', false);
+            }
+        }
+        
+        function mostrarResultado(mensaje, exito) {
+            const resultado = document.getElementById('resultado-activacion');
+            resultado.className = `mensaje-resultado ${exito ? 'resultado-exito' : 'resultado-error'}`;
+            resultado.textContent = mensaje;
+            resultado.style.display = 'block';
+            
+            setTimeout(() => {
+                resultado.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

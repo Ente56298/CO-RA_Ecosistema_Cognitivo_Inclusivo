@@ -60,7 +60,8 @@ function activarSecuencia(textoIntencion) {
             
             setTimeout(() => {
                 cuestionamiento.style.opacity = '1';
-            }, 2000);
+                cuestionamiento.setAttribute('aria-live', 'assertive');
+            }, 3000);
         }, 800);
     }, 400);
 }

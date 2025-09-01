@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>•</title>
+    <title>CO•RA - Preludio</title>
+    <meta name="description" content="Ecosistema Cognitivo Inclusivo - Preparación ritual">
+    
+    <!-- Accesibilidad -->
+    <meta name="theme-color" content="#f8f8f8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -23,21 +29,37 @@
             transform: translate(-50%, -50%);
             text-align: center;
             opacity: 0;
-            animation: resonancia 3s ease-in-out forwards;
+            animation: resonancia 6s ease-in-out forwards;
         }
         
         .invitacion {
-            color: #666;
-            font-size: 1.1em;
-            font-weight: 300;
-            letter-spacing: 0.8px;
-            line-height: 1.6;
+            color: #555;
+            font-size: 1.2em;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            line-height: 1.8;
+            max-width: 90vw;
+        }
+        
+        /* Accesibilidad */
+        @media (prefers-reduced-motion: reduce) {
+            .preparacion { animation: none; opacity: 1; }
+            .transicion { transition: none !important; }
+        }
+        
+        @media (prefers-contrast: high) {
+            .invitacion { color: #000; }
+            body { background: #fff; }
+        }
+        
+        @media (max-width: 480px) {
+            .invitacion { font-size: 1.1em; line-height: 1.6; }
         }
         
         @keyframes resonancia {
             0% { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
-            30% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-            70% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
             100% { opacity: 0; transform: translate(-50%, -50%) scale(1.05); }
         }
         
@@ -66,8 +88,8 @@
             document.body.classList.add('transicion');
             setTimeout(() => {
                 window.location.href = 'index.html';
-            }, 1000);
-        }, 3000);
+            }, 2000);
+        }, 6000);
     </script>
 </body>
 </html>

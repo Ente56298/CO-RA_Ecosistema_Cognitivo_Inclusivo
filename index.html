@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>•</title>
-    <meta name="description" content="">
+    <title>CO•RA - Umbral</title>
+    <meta name="description" content="Ecosistema Cognitivo Inclusivo - Espacio de acompañamiento">
+    
+    <!-- Accesibilidad -->
+    <meta name="theme-color" content="#ffffff">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -26,28 +30,35 @@
         }
         
         .invitacion {
-            color: #e8e8e8;
-            font-size: 1.1em;
-            font-weight: 300;
-            letter-spacing: 0.5px;
+            color: #999;
+            font-size: 1.2em;
+            font-weight: 400;
+            letter-spacing: 0.3px;
             margin-bottom: 2rem;
             opacity: 0;
-            animation: aparecer 4s ease-in-out 2s forwards;
+            animation: aparecer 6s ease-in-out 3s forwards;
+            max-width: 90vw;
         }
         
         .campo-intencion {
             background: transparent;
-            border: none;
+            border: 1px solid transparent;
             outline: none;
             font-size: 1.2em;
             color: #333;
             text-align: center;
             width: 400px;
-            max-width: 80vw;
-            padding: 0.5rem;
+            max-width: 85vw;
+            padding: 0.8rem;
             font-family: inherit;
-            font-weight: 300;
-            letter-spacing: 1px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            border-radius: 2px;
+        }
+        
+        .campo-intencion:focus {
+            border-color: #ddd;
+            box-shadow: 0 0 0 2px rgba(93, 211, 255, 0.1);
         }
         
         .punto {
@@ -65,13 +76,48 @@
         }
         
         .cuestionamiento {
-            color: #d0d0d0;
-            font-size: 0.9em;
-            font-weight: 300;
-            letter-spacing: 0.3px;
+            color: #aaa;
+            font-size: 1em;
+            font-weight: 400;
+            letter-spacing: 0.2px;
             margin-top: 3rem;
             opacity: 0;
-            transition: opacity 3s ease;
+            transition: opacity 4s ease;
+            max-width: 90vw;
+        }
+        
+        /* Accesibilidad */
+        @media (prefers-reduced-motion: reduce) {
+            .invitacion { animation: none; opacity: 1; }
+            .punto { transition: none; }
+            .vibrar { animation: none; }
+            .destello-momento { animation: none; }
+        }
+        
+        @media (prefers-contrast: high) {
+            .invitacion { color: #000; }
+            .campo-intencion { color: #000; border-color: #000; }
+            .cuestionamiento { color: #000; }
+            .punto { background: #000; }
+        }
+        
+        @media (max-width: 480px) {
+            .invitacion { font-size: 1.1em; }
+            .campo-intencion { font-size: 1.1em; width: 90vw; }
+            .cuestionamiento { font-size: 0.95em; }
+        }
+        
+        /* Soporte para lectores de pantalla */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
         
         @keyframes aparecer {
@@ -96,12 +142,18 @@
 </head>
 <body>
     <div class="umbral" id="umbral">
-        <div class="invitacion">Escribe con intención.</div>
-        <input type="text" class="campo-intencion" id="intencion" autofocus>
-        <div class="cuestionamiento" id="cuestionamiento">¿Sabes por qué lo estás viendo?</div>
+        <div class="invitacion" role="banner">Escribe con intención.</div>
+        <label for="intencion" class="sr-only">Campo de intención auténtica</label>
+        <input type="text" class="campo-intencion" id="intencion" 
+               aria-label="Escribe tu intención auténtica" 
+               placeholder="" 
+               autocomplete="off" 
+               spellcheck="false"
+               autofocus>
+        <div class="cuestionamiento" id="cuestionamiento" role="status" aria-live="polite">¿Sabes por qué lo estás viendo?</div>
     </div>
     
-    <div class="punto" id="punto"></div>
+    <button class="punto" id="punto" aria-label="Completar ritual" role="button" tabindex="0"></button>
     
     <script src="bitacora-presencias.js"></script>
     <script src="ritual.js"></script>

@@ -1,0 +1,270 @@
+/* Módulo de Servicio Consciente - Estilos Visuales */
+
+.servicio-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 1s ease-in-out;
+    z-index: 200;
+}
+
+.servicio-container.activo {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.guardian-mensaje {
+    color: #444;
+    font-size: 1.3em;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-align: center;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    line-height: 1.6;
+    opacity: 0;
+    animation: aparecer-suave 2s ease-in-out 0.5s forwards;
+}
+
+.campo-servicio {
+    background: rgba(255,255,255,0.8);
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    font-size: 1.1em;
+    color: #333;
+    text-align: center;
+    width: 500px;
+    max-width: 85vw;
+    font-family: inherit;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+    opacity: 0;
+    animation: aparecer-suave 2s ease-in-out 1s forwards;
+}
+
+.campo-servicio:focus {
+    outline: none;
+    border-color: rgba(93, 211, 255, 0.3);
+    box-shadow: 0 0 0 4px rgba(93, 211, 255, 0.1);
+    background: rgba(255,255,255,0.95);
+}
+
+.campo-servicio::placeholder {
+    color: #999;
+    font-style: italic;
+}
+
+.huellas-flotantes {
+    position: absolute;
+    top: 20%;
+    right: 5%;
+    width: 250px;
+    opacity: 0;
+    animation: aparecer-suave 2s ease-in-out 2s forwards;
+}
+
+.huella-item {
+    background: rgba(255,255,255,0.6);
+    border-left: 3px solid #e0e0e0;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.8rem;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.9em;
+    color: #666;
+    transform: translateX(20px);
+    opacity: 0;
+    animation: flotar-entrada 1s ease-out forwards;
+}
+
+.huella-item:nth-child(1) { animation-delay: 2.5s; }
+.huella-item:nth-child(2) { animation-delay: 3s; }
+.huella-item:nth-child(3) { animation-delay: 3.5s; }
+
+.presencias-activas {
+    position: absolute;
+    top: 20%;
+    left: 5%;
+    width: 250px;
+    opacity: 0;
+    animation: aparecer-suave 2s ease-in-out 2s forwards;
+}
+
+.presencia-item {
+    background: rgba(255,255,255,0.6);
+    border-right: 3px solid #d0d0d0;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.8rem;
+    border-radius: 6px 0 0 6px;
+    font-size: 0.9em;
+    color: #666;
+    transform: translateX(-20px);
+    opacity: 0;
+    animation: flotar-entrada 1s ease-out forwards;
+}
+
+.presencia-item:nth-child(1) { animation-delay: 2.5s; }
+.presencia-item:nth-child(2) { animation-delay: 3s; }
+.presencia-item:nth-child(3) { animation-delay: 3.5s; }
+
+.coincidencia-revelada {
+    position: absolute;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(93, 211, 255, 0.1);
+    border: 2px solid rgba(93, 211, 255, 0.3);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    text-align: center;
+    max-width: 500px;
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+    transition: all 0.8s ease-out;
+}
+
+.coincidencia-revelada.mostrar {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.coincidencia-texto {
+    color: #2c5aa0;
+    font-size: 1.1em;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.boton-señal {
+    background: linear-gradient(135deg, #5dd3ff 0%, #4fc3f7 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.8rem 1.5rem;
+    font-size: 0.95em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.3px;
+}
+
+.boton-señal:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(93, 211, 255, 0.3);
+}
+
+.estado-consagracion {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    opacity: 0;
+    animation: aparecer-suave 2s ease-in-out 3s forwards;
+}
+
+.habitante-consciente {
+    color: #4caf50;
+    font-size: 0.9em;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.sello-ritual {
+    color: #ff9800;
+    font-size: 0.85em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+}
+
+.indicador-fase {
+    position: absolute;
+    bottom: 5%;
+    right: 5%;
+    color: #999;
+    font-size: 0.8em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0;
+    animation: aparecer-suave 2s ease-in-out 1.5s forwards;
+}
+
+/* Animaciones */
+@keyframes aparecer-suave {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes flotar-entrada {
+    from { 
+        opacity: 0; 
+        transform: translateX(var(--direccion, 20px)) translateY(10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateX(0) translateY(0); 
+    }
+}
+
+.huella-item { --direccion: 20px; }
+.presencia-item { --direccion: -20px; }
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .huellas-flotantes,
+    .presencias-activas {
+        position: static;
+        width: 90%;
+        margin: 1rem auto;
+    }
+    
+    .guardian-mensaje {
+        font-size: 1.1em;
+        margin-bottom: 1.5rem;
+    }
+    
+    .campo-servicio {
+        width: 90%;
+        font-size: 1em;
+    }
+    
+    .coincidencia-revelada {
+        bottom: 10%;
+        max-width: 90%;
+        padding: 1rem 1.5rem;
+    }
+}
+
+/* Accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .servicio-container,
+    .guardian-mensaje,
+    .campo-servicio,
+    .huellas-flotantes,
+    .presencias-activas,
+    .estado-consagracion,
+    .indicador-fase {
+        opacity: 1;
+        transform: none;
+    }
+}

@@ -115,18 +115,8 @@ punto.addEventListener('click', function() {
         
         punto.style.transform = 'translate(-50%, -50%) scale(0)';
         setTimeout(() => {
-            // Activar Guardián del Servicio Consciente
-            const guardianMensaje = window.guardianServicio.iniciarDialogo();
-            cuestionamiento.innerHTML = guardianMensaje;
-            
-            // Cambiar el campo de entrada para el diálogo de servicio
-            intencion.placeholder = "Escribe tu ofrecimiento...";
-            intencion.value = "";
-            intencion.style.caretColor = "";
-            intencion.disabled = false;
-            
-            // Activar modo servicio
-            window.modoServicio = true;
+            // Activar módulo visual de servicio
+            window.moduloServicioVisual.activar();
         }, 1000);
     }
 });

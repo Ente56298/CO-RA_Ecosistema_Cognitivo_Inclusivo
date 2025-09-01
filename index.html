@@ -6,8 +6,9 @@
     <title>CO•RA</title>
     <meta name="description" content="Conciencia + Raíz — Donde la IA no sustituye, sino acompaña">
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            margin: 0;
             background: #ffffff;
             overflow: hidden;
             font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -74,6 +75,52 @@
             transition: opacity 2s ease;
         }
         
+        .ecosistema {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            opacity: 0;
+            transition: all 2s ease;
+            color: white;
+            width: 90%;
+            max-width: 800px;
+        }
+        
+        .ecosistema h1 {
+            font-size: 2.5em;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+        
+        .ecosistema p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .modulos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .modulo {
+            background: rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .modulo:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+        
         @keyframes aparecer {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -96,27 +143,59 @@
     </style>
 </head>
 <body>
-    <div class="umbral">
+    <div class="umbral" id="umbral">
         <div class="invitacion">Escribe con intención.</div>
         <input type="text" class="campo-intencion" id="intencion" autofocus>
         <div class="cuestionamiento" id="cuestionamiento">¿Sabes por qué lo estás viendo?</div>
     </div>
     
     <div class="punto" id="punto"></div>
+    
+    <div class="ecosistema" id="ecosistema">
+        <h1>🌍 CO•RA</h1>
+        <p>Conciencia + Raíz — Donde la IA no sustituye, sino acompaña</p>
+        
+        <div class="modulos">
+            <div class="modulo">
+                <h3>🧠 Asistente Cognitivo</h3>
+                <p>IA compasiva que se adapta a tu forma única de pensar</p>
+            </div>
+            <div class="modulo">
+                <h3>♿ Accesibilidad Universal</h3>
+                <p>Herramientas para todas las capacidades</p>
+            </div>
+            <div class="modulo">
+                <h3>👨👩👧👦 Educación Familiar</h3>
+                <p>Aprendizaje inclusivo y colaborativo</p>
+            </div>
+            <div class="modulo">
+                <h3>🤝 Comunidad Global</h3>
+                <p>Construyendo juntos un futuro inclusivo</p>
+            </div>
+        </div>
+        
+        <p style="margin-top: 2rem; font-size: 0.9em; opacity: 0.7;">
+            🌱 CO•RA crece contigo, para todos, desde todos
+        </p>
+    </div>
 
     <script>
         const intencion = document.getElementById('intencion');
         const punto = document.getElementById('punto');
         const cuestionamiento = document.getElementById('cuestionamiento');
+        const umbral = document.getElementById('umbral');
+        const ecosistema = document.getElementById('ecosistema');
         
         let secuenciaIniciada = false;
+        let ecosistemaRevelado = false;
         
         // Palabras que resuenan con CO•RA
         const palabrasResonantes = [
             'ayuda', 'acompañar', 'entender', 'escuchar', 'comprender',
             'incluir', 'accesible', 'familia', 'aprender', 'crecer',
             'colaborar', 'juntos', 'diversidad', 'respeto', 'empatía',
-            'cuidar', 'proteger', 'sanar', 'transformar', 'evolucionar'
+            'cuidar', 'proteger', 'sanar', 'transformar', 'evolucionar',
+            'necesito', 'busco', 'quiero', 'siento', 'espero'
         ];
         
         intencion.addEventListener('input', function(e) {
@@ -130,17 +209,29 @@
                 const tieneAutenticidad = texto.length > 8 && 
                                         !texto.includes('test') && 
                                         !texto.includes('hola') &&
+                                        !texto.includes('demo') &&
                                         texto.split(' ').length > 1;
                 
                 if (tieneResonancia || tieneAutenticidad) {
-                    activarSecuencia();
+                    activarSecuencia(texto);
                 }
             }
         });
         
-        function activarSecuencia() {
+        function activarSecuencia(textoIntencion) {
             if (secuenciaIniciada) return;
             secuenciaIniciada = true;
+            
+            // Registrar momento ritual
+            const momentoRitual = {
+                timestamp: new Date().toISOString(),
+                intencion: textoIntencion,
+                navegador: navigator.userAgent,
+                resolucion: `${window.innerWidth}x${window.innerHeight}`,
+                ritual_completado: true
+            };
+            
+            localStorage.setItem('cora_umbral_cruzado', JSON.stringify(momentoRitual));
             
             // Vibración sutil
             document.body.classList.add('vibrar');
@@ -157,14 +248,6 @@
                     
                     setTimeout(() => {
                         cuestionamiento.style.opacity = '1';
-                        
-                        // Registrar momento ritual
-                        localStorage.setItem('cora_umbral_cruzado', JSON.stringify({
-                            momento: new Date().toISOString(),
-                            intencion: intencion.value,
-                            ritual_completado: true
-                        }));
-                        
                     }, 1500);
                 }, 600);
             }, 300);
@@ -172,19 +255,34 @@
         
         // Transición al ecosistema
         punto.addEventListener('click', function() {
-            if (secuenciaIniciada) {
+            if (secuenciaIniciada && !ecosistemaRevelado) {
+                ecosistemaRevelado = true;
+                
+                // Transición de fondo
                 document.body.style.background = 'linear-gradient(135deg, #0f4c81 0%, #1a365d 100%)';
                 
                 setTimeout(() => {
-                    // Aquí se conectaría con el ecosistema completo
-                    alert('🌱 Bienvenido al ecosistema CO•RA\n\nConciencia + Raíz\nDonde la IA no sustituye, sino acompaña');
-                }, 2000);
+                    // Ocultar umbral
+                    umbral.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        // Mostrar ecosistema
+                        ecosistema.style.opacity = '1';
+                        document.body.style.cursor = 'default';
+                    }, 1000);
+                }, 1000);
             }
         });
         
         // Prevenir disrupciones del ritual
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('selectstart', e => e.preventDefault());
+        
+        // Debug para desarrolladores
+        window.cora_debug = () => {
+            const ritual = localStorage.getItem('cora_umbral_cruzado');
+            console.log('🌱 Estado del ritual CO•RA:', ritual ? JSON.parse(ritual) : 'No iniciado');
+        };
     </script>
 </body>
 </html>

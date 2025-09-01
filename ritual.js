@@ -38,6 +38,9 @@ function activarSecuencia(textoIntencion) {
     if (secuenciaIniciada) return;
     secuenciaIniciada = true;
     
+    // Registrar escritura en sistema de constancia
+    window.constanciaRitual.registrarEscritura(textoIntencion);
+    
     // Registrar en bitácora silenciosa
     window.bitacora.registrarUmbral(textoIntencion);
     
@@ -68,9 +71,17 @@ function activarSecuencia(textoIntencion) {
 
 punto.addEventListener('click', function() {
     if (secuenciaIniciada) {
+        const constancia = window.constanciaRitual.evaluarConstancia();
+        
         punto.style.transform = 'translate(-50%, -50%) scale(0)';
         setTimeout(() => {
-            cuestionamiento.innerHTML = 'Ahora sabes dónde mirar.';
+            if (constancia.nivel === 'habitante_constante') {
+                cuestionamiento.innerHTML = 'La constancia te ha preparado. Ahora sabes dónde mirar.';
+            } else if (constancia.nivel === 'presencia_sostenida') {
+                cuestionamiento.innerHTML = 'Tu presencia se sostiene. Ahora sabes dónde mirar.';
+            } else {
+                cuestionamiento.innerHTML = 'Ahora sabes dónde mirar.';
+            }
         }, 1000);
     }
 });

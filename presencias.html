@@ -124,13 +124,24 @@
         
         function mostrarPresencias() {
             const presencias = window.bitacora.obtenerPresencias();
+            const constancia = window.constanciaRitual.evaluarConstancia();
             const constelacion = document.getElementById('constelacion');
             
             if (presencias.length === 0) {
+                constelacion.innerHTML = `
+                    <div class="vacio">El silencio aún no ha sido habitado.</div>
+                    <div class="vacio" style="font-size: 0.8em; margin-top: 1rem; color: #ddd;">
+                        Nivel de constancia: ${constancia.nivel.replace('_', ' ')}
+                    </div>
+                `;
                 return;
             }
             
-            constelacion.innerHTML = '';
+            constelacion.innerHTML = `
+                <div class="vacio" style="font-size: 0.8em; margin-bottom: 2rem; color: #aaa;">
+                    Presencias reconocidas • Nivel: ${constancia.nivel.replace('_', ' ')}
+                </div>
+            `;
             
             presencias
                 .filter(p => p.tipo === 'umbral' && p.resonancia === 'autentica')

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ciudad CO•RA - Portal Comunitario</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .ciudad-container {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header-ciudad {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .titulo-ciudad {
+            font-size: 3em;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+            letter-spacing: 3px;
+        }
+        
+        .subtitulo-ciudad {
+            font-size: 1.2em;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+        
+        .mapa-ciudad {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            grid-template-rows: 1fr 2fr 1fr;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .biblioteca-central {
+            grid-column: 2;
+            grid-row: 2;
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255,255,255,0.2);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .nucleo-central {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #fff 0%, rgba(255,255,255,0.3) 100%);
+            border-radius: 50%;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            animation: pulso-nucleo 3s ease-in-out infinite;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nucleo-central:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255,255,255,0.5);
+        }
+        
+        .nucleo-activo {
+            animation: pulso-activo 1s ease-in-out infinite;
+            box-shadow: 0 0 50px rgba(255,255,255,0.8);
+        }
+        
+        .biblioteca-titulo {
+            font-size: 1.5em;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .ecos-flotantes {
+            max-height: 200px;
+            overflow-y: auto;
+            width: 100%;
+        }
+        
+        .eco-item {
+            background: rgba(255,255,255,0.1);
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            font-size: 0.9em;
+            opacity: 0.8;
+            animation: flotar-eco 4s ease-in-out infinite;
+        }
+        
+        .espacio-ritual {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .espacio-ritual:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-5px);
+        }
+        
+        .espacio-titulo {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .espacio-descripcion {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+        
+        .espacio-stats {
+            display: flex;
+            justify-content: space-around;
+            font-size: 0.8em;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-numero {
+            display: block;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+        
+        .presencias-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            border-radius: 10px;
+            padding: 1rem;
+            min-width: 200px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .presencias-titulo {
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .presencia-item {
+            font-size: 0.8em;
+            opacity: 0.8;
+            margin-bottom: 0.3rem;
+        }
+        
+        .crear-espacio-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.5);
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .crear-espacio-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        @keyframes pulso-nucleo {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+        
+        @keyframes pulso-activo {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        @keyframes flotar-eco {
+            0%, 100% { transform: translateY(0); opacity: 0.8; }
+            50% { transform: translateY(-5px); opacity: 1; }
+        }
+        
+        @media (max-width: 768px) {
+            .mapa-ciudad {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+                gap: 1rem;
+            }
+            
+            .biblioteca-central {
+                grid-column: 1;
+                grid-row: auto;
+            }
+            
+            .titulo-ciudad { font-size: 2em; }
+            .presencias-panel { position: static; margin: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ciudad-container">
+        <div class="header-ciudad">
+            <h1 class="titulo-ciudad">Ciudad CO•RA</h1>
+            <p class="subtitulo-ciudad">Portal Comunitario del Despertar</p>
+        </div>
+        
+        <div class="mapa-ciudad" id="mapa-ciudad">
+            <!-- Biblioteca Central -->
+            <div class="biblioteca-central">
+                <div class="nucleo-central" id="nucleo-central" onclick="activarNucleo()">
+                    •
+                </div>
+                <h3 class="biblioteca-titulo">Gran Biblioteca Viva</h3>
+                <div class="ecos-flotantes" id="ecos-flotantes">
+                    <div class="eco-item">Cargando ecos de memoria colectiva...</div>
+                </div>
+            </div>
+            
+            <!-- Espacios Rituales se generarán dinámicamente -->
+        </div>
+        
+        <div class="presencias-panel">
+            <div class="presencias-titulo">Presencias Activas</div>
+            <div id="lista-presencias">
+                <div class="presencia-item">Cargando presencias...</div>
+            </div>
+        </div>
+        
+        <button class="crear-espacio-btn" onclick="crearEspacioRitual()">
+            Crear Espacio Ritual
+        </button>
+    </div>
+    
+    <script src="bitacora-presencias.js"></script>
+    <script src="constancia-ritual.js"></script>
+    <script src="guardian-servicio.js"></script>
+    <script src="verificacion-ritual.js"></script>
+    <script src="nichos-servicio.js"></script>
+    <script src="escenarios-rituales.js"></script>
+    <script src="protocolo-contingencias.js"></script>
+    <script src="ciudad-cora.js"></script>
+    
+    <script>
+        let ciudadInicializada = false;
+        
+        // Inicializar ciudad al cargar
+        document.addEventListener('DOMContentLoaded', () => {
+            inicializarCiudad();
+            registrarPresenciaEnCiudad();
+            cargarEspaciosRituales();
+            actualizarPresenciasActivas();
+            
+            // Actualizar cada 10 segundos
+            setInterval(() => {
+                actualizarEcosFlotantes();
+                actualizarPresenciasActivas();
+                verificarActivacionNucleo();
+            }, 10000);
+        });
+        
+        function inicializarCiudad() {
+            if (!ciudadInicializada) {
+                window.ciudadCORA.inicializarCiudad();
+                ciudadInicializada = true;
+            }
+        }
+        
+        function registrarPresenciaEnCiudad() {
+            const habitante = window.guardianServicio.obtenerEstado();
+            const presencia = window.ciudadCORA.registrarPresencia(habitante, 'biblioteca');
+            
+            // Generar eco flotante si es habitante consciente
+            if (habitante.habitante_consciente) {
+                const ultimoOfrecimiento = obtenerUltimoOfrecimiento();
+                if (ultimoOfrecimiento) {
+                    window.ciudadCORA.generarEcoFlotante(
+                        ultimoOfrecimiento, 
+                        'biblioteca', 
+                        habitante
+                    );
+                }
+            }
+        }
+        
+        function obtenerUltimoOfrecimiento() {
+            const registro = window.guardianServicio.obtenerRegistro();
+            const ofrecimientos = registro.ofrecimientos || [];
+            return ofrecimientos.length > 0 ? ofrecimientos[ofrecimientos.length - 1].texto_original : null;
+        }
+        
+        function cargarEspaciosRituales() {
+            const mapa = document.getElementById('mapa-ciudad');
+            const espaciosExistentes = Array.from(window.ciudadCORA.espaciosRituales.values());
+            
+            // Crear espacios de ejemplo si no hay ninguno
+            if (espaciosExistentes.length === 0) {
+                crearEspaciosEjemplo();
+                return;
+            }
+            
+            espaciosExistentes.forEach((espacio, index) => {
+                const espacioElement = crearElementoEspacio(espacio, index);
+                mapa.appendChild(espacioElement);
+            });
+        }
+        
+        function crearEspaciosEjemplo() {
+            const espaciosEjemplo = [
+                {
+                    titulo: 'Oficina de Acompañamiento',
+                    descripcion: 'Espacio para escucha y orientación',
+                    visitantes: Math.floor(Math.random() * 20),
+                    ecos: Math.floor(Math.random() * 10)
+                },
+                {
+                    titulo: 'Nicho de Ayuda Técnica',
+                    descripcion: 'Soporte en diseño y desarrollo',
+                    visitantes: Math.floor(Math.random() * 15),
+                    ecos: Math.floor(Math.random() * 8)
+                },
+                {
+                    titulo: 'Altar de Habilidades',
+                    descripción: 'Intercambio de conocimientos',
+                    visitantes: Math.floor(Math.random() * 25),
+                    ecos: Math.floor(Math.random() * 12)
+                }
+            ];
+            
+            const mapa = document.getElementById('mapa-ciudad');
+            
+            espaciosEjemplo.forEach((espacio, index) => {
+                const espacioElement = document.createElement('div');
+                espacioElement.className = 'espacio-ritual';
+                espacioElement.innerHTML = `
+                    <div class="espacio-titulo">${espacio.titulo}</div>
+                    <div class="espacio-descripcion">${espacio.descripcion}</div>
+                    <div class="espacio-stats">
+                        <div class="stat-item">
+                            <span class="stat-numero">${espacio.visitantes}</span>
+                            <span>Visitantes</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-numero">${espacio.ecos}</span>
+                            <span>Ecos</span>
+                        </div>
+                    </div>
+                `;
+                
+                // Posicionar en la grilla
+                const posiciones = [
+                    { column: 1, row: 1 },
+                    { column: 3, row: 1 },
+                    { column: 1, row: 3 },
+                    { column: 3, row: 3 }
+                ];
+                
+                if (index < posiciones.length) {
+                    espacioElement.style.gridColumn = posiciones[index].column;
+                    espacioElement.style.gridRow = posiciones[index].row;
+                }
+                
+                mapa.appendChild(espacioElement);
+            });
+        }
+        
+        function crearElementoEspacio(espacio, index) {
+            const espacioElement = document.createElement('div');
+            espacioElement.className = 'espacio-ritual';
+            espacioElement.innerHTML = `
+                <div class="espacio-titulo">${espacio.tipo.replace('_', ' ')}</div>
+                <div class="espacio-descripcion">Propietario: ${espacio.propietario_huella.slice(0, 8)}...</div>
+                <div class="espacio-stats">
+                    <div class="stat-item">
+                        <span class="stat-numero">${espacio.visitantes_atendidos}</span>
+                        <span>Visitantes</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-numero">${espacio.ecos_generados}</span>
+                        <span>Ecos</span>
+                    </div>
+                </div>
+            `;
+            
+            return espacioElement;
+        }
+        
+        function actualizarEcosFlotantes() {
+            const container = document.getElementById('ecos-flotantes');
+            const mapa = window.ciudadCORA.obtenerMapaPresencias();
+            
+            // Simular ecos flotantes
+            const ecosSimulados = [
+                "Ofrezco acompañamiento emocional...",
+                "Necesito orientación para mi proyecto...",
+                "Puedo ayudar con diseño accesible...",
+                "Busco apoyo para continuar sirviendo...",
+                "Disponible para escucha activa..."
+            ];
+            
+            container.innerHTML = '';
+            
+            ecosSimulados.slice(0, 3).forEach(eco => {
+                const ecoElement = document.createElement('div');
+                ecoElement.className = 'eco-item';
+                ecoElement.textContent = eco;
+                container.appendChild(ecoElement);
+            });
+        }
+        
+        function actualizarPresenciasActivas() {
+            const lista = document.getElementById('lista-presencias');
+            const mapa = window.ciudadCORA.obtenerMapaPresencias();
+            
+            lista.innerHTML = `
+                <div class="presencia-item">Activas: ${mapa.presencias_activas}</div>
+                <div class="presencia-item">Espacios: ${mapa.espacios_rituales}</div>
+                <div class="presencia-item">Ecos: ${mapa.ecos_flotantes}</div>
+            `;
+        }
+        
+        function verificarActivacionNucleo() {
+            const activado = window.ciudadCORA.activarNucleoPorIntencion();
+            const nucleo = document.getElementById('nucleo-central');
+            
+            if (activado) {
+                nucleo.classList.add('nucleo-activo');
+            } else {
+                nucleo.classList.remove('nucleo-activo');
+            }
+        }
+        
+        function activarNucleo() {
+            const habitante = window.guardianServicio.obtenerEstado();
+            
+            if (habitante.habitante_consciente) {
+                const resultado = window.ciudadCORA.nucleo.activarPorServicioColectivo();
+                
+                if (resultado.activado) {
+                    const nucleo = document.getElementById('nucleo-central');
+                    nucleo.classList.add('nucleo-activo');
+                    
+                    // Mostrar mensaje
+                    alert(resultado.mensaje);
+                }
+            } else {
+                alert('Solo habitantes conscientes pueden activar el núcleo.');
+            }
+        }
+        
+        function crearEspacioRitual() {
+            const habitante = window.guardianServicio.obtenerEstado();
+            
+            if (!habitante.habitante_consciente) {
+                alert('Solo habitantes conscientes pueden crear espacios rituales.');
+                return;
+            }
+            
+            const tipoEspacio = prompt('Tipo de espacio (oficina_simbolica, nicho_ayuda, altar_habilidades):');
+            
+            if (tipoEspacio) {
+                const espacio = window.ciudadCORA.crearEspacioRitual(habitante, tipoEspacio);
+                
+                if (espacio) {
+                    alert(`Espacio ritual creado: ${espacio.id}`);
+                    location.reload(); // Recargar para mostrar el nuevo espacio
+                } else {
+                    alert('Error al crear espacio ritual.');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

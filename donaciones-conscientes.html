@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CO•RA - Donaciones Conscientes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: #333;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .titulo {
+            font-size: 2.5em;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+        
+        .subtitulo {
+            font-size: 1.1em;
+            color: #7f8c8d;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .principios {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .principio-item {
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+            position: relative;
+        }
+        
+        .principio-item::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #3498db;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        
+        .formulario-necesidad {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .campo-necesidad {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 120px;
+            margin-bottom: 1rem;
+        }
+        
+        .campo-necesidad:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        .criterios-verificacion {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-size: 0.9em;
+        }
+        
+        .criterio {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .criterio-check {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            background: #dee2e6;
+        }
+        
+        .criterio-check.cumplido {
+            background: #28a745;
+        }
+        
+        .boton-verificar {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 1rem 2rem;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .boton-verificar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.3);
+        }
+        
+        .resultado-verificacion {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .verificacion-exitosa {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .verificacion-fallida {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .coincidencias-apoyo {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            display: none;
+        }
+        
+        .coincidencia-item {
+            background: #f8f9fa;
+            border-left: 4px solid #28a745;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .compatibilidad {
+            font-weight: 600;
+            color: #28a745;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tipo-apoyo {
+            font-size: 0.9em;
+            color: #6c757d;
+            text-transform: capitalize;
+        }
+        
+        .estadisticas {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem auto;
+            max-width: 800px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .stat-numero {
+            font-size: 2em;
+            font-weight: 700;
+            color: #3498db;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="titulo">CO•RA</h1>
+        <p class="subtitulo">
+            Donaciones Conscientes - Donde cada necesidad se reconoce por su verdad, 
+            no por su exposición
+        </p>
+    </div>
+    
+    <div class="principios">
+        <h2 style="margin-bottom: 1.5rem; color: #2c3e50;">Principios de Verificación</h2>
+        <div class="principio-item">
+            <strong>Intención auténtica:</strong> ¿Buscas continuar tu servicio o sostener tu trabajo de ayuda?
+        </div>
+        <div class="principio-item">
+            <strong>Has ofrecido antes:</strong> ¿Has registrado gestos de ayuda en el ecosistema?
+        </div>
+        <div class="principio-item">
+            <strong>Vibra con verdad:</strong> ¿Tu necesidad es genuina, no solo utilidad?
+        </div>
+        <div class="principio-item">
+            <strong>Sostenido por otro:</strong> ¿Has dejado señales de apoyo a otros habitantes?
+        </div>
+    </div>
+    
+    <div class="formulario-necesidad">
+        <h3 style="margin-bottom: 1rem; color: #2c3e50;">Registrar Necesidad Real</h3>
+        <textarea 
+            class="campo-necesidad" 
+            id="campo-necesidad"
+            placeholder="Describe tu necesidad desde la verdad. Ejemplo: 'Necesito apoyo económico para continuar mi trabajo de acompañamiento a familias vulnerables...'"
+        ></textarea>
+        
+        <div class="criterios-verificacion">
+            <h4 style="margin-bottom: 0.5rem;">Criterios de Verificación:</h4>
+            <div class="criterio">
+                <div class="criterio-check" id="check-intencion"></div>
+                <span>Intención auténtica detectada</span>
+            </div>
+            <div class="criterio">
+                <div class="criterio-check" id="check-ofrecido"></div>
+                <span>Ha ofrecido antes de pedir</span>
+            </div>
+            <div class="criterio">
+                <div class="criterio-check" id="check-verdad"></div>
+                <span>Vibra con verdad genuina</span>
+            </div>
+            <div class="criterio">
+                <div class="criterio-check" id="check-sostenido"></div>
+                <span>Ha sostenido a otros</span>
+            </div>
+        </div>
+        
+        <button class="boton-verificar" onclick="verificarNecesidad()">
+            Verificar Necesidad
+        </button>
+        
+        <div class="resultado-verificacion" id="resultado-verificacion"></div>
+    </div>
+    
+    <div class="coincidencias-apoyo" id="coincidencias-apoyo">
+        <h3 style="margin-bottom: 1rem; color: #2c3e50;">Coincidencias de Apoyo Encontradas</h3>
+        <div id="lista-coincidencias"></div>
+    </div>
+    
+    <div class="estadisticas">
+        <div class="stat-card">
+            <span class="stat-numero" id="necesidades-verificadas">0</span>
+            <span class="stat-label">Necesidades Verificadas</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-numero" id="coincidencias-encontradas">0</span>
+            <span class="stat-label">Coincidencias de Apoyo</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-numero" id="distribuciones-realizadas">0</span>
+            <span class="stat-label">Distribuciones Realizadas</span>
+        </div>
+    </div>
+    
+    <script src="bitacora-presencias.js"></script>
+    <script src="constancia-ritual.js"></script>
+    <script src="guardian-servicio.js"></script>
+    <script src="verificacion-ritual.js"></script>
+    <script src="nichos-servicio.js"></script>
+    <script src="escenarios-rituales.js"></script>
+    
+    <script>
+        let moduloDonaciones;
+        
+        // Inicializar módulo de donaciones
+        document.addEventListener('DOMContentLoaded', () => {
+            moduloDonaciones = window.escenariosRituales.activarDonacionesConscientes();
+            actualizarEstadisticas();
+            
+            // Actualizar criterios en tiempo real
+            document.getElementById('campo-necesidad').addEventListener('input', actualizarCriterios);
+        });
+        
+        function actualizarCriterios() {
+            const necesidad = document.getElementById('campo-necesidad').value;
+            const habitante = window.guardianServicio.obtenerEstado();
+            
+            // Verificar cada criterio
+            const intencionAutentica = window.escenariosRituales.verificarIntencionAutentica(necesidad);
+            const haOfrecido = habitante.ofrecimientos_verificados > 0;
+            const vibraVerdad = window.escenariosRituales.evaluarVerdadNecesidad(necesidad);
+            const haSostenido = habitante.señales_dejadas > 0;
+            
+            // Actualizar indicadores visuales
+            document.getElementById('check-intencion').className = 
+                `criterio-check ${intencionAutentica ? 'cumplido' : ''}`;
+            document.getElementById('check-ofrecido').className = 
+                `criterio-check ${haOfrecido ? 'cumplido' : ''}`;
+            document.getElementById('check-verdad').className = 
+                `criterio-check ${vibraVerdad ? 'cumplido' : ''}`;
+            document.getElementById('check-sostenido').className = 
+                `criterio-check ${haSostenido ? 'cumplido' : ''}`;
+        }
+        
+        function verificarNecesidad() {
+            const necesidad = document.getElementById('campo-necesidad').value.trim();
+            const habitante = window.guardianServicio.obtenerEstado();
+            
+            if (!necesidad) {
+                mostrarResultado('Por favor, describe tu necesidad.', false);
+                return;
+            }
+            
+            // Verificar necesidad real
+            const verificacion = moduloDonaciones.verificarNecesidadReal(necesidad, habitante);
+            
+            if (verificacion.verificada) {
+                // Registrar necesidad
+                const registro = moduloDonaciones.registrarNecesidadReal(necesidad, verificacion);
+                
+                if (registro) {
+                    mostrarResultado(
+                        `Necesidad verificada y registrada. Huella: ${registro.huella}`, 
+                        true
+                    );
+                    
+                    // Buscar coincidencias de apoyo
+                    buscarCoincidenciasApoyo(necesidad);
+                }
+            } else {
+                mostrarResultado(
+                    'La necesidad no cumple los criterios de verificación ritual. ' +
+                    'Asegúrate de haber ofrecido ayuda antes y de expresar una necesidad genuina.',
+                    false
+                );
+            }
+        }
+        
+        function buscarCoincidenciasApoyo(necesidad) {
+            const coincidencias = moduloDonaciones.buscarCoincidenciasApoyo(necesidad);
+            
+            if (coincidencias.length > 0) {
+                mostrarCoincidencias(coincidencias);
+            }
+        }
+        
+        function mostrarResultado(mensaje, exitoso) {
+            const resultado = document.getElementById('resultado-verificacion');
+            resultado.className = `resultado-verificacion ${exitoso ? 'verificacion-exitosa' : 'verificacion-fallida'}`;
+            resultado.textContent = mensaje;
+            resultado.style.display = 'block';
+        }
+        
+        function mostrarCoincidencias(coincidencias) {
+            const container = document.getElementById('coincidencias-apoyo');
+            const lista = document.getElementById('lista-coincidencias');
+            
+            lista.innerHTML = '';
+            
+            coincidencias.forEach(coincidencia => {
+                const item = document.createElement('div');
+                item.className = 'coincidencia-item';
+                item.innerHTML = `
+                    <div class="compatibilidad">
+                        Compatibilidad: ${(coincidencia.compatibilidad * 100).toFixed(0)}%
+                    </div>
+                    <div class="tipo-apoyo">
+                        Tipo de apoyo: ${coincidencia.tipo_apoyo}
+                    </div>
+                    <div style="margin-top: 0.5rem; font-size: 0.9em; color: #495057;">
+                        Oferente: ${coincidencia.oferente_huella}
+                    </div>
+                `;
+                lista.appendChild(item);
+            });
+            
+            container.style.display = 'block';
+        }
+        
+        function actualizarEstadisticas() {
+            const estadisticas = window.escenariosRituales.obtenerEstadisticasImpacto();
+            
+            document.getElementById('necesidades-verificadas').textContent = 
+                estadisticas.donaciones_verificadas || 0;
+            document.getElementById('coincidencias-encontradas').textContent = 
+                Math.floor(Math.random() * 10); // Simulado
+            document.getElementById('distribuciones-realizadas').textContent = 
+                estadisticas.activaciones_totales || 0;
+        }
+    </script>
+</body>
+</html>

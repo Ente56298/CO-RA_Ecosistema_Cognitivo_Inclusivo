@@ -16,6 +16,11 @@ const palabrasResonantes = [
 intencion.addEventListener('input', function(e) {
     const texto = e.target.value.toLowerCase().trim();
     
+    // Modo servicio activo
+    if (window.modoServicio) {
+        return; // El manejo se hace en el submit
+    }
+    
     if (texto.length > 4 && !secuenciaIniciada) {
         const tieneResonancia = palabrasResonantes.some(palabra => 
             texto.includes(palabra)
@@ -33,6 +38,41 @@ intencion.addEventListener('input', function(e) {
         }
     }
 });
+
+// Manejar diálogo de servicio
+intencion.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' && window.modoServicio) {
+        e.preventDefault();
+        const texto = e.target.value.trim();
+        if (texto) {
+            procesarDialogoServicio(texto);
+        }
+    }
+});
+
+function procesarDialogoServicio(texto) {
+    const guardian = window.guardianServicio;
+    let respuesta;
+    
+    if (guardian.fase === 'inicial') {
+        respuesta = guardian.procesarOfrecimiento(texto);
+    } else if (guardian.fase === 'necesidad') {
+        respuesta = guardian.procesarNecesidad(texto);
+    }
+    
+    // Mostrar respuesta del guardián
+    cuestionamiento.innerHTML = respuesta;
+    
+    // Limpiar campo
+    intencion.value = "";
+    
+    // Actualizar placeholder según fase
+    if (guardian.fase === 'necesidad') {
+        intencion.placeholder = "Escribe tu necesidad...";
+    } else {
+        intencion.placeholder = "Continúa el diálogo...";
+    }
+}
 
 function activarSecuencia(textoIntencion) {
     if (secuenciaIniciada) return;
@@ -75,20 +115,18 @@ punto.addEventListener('click', function() {
         
         punto.style.transform = 'translate(-50%, -50%) scale(0)';
         setTimeout(() => {
-            if (constancia.nivel === 'habitante_constante') {
-                cuestionamiento.innerHTML = 'La constancia te ha preparado. Ahora sabes dónde mirar.';
-            } else if (constancia.nivel === 'presencia_sostenida') {
-                cuestionamiento.innerHTML = 'Tu presencia se sostiene. Ahora sabes dónde mirar.';
-            } else {
-                cuestionamiento.innerHTML = 'Ahora sabes dónde mirar.';
-            }
+            // Activar Guardián del Servicio Consciente
+            const guardianMensaje = window.guardianServicio.iniciarDialogo();
+            cuestionamiento.innerHTML = guardianMensaje;
             
-            // Mostrar invitación de pertenencia después del reconocimiento
-            setTimeout(() => {
-                if (window.pertenenciaConsciente && !window.pertenenciaConsciente.esHabitanteReconocido()) {
-                    window.pertenenciaConsciente.mostrarInvitacionPertenencia();
-                }
-            }, 3000);
+            // Cambiar el campo de entrada para el diálogo de servicio
+            intencion.placeholder = "Escribe tu ofrecimiento...";
+            intencion.value = "";
+            intencion.style.caretColor = "";
+            intencion.disabled = false;
+            
+            // Activar modo servicio
+            window.modoServicio = true;
         }, 1000);
     }
 });

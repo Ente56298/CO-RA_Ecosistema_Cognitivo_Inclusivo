@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>•</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #f8f8f8;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            cursor: none;
+            transition: background 3s ease;
+        }
+        
+        .preparacion {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            opacity: 0;
+            animation: resonancia 3s ease-in-out forwards;
+        }
+        
+        .invitacion {
+            color: #666;
+            font-size: 1.1em;
+            font-weight: 300;
+            letter-spacing: 0.8px;
+            line-height: 1.6;
+        }
+        
+        @keyframes resonancia {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+            30% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            70% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.05); }
+        }
+        
+        .transicion {
+            background: #ffffff !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="preparacion">
+        <div class="invitacion">
+            Si estás listo, entra.<br>
+            Pero no esperes nada.
+        </div>
+    </div>
+    
+    <script src="bitacora-presencias.js"></script>
+    <script>
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('selectstart', e => e.preventDefault());
+        
+        // Registrar presencia en preludio
+        window.bitacora.registrarPreludio();
+        
+        setTimeout(() => {
+            document.body.classList.add('transicion');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        }, 3000);
+    </script>
+</body>
+</html>

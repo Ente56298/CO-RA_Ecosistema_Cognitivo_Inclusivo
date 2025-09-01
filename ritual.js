@@ -38,6 +38,9 @@ function activarSecuencia(textoIntencion) {
     if (secuenciaIniciada) return;
     secuenciaIniciada = true;
     
+    // Registrar en bitácora silenciosa
+    window.bitacora.registrarUmbral(textoIntencion);
+    
     localStorage.setItem('cora_umbral_cruzado', JSON.stringify({
         timestamp: new Date().toISOString(),
         intencion: textoIntencion,

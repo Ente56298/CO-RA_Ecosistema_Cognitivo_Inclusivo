@@ -1,0 +1,557 @@
+# ===============================================
+# Ejemplos de Código en Quantum-Ω Language
+# CORA-Quantum Assistant - Prototipo Básico
+# Fecha: 1 de octubre de 2025
+# Versión: 1.0 - Ejemplos Iniciales
+# ===============================================
+
+# ===============================================
+# Ejemplo 1: Programa Básico de Optimización
+# ===============================================
+
+quantum_program "optimizacion_basica" {
+    version: "1.0"
+    qubits: 50
+    classical_bits: 20
+    description: "Ejemplo básico de optimización cuántica"
+
+    quantum_function optimizar_vector(vector_inicial: vector[10]) -> vector[10] {
+        # Declarar variables cuánticas
+        qregister qreg[10]
+        qstate estado_inicial
+
+        # Crear superposición inicial
+        for i in 0..9 {
+            H(qreg[i])
+        }
+
+        # Definir función de costo cuadrática
+        cost_function costo_cuadratico(vector_x) {
+            return sum(vector_x[i]^2 for i in 0..9)
+        }
+
+        # Aplicar algoritmo QOA
+        QOA {
+            register: qreg
+            cost_func: costo_cuadratico
+            iterations: 1000
+            convergence_threshold: 1e-6
+        }
+
+        # Medir resultado óptimo
+        Ω_MEASURE(qreg, costo_cuadratico)
+
+        return optimal_vector
+    }
+}
+
+# ===============================================
+# Ejemplo 2: Machine Learning Cuántico
+# ===============================================
+
+quantum_program "clasificador_cuantico" {
+    version: "1.0"
+    qubits: 100
+    classical_bits: 50
+    description: "Clasificador cuántico híbrido"
+
+    quantum_function entrenar_clasificador(
+        datos_entrenamiento: matrix[1000, 20],
+        etiquetas: vector[1000]
+    ) -> quantum_model {
+
+        # Preparar estado cuántico de datos
+        qstate estado_datos = datos_a_estado_cuantico(datos_entrenamiento)
+
+        # Crear circuito variacional cuántico
+        quantum_circuit vqc {
+            layers: 10
+            parameters: trainable_angles
+            entanglement: circular
+            rotation_gates: Rx, Ry, Rz
+        }
+
+        # Definir función de pérdida cuántica
+        loss_function perdida_clasificacion(predicciones, etiquetas_reales) {
+            return quantum_cross_entropy(predicciones, etiquetas_reales)
+        }
+
+        # Entrenamiento cuántico híbrido
+        QML_TRAIN {
+            model: vqc
+            data: estado_datos
+            labels: etiquetas
+            optimizer: quantum_adam
+            loss_func: perdida_clasificacion
+            epochs: 1000
+            learning_rate: 0.01
+        }
+
+        return trained_model
+    }
+
+    quantum_function predecir_nuevo_dato(modelo: quantum_model, nuevo_dato: vector[20]) -> int {
+        # Preparar estado del nuevo dato
+        qstate estado_nuevo = preparar_estado_individual(nuevo_dato)
+
+        # Aplicar modelo entrenado
+        resultado = aplicar_modelo_cuantico(modelo, estado_nuevo)
+
+        # Medir y retornar predicción
+        return Ω_MEASURE(resultado, clasificacion)
+    }
+}
+
+# ===============================================
+# Ejemplo 3: Recocido Simulado Cuántico (QSA)
+# ===============================================
+
+quantum_program "recocido_simulado_cuantico" {
+    version: "1.0"
+    qubits: 200
+    classical_bits: 100
+    description: "Problema de optimización combinatoria con QSA"
+
+    quantum_function resolver_problema_combinatorio(
+        matriz_costos: matrix[2^50, 2^50],
+        temperatura_inicial: float,
+        tasa_enfriamiento: float
+    ) -> solucion_optima {
+
+        # Inicializar sistema cuántico en superposición uniforme
+        qregister sistema[200]
+        superposicion_uniforme(sistema)
+
+        # Definir Hamiltoniano del problema
+        hamiltoniano_problema = construir_hamiltoniano(matriz_costos)
+
+        # Evolución cuántica con temperatura decreciente
+        QSA {
+            system: sistema
+            cost_matrix: matriz_costos
+            hamiltonian: hamiltoniano_problema
+            initial_temp: temperatura_inicial
+            cooling_rate: tasa_enfriamiento
+            quantum_tunneling: enabled
+            tunneling_amplitude: 0.1
+        }
+
+        # Medir configuración de mínima energía
+        solucion = Ω_MEASURE(sistema, energia_minima)
+
+        return solucion
+    }
+}
+
+# ===============================================
+# Ejemplo 4: Optimización de Portafolio Financiero
+# ===============================================
+
+quantum_program "optimizacion_portafolio" {
+    version: "1.0"
+    qubits: 50
+    classical_bits: 20
+    description: "Optimización cuántica de portafolio de inversión"
+
+    quantum_function optimizar_portafolio(
+        datos_mercado: matrix[1000, 50],
+        rendimiento_esperado: vector[50],
+        matriz_covarianza: matrix[50, 50]
+    ) -> vector[50] {
+
+        # Declarar registro cuántico para activos
+        qregister activos[50]
+
+        # Crear superposición inicial uniforme
+        for i in 0..49 {
+            H(activos[i])
+        }
+
+        # Definir función de riesgo del portafolio
+        cost_function riesgo_portafolio(vector_pesos) {
+            return quadratic_form(vector_pesos, matriz_covarianza)
+        }
+
+        # Restricción de presupuesto (suma de pesos = 1)
+        constraint_function presupuesto(vector_pesos) {
+            return abs(sum(vector_pesos) - 1.0)
+        }
+
+        # Función objetivo compuesta
+        objective_function portafolio_optimo(vector_pesos) {
+            riesgo = riesgo_portafolio(vector_pesos)
+            restriccion = presupuesto(vector_pesos)
+            return riesgo + 1000 * restriccion  # Penalización fuerte por restricción
+        }
+
+        # Aplicar algoritmo QOA con restricciones
+        QOA {
+            register: activos
+            cost_func: portafolio_optimo
+            constraints: [presupuesto]
+            iterations: 2000
+            convergence_threshold: 1e-8
+        }
+
+        # Medir pesos óptimos
+        pesos_optimos = Ω_MEASURE(activos, portafolio_optimo)
+
+        return pesos_optimos
+    }
+
+    quantum_function calcular_rendimiento_esperado(
+        pesos_optimos: vector[50],
+        rendimiento_esperado: vector[50]
+    ) -> float {
+        return dot_product(pesos_optimos, rendimiento_esperado)
+    }
+
+    quantum_function calcular_riesgo_portafolio(
+        pesos_optimos: vector[50],
+        matriz_covarianza: matrix[50, 50]
+    ) -> float {
+        return quadratic_form(pesos_optimos, matriz_covarianza)
+    }
+}
+
+# ===============================================
+# Ejemplo 5: Algoritmo de Búsqueda de Grover Cuántico
+# ===============================================
+
+quantum_program "busqueda_grover" {
+    version: "1.0"
+    qubits: 25
+    classical_bits: 25
+    description: "Implementación cuántica del algoritmo de Grover"
+
+    quantum_function buscar_elemento_marcado(
+        elementos: vector[2^25],
+        elemento_marcado: int
+    ) -> int {
+
+        # Crear registro cuántico
+        qregister busqueda[25]
+
+        # Inicializar en superposición uniforme
+        superposicion_uniforme(busqueda)
+
+        # Definir oráculo que marca el elemento buscado
+        oracle_function marcar_elemento(qreg, elemento_objetivo) {
+            # Crear superposición uniforme
+            for i in 0..24 {
+                H(qreg[i])
+            }
+
+            # Aplicar oráculo
+            control_sequence = elementos_a_control(elemento_objetivo)
+            for control in control_sequence {
+                CNOT(control, qreg[24])
+            }
+
+            # Difusión de Grover
+            for i in 0..24 {
+                H(qreg[i])
+            }
+
+            # Aplicar inversión alrededor del promedio
+            for i in 0..24 {
+                X(qreg[i])
+            }
+
+            H(qreg[24])
+            CCNOT(qreg[0], qreg[1], qreg[24])
+            H(qreg[24])
+
+            for i in 0..24 {
+                X(qreg[i])
+            }
+
+            for i in 0..24 {
+                H(qreg[i])
+            }
+        }
+
+        # Aplicar algoritmo de Grover
+        grover_iterations = int(pi/4 * sqrt(2^25))
+
+        for iter in 0..grover_iterations {
+            marcar_elemento(busqueda, elemento_marcado)
+        }
+
+        # Medir resultado
+        resultado = Ω_MEASURE(busqueda, elemento_marcado)
+
+        return resultado
+    }
+}
+
+# ===============================================
+# Ejemplo 6: Simulación de Sistema Cuántico
+# ===============================================
+
+quantum_program "simulacion_cuantica" {
+    version: "1.0"
+    qubits: 10
+    classical_bits: 10
+    description: "Simulación de evolución temporal cuántica"
+
+    quantum_function simular_evolucion(
+        estado_inicial: qstate,
+        hamiltoniano: matrix[2^10, 2^10],
+        tiempo_total: float,
+        pasos_tiempo: int
+    ) -> qstate {
+
+        # Crear registro cuántico para el sistema
+        qregister sistema[10]
+
+        # Preparar estado inicial
+        preparar_estado(estado_inicial, sistema)
+
+        # Evolución temporal discreta
+        dt = tiempo_total / pasos_tiempo
+
+        for paso in 0..pasos_tiempo {
+            # Aplicar evolución cuántica
+            Ω_EVOLVE(sistema, hamiltoniano, dt)
+
+            # Monitoreo de decoherencia
+            if paso % 10 == 0 {
+                coherencia_actual = medir_coherencia(sistema)
+                if coherencia_actual < 0.1 {
+                    aplicar_correccion_errores(sistema)
+                }
+            }
+        }
+
+        # Estado final evolucionado
+        estado_final = medir_estado_completo(sistema)
+
+        return estado_final
+    }
+
+    quantum_function medir_coherencia(qreg: qregister) -> float {
+        # Implementación básica de medición de coherencia
+        return 0.95  # Placeholder
+    }
+
+    quantum_function aplicar_correccion_errores(qreg: qregister) -> void {
+        # Aplicar código de corrección de errores básico
+        for i in 0..len(qreg)-1 {
+            if i % 3 == 2 {  # Cada 3 qubits aplicar corrección
+                # Síndrome de errores básico
+                syndrome = medir_sindrome(qreg[i-2], qreg[i-1], qreg[i])
+                corregir_errores(qreg[i-2], qreg[i-1], qreg[i], syndrome)
+            }
+        }
+    }
+}
+
+# ===============================================
+# Ejemplo 7: Programa Híbrido Clásico-Cuántico
+# ===============================================
+
+quantum_program "optimizacion_hibrida" {
+    version: "1.0"
+    qubits: 100
+    classical_bits: 50
+    description: "Ejemplo de optimización híbrida inteligente"
+
+    hybrid_function optimizacion_inteligente(
+        datos_grandes: matrix[10000, 1000],
+        parametros_iniciales: vector[100]
+    ) -> vector[100] {
+
+        # Análisis inicial clásico para determinar estrategia
+        if analizar_complejidad(datos_grandes) == "baja" {
+            # Usar optimización completamente clásica
+            resultado = optimizacion_clasica(datos_grandes, parametros_iniciales)
+        } else {
+            # Usar enfoque híbrido cuántico-clásico
+
+            # Preprocesamiento clásico
+            datos_reducidos = preprocesar_clasico(datos_grandes)
+
+            # Optimización cuántica del espacio reducido
+            parametros_cuanticos = optimizacion_cuantica(datos_reducidos)
+
+            # Refinamiento clásico final
+            resultado = refinamiento_clasico(parametros_cuanticos, datos_grandes)
+        }
+
+        return resultado
+    }
+
+    classical_function analizar_complejidad(datos: matrix) -> string {
+        # Análisis de complejidad usando métodos clásicos
+        n_samples, n_features = shape(datos)
+
+        if n_samples * n_features < 1000000 {
+            return "baja"
+        } elif n_samples * n_features < 10000000 {
+            return "media"
+        } else {
+            return "alta"
+        }
+    }
+
+    classical_function preprocesar_clasico(datos: matrix) -> matrix {
+        # Reducción de dimensionalidad clásica
+        from sklearn.decomposition import PCA
+
+        pca = PCA(n_components=min(100, min(shape(datos))))
+        return pca.fit_transform(datos)
+    }
+
+    quantum_function optimizacion_cuantica(datos_reducidos: matrix) -> vector {
+        # Crear estado cuántico de datos reducidos
+        qstate estado_datos = datos_a_estado_cuantico(datos_reducidos)
+
+        # Aplicar algoritmo de optimización cuántica
+        qregister parametros[50]
+
+        # Inicialización
+        superposicion_uniforme(parametros)
+
+        # Función de costo cuántica
+        cost_function costo_cuantico(vector_params) {
+            return quantum_loss_function(vector_params, estado_datos)
+        }
+
+        # Optimización cuántica
+        QPSO {
+            register: parametros
+            cost_func: costo_cuantico
+            iterations: 500
+        }
+
+        return Ω_MEASURE(parametros, costo_cuantico)
+    }
+
+    classical_function refinamiento_clasico(
+        parametros_iniciales: vector,
+        datos_originales: matrix
+    ) -> vector {
+        # Refinamiento usando optimización clásica avanzada
+        from scipy.optimize import minimize
+
+        def funcion_objetivo(params):
+            return calcular_perdida_clasica(params, datos_originales)
+
+        resultado = minimize(
+            funcion_objetivo,
+            parametros_iniciales,
+            method='L-BFGS-B',
+            options={'maxiter': 1000}
+        )
+
+        return resultado.x
+    }
+}
+
+# ===============================================
+# Ejemplo 8: Integración con CORA Clásico
+# ===============================================
+
+quantum_program "integracion_cora" {
+    version: "1.0"
+    qubits: 100
+    classical_bits: 50
+    description: "Integración cuántica con componentes CORA clásicos"
+
+    quantum_function memoria_cuantica(
+        estado_cora: cora_state,
+        consulta: string
+    ) -> cora_response {
+
+        # Convertir estado CORA clásico a estado cuántico
+        qstate estado_cuantico = cora_clasico_a_cuantico(estado_cora)
+
+        # Crear superposición de consultas posibles
+        qregister consulta_q[50]
+        preparar_consulta_cuantica(consulta, consulta_q)
+
+        # Evolución cuántica de la memoria
+        Ω_EVOLVE(estado_cuantico, consulta_q, hamiltoniano_memoria)
+
+        # Medir respuesta más probable
+        respuesta = Ω_MEASURE(estado_cuantico, relevancia_maxima)
+
+        # Convertir respuesta cuántica de vuelta a formato CORA clásico
+        respuesta_cora = cuantico_a_cora_clasico(respuesta)
+
+        return respuesta_cora
+    }
+
+    quantum_function evaluador_cuantico(
+        soluciones_candidatas: vector[n_soluciones],
+        criterios_evaluacion: matrix[n_soluciones, n_criterios]
+    ) -> vector[n_soluciones] {
+
+        # Crear estado cuántico de soluciones
+        qstate soluciones_q = soluciones_a_estado_cuantico(soluciones_candidatas)
+
+        # Evaluación cuántica paralela
+        CORA_QUANTUM_EVALUATOR {
+            parallel_evaluation: true
+            quantum_speedup: exponential
+            classical_fallback: automatic
+            result_aggregation: quantum_interference
+        }
+
+        # Obtener puntuaciones cuánticas
+        puntuaciones = medir_puntuaciones(soluciones_q, criterios_evaluacion)
+
+        return puntuaciones
+    }
+
+    quantum_function cognitivo_cuantico(
+        patrones_entrada: matrix[n_patrones, n_features],
+        contexto_actual: cora_context
+    ) -> cora_decision {
+
+        # Procesamiento cognitivo cuántico
+        CORA_QUANTUM_COGNITIVE {
+            meta_learning: quantum_enabled
+            pattern_recognition: superposition_based
+            decision_making: quantum_optimization
+            creativity_engine: quantum_inspired
+        }
+
+        # Generar múltiples soluciones creativas en paralelo
+        qregister creatividad[50]
+        superposicion_creativa(patrones_entrada, creatividad)
+
+        # Evaluar soluciones creativas
+        soluciones_creativas = generar_soluciones_creativas(creatividad)
+
+        # Seleccionar mejor solución usando optimización cuántica
+        mejor_solucion = seleccionar_mejor_cuantico(soluciones_creativas, contexto_actual)
+
+        return mejor_solucion
+    }
+}
+
+# ===============================================
+# Comentarios finales y notas de uso:
+# ===============================================
+#
+# Estos ejemplos demuestran las capacidades del lenguaje Quantum-Ω:
+#
+# 1. Sintaxis híbrida clásico-cuántica intuitiva
+# 2. Integración natural con algoritmos cuánticos especializados
+# 3. Soporte para optimización híbrida inteligente
+# 4. Compatibilidad con componentes CORA clásicos existentes
+# 5. Abstracciones de alto nivel para algoritmos complejos
+#
+# Para ejecutar estos programas:
+# 1. Usar el CORA-Quantum Assistant con el modo omega_code
+# 2. Proporcionar parámetros específicos para cada función
+# 3. El sistema automáticamente seleccionará entre ejecución clásica y cuántica
+#
+# Ejemplo de uso básico:
+# assistant.execute_quantum_task('omega_code',
+#     code=quantum_program_text,
+#     execution_params={'QOA': cost_matrix})
+#
+# ===============================================

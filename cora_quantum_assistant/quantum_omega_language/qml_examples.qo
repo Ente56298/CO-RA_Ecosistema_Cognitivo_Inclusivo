@@ -1,0 +1,472 @@
+# ===============================================
+# Ejemplos de QML (Quantum Machine Learning)
+# Lenguaje Quantum-Ω - CORA-Quantum Assistant
+# Fecha: 1 de octubre de 2025
+# Versión: 1.0
+# ===============================================
+
+# ===============================================
+# Ejemplo QML-1: Clasificador Cuántico Básico
+# ===============================================
+
+quantum_program "clasificador_cuantico_basico" {
+    version: "1.0"
+    qubits: 50
+    classical_bits: 25
+    description: "Clasificador cuántico híbrido básico"
+
+    quantum_function entrenar_clasificador(
+        datos_entrenamiento: matrix[n_muestras, n_caracteristicas],
+        etiquetas_entrenamiento: vector[n_muestras],
+        datos_validacion: matrix[n_validacion, n_caracteristicas],
+        etiquetas_validacion: vector[n_validacion]
+    ) -> quantum_classifier {
+
+        # Preparar estados cuánticos de datos
+        qstate estado_entrenamiento = preparar_datos_cuantico(datos_entrenamiento)
+        qstate estado_validacion = preparar_datos_cuantico(datos_validacion)
+
+        # Crear circuito variacional cuántico (VQC)
+        quantum_circuit circuito_variacional {
+            num_qubits: n_caracteristicas
+            depth: 10
+            rotation_gates: [Rx, Ry, Rz]
+            entanglement_gates: CNOT
+            entanglement_pattern: circular
+
+            # Capas variacionales parametrizadas
+            variational_layers: [
+                layer_1: [Ry(θ1), Rx(θ2)],
+                layer_2: [entangling_layer],
+                layer_3: [Rz(θ3), Ry(θ4)]
+            ]
+        }
+
+        # Definir función de pérdida cuántica
+        loss_function perdida_clasificacion(predicciones, etiquetas) {
+            # Entropía cruzada cuántica
+            return quantum_cross_entropy(predicciones, etiquetas)
+        }
+
+        # Configuración del optimizador cuántico híbrido
+        quantum_optimizer optimizador_hibrido {
+            quantum_backend: qiskit_aer
+            classical_optimizer: adam
+            learning_rate: 0.01
+            batch_size: 32
+
+            # Estrategias específicas QML
+            parameter_shift_rules: enabled
+            natural_gradient: enabled
+            quantum_backpropagation: true
+        }
+
+        # Entrenamiento cuántico híbrido
+        QML_TRAIN {
+            model: circuito_variacional
+            training_data: estado_entrenamiento
+            training_labels: etiquetas_entrenamiento
+            validation_data: estado_validacion
+            validation_labels: etiquetas_validacion
+
+            optimizer: optimizador_hibrido
+            loss_function: perdida_clasificacion
+
+            # Parámetros de entrenamiento
+            epochs: 1000
+            early_stopping: true
+            patience: 50
+
+            # Técnicas QML avanzadas
+            data_encoding: amplitude_encoding
+            measurement_strategy: expectation_value
+            noise_mitigation: readout_error_mitigation
+        }
+
+        # Evaluar rendimiento del modelo
+        accuracy_entrenamiento = evaluar_modelo(estado_entrenamiento, etiquetas_entrenamiento)
+        accuracy_validacion = evaluar_modelo(estado_validacion, etiquetas_validacion)
+
+        print(f"Accuracy entrenamiento: {accuracy_entrenamiento:.4f}")
+        print(f"Accuracy validación: {accuracy_validacion:.4f}")
+
+        return circuito_variacional
+    }
+
+    quantum_function predecir_clasificacion(
+        modelo: quantum_classifier,
+        nuevos_datos: matrix[n_nuevos, n_caracteristicas]
+    ) -> vector[n_nuevos] {
+
+        # Preparar nuevos datos
+        qstate nuevos_estado = preparar_datos_cuantico(nuevos_datos)
+
+        # Aplicar modelo entrenado
+        predicciones = aplicar_modelo_cuantico(modelo, nuevos_estado)
+
+        # Medir y retornar predicciones
+        return Ω_MEASURE_CLASSIFICATION(predicciones)
+    }
+}
+
+# ===============================================
+# Ejemplo QML-2: Regresión Cuántica
+# ===============================================
+
+quantum_program "regresion_cuantica" {
+    version: "1.0"
+    qubits: 75
+    classical_bits: 40
+    description: "Modelo de regresión cuántico híbrido"
+
+    quantum_function entrenar_regresor(
+        datos_entrenamiento: matrix[n_muestras, n_caracteristicas],
+        valores_objetivo: vector[n_muestras],
+        datos_prueba: matrix[n_prueba, n_caracteristicas],
+        valores_prueba: vector[n_prueba]
+    ) -> quantum_regressor {
+
+        # Crear estado cuántico de datos y objetivos
+        qstate datos_estado = preparar_datos_regresion(datos_entrenamiento, valores_objetivo)
+
+        # Arquitectura de regresión cuántica
+        quantum_circuit regresion_circuit {
+            data_qubits: n_caracteristicas
+            variational_qubits: 20
+            measurement_qubits: 10
+
+            # Codificación de datos cuántica
+            data_encoding: angle_encoding
+
+            # Capas variacionales profundas
+            ansatz: hardware_efficient_ansatz
+            depth: 15
+
+            # Estrategia de medición para regresión
+            measurement_strategy: expectation_value_multiple_observables
+        }
+
+        # Función de pérdida para regresión cuántica
+        loss_function perdida_regresion(predicciones, objetivos) {
+            # Error cuadrático medio cuántico
+            return quantum_mean_squared_error(predicciones, objetivos)
+        }
+
+        # Optimizador cuántico especializado para regresión
+        quantum_optimizer optimizador_regresion {
+            algorithm: quantum_natural_gradient
+            regularization: quantum_ridge_regression
+            learning_rate_schedule: exponential_decay
+        }
+
+        # Entrenamiento del modelo de regresión
+        QML_REGRESS {
+            model: regresion_circuit
+            training_data: datos_estado
+            target_values: valores_objetivo
+            test_data: datos_prueba
+            test_targets: valores_prueba
+
+            optimizer: optimizador_regresion
+            loss_function: perdida_regresion
+
+            # Parámetros específicos de regresión
+            epochs: 2000
+            convergence_threshold: 1e-6
+
+            # Técnicas avanzadas de regresión cuántica
+            kernel_alignment: enabled
+            quantum_feature_map: optimized
+        }
+
+        # Evaluar métricas de regresión
+        mse_entrenamiento = calcular_mse(estado_entrenamiento, valores_objetivo)
+        mse_prueba = calcular_mse(datos_prueba, valores_prueba)
+        r2_score = calcular_r2_score(datos_prueba, valores_prueba)
+
+        print(f"MSE entrenamiento: {mse_entrenamiento:.6f}")
+        print(f"MSE prueba: {mse_prueba:.6f}")
+        print(f"R² score: {r2_score:.4f}")
+
+        return regresion_circuit
+    }
+}
+
+# ===============================================
+# Ejemplo QML-3: Clustering Cuántico
+# ===============================================
+
+quantum_program "clustering_cuantico" {
+    version: "1.0"
+    qubits: 100
+    classical_bits: 50
+    description: "Algoritmo de clustering cuántico híbrido"
+
+    quantum_function clustering_cuantico(
+        datos: matrix[n_puntos, n_dimensiones],
+        n_clusters: int,
+        datos_visualizacion: matrix[n_viz, n_dimensiones]
+    ) -> cluster_assignment {
+
+        # Preparar estado cuántico de datos
+        qstate datos_estado = preparar_datos_clustering(datos)
+
+        # Crear centros de clusters iniciales
+        qstate centros_iniciales = inicializar_centros_cuantico(n_clusters, datos_estado)
+
+        # Circuito cuántico para clustering
+        quantum_circuit clustering_circuit {
+            data_qubits: n_dimensiones
+            centroid_qubits: n_clusters * n_dimensiones
+            assignment_qubits: calcular_qubits_asignacion(n_puntos)
+
+            # Codificación cuántica de datos y centros
+            data_encoding: basis_encoding
+            centroid_encoding: amplitude_encoding
+
+            # Circuito variacional para optimización de centros
+            variational_ansatz: real_amplitudes
+            depth: 8
+        }
+
+        # Función objetivo para clustering cuántico
+        objective_function funcion_clustering(centros, asignaciones) {
+            # Calcular distancia cuántica entre puntos y centros
+            distancia_total = 0.0
+
+            for punto in 0..n_puntos-1 {
+                distancia_minima = infinito
+
+                for centro in 0..n_clusters-1 {
+                    distancia = distancia_cuantica(punto, centro, datos, centros)
+                    distancia_minima = min(distancia_minima, distancia)
+                }
+
+                distancia_total += distancia_minima
+            }
+
+            return distancia_total
+        }
+
+        # Algoritmo de clustering cuántico
+        QML_CLUSTER {
+            circuit: clustering_circuit
+            data: datos_estado
+            initial_centroids: centros_iniciales
+            n_clusters: n_clusters
+
+            objective: funcion_clustering
+
+            # Parámetros de optimización
+            max_iterations: 1000
+            convergence_threshold: 1e-8
+
+            # Estrategias cuánticas específicas
+            quantum_distance_computation: enabled
+            superposition_clustering: true
+            entanglement_aware_assignment: true
+        }
+
+        # Asignar puntos a clusters
+        asignaciones = asignar_puntos_clusters_cuantico(datos_estado, centros_finales)
+
+        # Visualizar resultados (si hay datos de visualización)
+        if datos_visualizacion != null {
+            visualizacion_cuantica(asignaciones, datos_visualizacion)
+        }
+
+        return asignaciones
+    }
+}
+
+# ===============================================
+# Ejemplo QML-4: Redes Neuronales Cuánticas
+# ===============================================
+
+quantum_program "red_neuronal_cuantica" {
+    version: "1.0"
+    qubits: 200
+    classical_bits: 100
+    description: "Red neuronal cuántica profunda"
+
+    quantum_function entrenar_red_neuronal(
+        datos_entrenamiento: matrix[n_muestras, n_entradas],
+        etiquetas_entrenamiento: vector[n_muestras],
+        arquitectura: neural_architecture
+    ) -> quantum_neural_network {
+
+        # Crear estado cuántico de datos de entrenamiento
+        qstate datos_estado = codificar_datos_red(datos_entrenamiento)
+
+        # Arquitectura cuántica profunda
+        quantum_neural_network qnn {
+            input_layer: quantum_encoding_layer(n_entradas)
+            hidden_layers: [
+                quantum_dense_layer(100, "relu"),
+                quantum_dense_layer(50, "tanh"),
+                quantum_dense_layer(25, "sigmoid")
+            ]
+            output_layer: quantum_decoding_layer(n_salidas)
+
+            # Conexiones entrelazadas cuánticas
+            entanglement_pattern: all_to_all
+            depth: 20
+
+            # Activaciones cuánticas
+            activation_functions: [
+                quantum_relu,
+                quantum_tanh,
+                quantum_sigmoid
+            ]
+        }
+
+        # Función de pérdida cuántica profunda
+        loss_function perdida_red(predicciones, etiquetas) {
+            return quantum_categorical_crossentropy(predicciones, etiquetas)
+        }
+
+        # Optimizador cuántico avanzado
+        quantum_optimizer optimizador_qnn {
+            algorithm: quantum_adam
+            gradient_computation: parameter_shift_rule
+            hessian_calculation: quantum_natural_gradient
+
+            # Técnicas específicas para redes profundas
+            vanishing_gradient_mitigation: enabled
+            barren_plateau_avoidance: true
+            expressibility_enhancement: true
+        }
+
+        # Entrenamiento profundo cuántico
+        QML_DEEP_LEARNING {
+            network: qnn
+            training_data: datos_estado
+            training_labels: etiquetas_entrenamiento
+
+            optimizer: optimizador_qnn
+            loss_function: perdida_red
+
+            # Hiperparámetros de entrenamiento profundo
+            epochs: 5000
+            batch_size: 64
+            learning_rate: 0.001
+
+            # Técnicas avanzadas QML
+            dropout_quantum: 0.2
+            batch_normalization_quantum: enabled
+            regularization_quantum: l2_quantum
+        }
+
+        # Evaluar red neuronal cuántica
+        accuracy = evaluar_red_cuantica(qnn, datos_estado, etiquetas_entrenamiento)
+
+        print(f"Accuracy red neuronal cuántica: {accuracy:.4f}")
+
+        return qnn
+    }
+}
+
+# ===============================================
+# Ejemplo QML-5: Transfer Learning Cuántico
+# ===============================================
+
+quantum_program "transfer_learning_cuantico" {
+    version: "1.0"
+    qubits: 150
+    classical_bits: 75
+    description: "Transfer learning cuántico entre dominios"
+
+    quantum_function transfer_learning(
+        modelo_fuente: quantum_model,
+        datos_objetivo: matrix[n_objetivo, n_caracteristicas],
+        etiquetas_objetivo: vector[n_objetivo],
+        estrategia_transferencia: string
+    ) -> quantum_model_fine_tuned {
+
+        # Crear estado cuántico del dominio objetivo
+        qstate datos_objetivo_estado = preparar_datos_transfer(datos_objetivo)
+
+        # Estrategias de transferencia cuántica
+        if estrategia_transferencia == "feature_extraction" {
+            # Usar características cuánticas del modelo fuente
+            caracteristicas_cuanticas = extraer_features_cuantico(modelo_fuente, datos_objetivo_estado)
+
+            # Entrenar solo la capa final
+            modelo_transferido = fine_tune_classifier(caracteristicas_cuanticas, etiquetas_objetivo)
+
+        } else if estrategia_transferencia == "full_fine_tuning" {
+            # Fine-tuning completo del modelo fuente
+            modelo_transferido = fine_tune_completo(modelo_fuente, datos_objetivo_estado, etiquetas_objetivo)
+
+        } else if estrategia_transferencia == "quantum_domain_adaptation" {
+            # Adaptación de dominio cuántica
+            modelo_transferido = adaptar_dominio_cuantico(modelo_fuente, datos_objetivo_estado)
+        }
+
+        # Evaluar transferencia cuántica
+        accuracy_transfer = evaluar_transferencia(modelo_transferido, datos_objetivo_estado, etiquetas_objetivo)
+
+        print(f"Accuracy después de transferencia: {accuracy_transfer:.4f}")
+
+        return modelo_transferido
+    }
+}
+
+# ===============================================
+# Funciones Auxiliares QML Especializadas
+# ===============================================
+
+quantum_function preparar_datos_cuantico(datos: matrix) -> qstate {
+    # Codificación de datos clásicos a estado cuántico
+    # Usando codificación de amplitud para máxima expresividad
+    return amplitude_encoding(datos)
+}
+
+quantum_function preparar_datos_regresion(datos: matrix, objetivos: vector) -> qstate {
+    # Preparar estado cuántico combinando datos y objetivos
+    return combined_encoding(datos, objetivos)
+}
+
+quantum_function distancia_cuantica(punto1: int, punto2: int, datos: matrix, centros: qstate) -> float {
+    # Calcular distancia cuántica entre puntos
+    return quantum_swap_test(punto1, punto2, datos, centros)
+}
+
+quantum_function evaluar_modelo(datos_estado: qstate, etiquetas: vector) -> float {
+    # Evaluar accuracy de modelo cuántico
+    predicciones = medir_predicciones(datos_estado)
+    return calcular_accuracy(predicciones, etiquetas)
+}
+
+# ===============================================
+# Comentarios y Notas de Uso QML
+# ===============================================
+#
+# Estos ejemplos de QML demuestran las capacidades de:
+#
+# 1. Aprendizaje automático cuántico híbrido
+# 2. Codificación cuántica de datos clásicos
+# 3. Circuitos variacionales cuánticos (VQC)
+# 4. Optimización cuántica de parámetros
+# 5. Transferencia de aprendizaje cuántico
+#
+# Características clave implementadas:
+# - Múltiples estrategias de codificación de datos
+# - Circuitos variacionales parametrizados
+# - Funciones de pérdida cuánticas especializadas
+# - Optimizadores cuánticos avanzados
+# - Técnicas de mitigación de ruido cuántico
+#
+# Ventajas cuánticas demostradas:
+# - Paralelización exponencial en evaluación
+# - Representación eficiente de características
+# - Generalización mejorada por entrelazamiento
+# - Aprendizaje más eficiente en espacios de alta dimensión
+#
+# Para ejecutar estos ejemplos:
+# 1. Preparar datasets clásicos apropiados
+# 2. Definir arquitecturas cuánticas específicas
+# 3. Configurar hiperparámetros de entrenamiento
+# 4. El sistema manejará automáticamente la ejecución híbrida
+#
+# ===============================================

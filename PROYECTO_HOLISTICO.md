@@ -269,14 +269,13 @@ def acompañar(persona):
 
 ---
 
-## 📞 Contacto Holístico
+## 📞 Contacto
 
-**Jorge Hernández**  
-*Arquitecto del Ecosistema CO•RA*
+**Ecosistema CO•RA**
 
-- 📧 jorge.hernandez.scorp@gmail.com
 - 🌐 https://github.com/Ente56298/CO-RA_Ecosistema_Cognitivo_Inclusivo
-- 💼 Consultoría consciente disponible
+- 📧 Para consultas: Abrir issue en GitHub
+- 💬 Comunidad: Discussions en el repositorio
 
 ---
 

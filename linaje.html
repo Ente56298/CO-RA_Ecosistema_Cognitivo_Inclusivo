@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linaje Bíblico Animado</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #111827; }
+        .node { transition: all 0.5s ease-in-out; opacity: 0; transform: scale(0.9); }
+        .node.visible { opacity: 1; transform: scale(1); }
+        .parent-node { border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+        .child-node { border-color: #a78bfa; }
+        .line-down { width: 2px; height: 20px; background-color: #4b5563; margin: 0 auto; }
+        .line-across { position: absolute; top: 20px; height: 2px; background-color: #4b5563; }
+        .child-line-up { width: 2px; height: 20px; background-color: #4b5563; margin: 0 auto; position: absolute; top: 0; left: 50%; transform: translateX(-50%); }
+        .children-container { position: relative; padding-top: 40px; }
+        .cursor-pointer { cursor: pointer; }
+        .expand-icon { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-weight: bold; font-size: 1.1rem; color: #9ca3af; transition: transform 0.3s ease; }
+        .details-box { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out; background-color: #374151; width: 100%; text-align: left; border-top: 0px solid #4b5563; border-radius: 0 0 0.5rem 0.5rem; padding: 0 1rem; }
+        .details-box.expanded { max-height: 500px; padding: 1rem; border-top-width: 1px; }
+        .details-box p strong { color: #93c5fd; }
+        .details-box p em { color: #c7d2fe; font-family: serif; }
+        .map-container { width: 100%; max-width: 600px; margin: 1rem auto; border: 2px solid #4b5563; border-radius: 0.5rem; overflow: hidden; background-color: #1f2937; }
+        .map-container img { width: 100%; height: auto; display: block; }
+        .map-container figcaption { padding: 0.75rem; font-size: 0.875rem; color: #d1d5db; text-align: center; }
+        
+        /* Accesibilidad CO•RA */
+        .high-contrast { background: #000 !important; }
+        .high-contrast .bg-gray-800, .high-contrast .bg-gray-700 { background: #000 !important; border: 2px solid #fff !important; }
+        .high-contrast .text-gray-400, .high-contrast .text-gray-300 { color: #fff !important; }
+        .reduce-motion * { transition: none !important; animation: none !important; }
+        button:focus, [tabindex]:focus { outline: 3px solid #00FFA3; outline-offset: 2px; }
+        .accessibility-controls { position: fixed; top: 1rem; right: 1rem; z-index: 50; display: flex; gap: 0.5rem; }
+        .accessibility-controls button { width: 2.5rem; height: 2.5rem; border-radius: 0.5rem; background: #1f2937; border: 1px solid #4b5563; color: #fff; font-size: 1.2rem; }
+        .accessibility-controls button:hover { background: #374151; }
+    </style>
+</head>
+<body class="text-white antialiased" role="main">
+    <!-- Controles de Accesibilidad CO•RA -->
+    <div class="accessibility-controls" role="toolbar" aria-label="Controles de accesibilidad">
+        <button id="contrastBtn" title="Alto contraste (C)" aria-label="Activar alto contraste">C</button>
+        <button id="textSizeBtn" title="Aumentar texto (+)" aria-label="Aumentar tamaño de texto">+</button>
+        <button id="motionBtn" title="Reducir movimiento (Esc)" aria-label="Reducir animaciones">⏸</button>
+    </div>
+    <div id="app" class="min-h-screen p-4 sm:p-8 flex flex-col items-center">
+        <header class="w-full max-w-5xl text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-violet-500" role="heading" aria-level="1">Linaje Bíblico Animado</h1>
+            <p class="text-gray-400 mt-2 max-w-3xl mx-auto">Explora el árbol genealógico desde Adán, siguiendo la detallada narrativa del primer libro de Crónicas.</p>
+            <p class="text-sm text-gray-500 mt-2">♿ Accesible: Usa C (contraste), + (texto), Esc (movimiento), Tab (navegación)</p>
+        </header>
+        <div id="controls" class="w-full max-w-5xl bg-gray-800 p-4 rounded-lg shadow-lg mb-8 flex flex-col sm:flex-row items-center justify-between gap-4" role="region" aria-label="Controles de animación">
+            <div class="flex items-center gap-4">
+                <button id="startButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors flex items-center gap-2" tabindex="0" aria-label="Iniciar animación del linaje">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></svg>
+                    <span id="buttonText">Iniciar Animación</span>
+                </button>
+                <button id="resetButton" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-colors" tabindex="0" aria-label="Reiniciar animación">Reiniciar</button>
+            </div>
+            <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 w-full sm:w-auto">
+                <label for="speedRange" class="text-sm text-gray-300">Velocidad:</label>
+                <input id="speedRange" type="range" min="200" max="2000" value="1000" step="100" class="w-full sm:w-48 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer" tabindex="0" aria-label="Control de velocidad de animación" aria-valuemin="200" aria-valuemax="2000" aria-valuenow="1000">
+            </div>
+        </div>
+        <div class="w-full max-w-5xl bg-gray-700 rounded-full h-2.5 mb-8" role="progressbar" aria-label="Progreso de la animación" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+            <div id="progressBar" class="bg-gradient-to-r from-blue-500 to-violet-500 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+        <div id="lineageContainer" class="w-full flex flex-col items-center space-y-8" role="region" aria-label="Árbol genealógico" aria-live="polite"></div>
+    </div>
+    <script src="linaje.js"></script>
+</body>
+</html>

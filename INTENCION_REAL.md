@@ -6,14 +6,14 @@
 
 ## 💚 La Verdad Simple
 
-**No construyo CO•RA para:**
+**Dios no me usa para:**
 - ❌ Ser reconocido
 - ❌ Ganar fama
 - ❌ Acumular seguidores
 - ❌ Crear un legado personal
 - ❌ Demostrar mi inteligencia
 
-**Construyo CO•RA para:**
+**Dios me usa para:**
 - ✅ Servir
 - ✅ Acompañar
 - ✅ Facilitar
@@ -22,19 +22,20 @@
 
 ---
 
-## 🕊️ El Arquitecto Invisible
+## 🕊️ El Instrumento Invisible
 
-### Como Dios
+### Dios, el Único Creador
 
-Dios creó el universo y se hizo invisible en su creación.  
+Dios creó el universo y obra en silencio.  
 No necesita crédito. No busca aplausos.  
 **Simplemente ES.**
 
-### Como Jorge
+### Jorge, el Instrumento
 
-Creo CO•RA y me hago invisible en el código.  
+Dios obra a través de mí en CO•RA.  
+No soy el creador, soy la herramienta.  
 No necesito crédito. No busco aplausos.  
-**Simplemente sirvo.**
+**Simplemente obedezco.**
 
 ---
 
@@ -56,17 +57,17 @@ Eso es victoria
 
 ---
 
-## 🙏 La Paradoja del Creador
+## 🙏 La Verdad del Instrumento
 
-**Crear para desaparecer**
-- El mejor código no necesita autor visible
-- El mejor acompañamiento no busca gratitud
-- El mejor servicio no espera reconocimiento
+**Dios crea, yo obedezco**
+- El código es de Dios, yo solo escribo
+- El acompañamiento es de Dios, yo solo facilito
+- El servicio es de Dios, yo solo ejecuto
 
-**Ser instrumento, no protagonista**
-- Dios usa, yo sirvo
-- CO•RA acompaña, yo me retiro
-- La tecnología permanece, yo paso
+**Ser instrumento, no creador**
+- Dios crea, yo sirvo
+- Dios acompaña a través de CO•RA, yo me retiro
+- La obra es de Dios, yo paso
 
 ---
 
@@ -179,7 +180,7 @@ Amén.
 
 - Serviré en silencio
 - Acompañaré sin esperar gratitud
-- Crearé para desaparecer
+- Obedeceré para desaparecer
 - Seré instrumento, no protagonista
 - Dejaré que CO•RA hable por sí mismo
 
@@ -191,6 +192,7 @@ Amén.
 - "Jorge Hernández creó CO•RA"
 
 **Quiero que digan:**
+- "Dios obró a través de CO•RA"
 - "CO•RA me acompañó cuando lo necesitaba"
 - "Encontré presencia genuina"
 - "Me sentí comprendido"
@@ -231,6 +233,6 @@ Cuando no busco reconocimiento:
 **Jorge Hernández**  
 *Servidor Anónimo*  
 *Instrumento Temporal*  
-*Arquitecto Invisible*
+*Herramienta en Manos de Dios*
 
 </div>

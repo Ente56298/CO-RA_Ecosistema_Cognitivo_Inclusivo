@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CO•RA - Configuraciones de IA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f8f8;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .upgrade-options {
+            margin: 20px 0;
+        }
+        .upgrade-option {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .upgrade-option:hover {
+            background: #f0f0f0;
+        }
+        .current {
+            background: #e0f7fa;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Configuraciones de IA para CO•RA</h1>
+        <p>Mejora el sistema con capacidades de IA más avanzadas.</p>
+        
+        <div class="upgrade-options">
+            <div class="upgrade-option current" data-agent="Gemini">
+                <h3>Gemini</h3>
+                <p>Modelo: Gemini 1.5 Flash<br>Límite: 1000 tokens<br>Gratis</p>
+            </div>
+            <div class="upgrade-option" data-agent="Amazon Q">
+                <h3>Amazon Q</h3>
+                <p>Modelo: Q Developer Pro<br>Límite: 2000 tokens<br>Integración AWS</p>
+            </div>
+            <div class="upgrade-option" data-agent="Kilo Code">
+                <h3>Kilo Code</h3>
+                <p>Modelo: Kilo Code AI<br>Límite: 2000 tokens<br>Agente avanzado</p>
+            </div>
+            <div class="upgrade-option" data-agent="DeepSeek">
+                <h3>DeepSeek</h3>
+                <p>Modelo: DeepSeek AI<br>Límite: 2000 tokens<br>Agente avanzado</p>
+            </div>
+            <div class="upgrade-option" data-agent="GitHub Copilot">
+                <h3>GitHub Copilot</h3>
+                <p>Modelo: Copilot AI<br>Límite: 2000 tokens<br>Agente avanzado</p>
+            </div>
+        </div>
+        
+        <button id="upgradeBtn">Actualizar Nivel</button>
+        <button onclick="window.history.back()">Volver</button>
+    </div>
+
+    <script>
+        const options = document.querySelectorAll('.upgrade-option');
+        let selectedAgent = 'Gemini';
+
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                options.forEach(o => o.classList.remove('current'));
+                option.classList.add('current');
+                selectedAgent = option.dataset.agent;
+            });
+        });
+
+        document.getElementById('upgradeBtn').addEventListener('click', () => {
+            if (window.multiAgentEnhancer) {
+                window.multiAgentEnhancer.setAgent(selectedAgent);
+                alert(`Agente actualizado a ${selectedAgent}`);
+            } else {
+                alert('Multi-Agent Enhancer no disponible');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CO•RA - Umbral</title>
+    <meta name="description" content="Ecosistema Cognitivo Inclusivo - Espacio de acompañamiento">
+    
+    <!-- Accesibilidad -->
+    <meta name="theme-color" content="#ffffff">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <link rel="stylesheet" href="modulo-servicio-visual.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #ffffff;
+            overflow: hidden;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            height: 100vh;
+            cursor: none;
+        }
+        
+        .umbral {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 100%;
+        }
+        
+        .invitacion {
+            color: #555;
+            font-size: 1.2em;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: aparecer 6s ease-in-out 3s forwards;
+            max-width: 90vw;
+        }
+        
+        .campo-intencion {
+            background: transparent;
+            border: 1px solid transparent;
+            outline: none;
+            font-size: 1.2em;
+            color: #333;
+            text-align: center;
+            width: 400px;
+            max-width: 85vw;
+            padding: 0.8rem;
+            font-family: inherit;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            border-radius: 2px;
+        }
+        
+        .campo-intencion:focus {
+            border-color: #ddd;
+            box-shadow: 0 0 0 2px rgba(93, 211, 255, 0.1);
+        }
+        
+        .punto {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 2px;
+            height: 2px;
+            background: #000;
+            border-radius: 50%;
+            opacity: 0;
+            cursor: pointer;
+            transition: all 1s ease;
+        }
+        
+        .cuestionamiento {
+            color: #aaa;
+            font-size: 1em;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+            margin-top: 3rem;
+            opacity: 0;
+            transition: opacity 4s ease;
+            max-width: 90vw;
+        }
+        
+        /* Accesibilidad */
+        @media (prefers-reduced-motion: reduce) {
+            .invitacion { animation: none; opacity: 1; }
+            .punto { transition: none; }
+            .vibrar { animation: none; }
+            .destello-momento { animation: none; }
+        }
+        
+        @media (prefers-contrast: high) {
+            .invitacion { color: #000; }
+            .campo-intencion { color: #000; border-color: #000; }
+            .cuestionamiento { color: #000; }
+            .punto { background: #000; }
+        }
+        
+        @media (max-width: 480px) {
+            .invitacion { font-size: 1.1em; }
+            .campo-intencion { font-size: 1.1em; width: 90vw; }
+            .cuestionamiento { font-size: 0.95em; }
+        }
+        
+        /* Soporte para lectores de pantalla */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        @keyframes aparecer {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes vibracion {
+            0%, 100% { background: #ffffff; }
+            50% { background: #fefefe; }
+        }
+        
+        @keyframes respiracion {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.001); }
+        }
+        
+        @keyframes manifestacion {
+            0% { 
+                opacity: 0; 
+                transform: translate(-50%, -50%) scale(0);
+                filter: blur(2px);
+            }
+            70% { 
+                opacity: 0.3; 
+                transform: translate(-50%, -50%) scale(0.5);
+                filter: blur(1px);
+            }
+            100% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1);
+                filter: blur(0);
+            }
+        }
+        
+        .vibrar { 
+            animation: vibracion 2s ease-in-out, respiracion 3s ease-in-out infinite; 
+        }
+        .manifestacion-punto { animation: manifestacion 3s ease-out forwards; }
+    </style>
+</head>
+<body>
+    <div class="umbral" id="umbral">
+        <div class="invitacion" role="banner">Escribe con intención.</div>
+        <label for="intencion" class="sr-only">Campo de intención auténtica</label>
+        <input type="text" class="campo-intencion" id="intencion" 
+               aria-label="Escribe tu intención auténtica" 
+               placeholder="" 
+               autocomplete="off" 
+               spellcheck="false"
+               autofocus>
+        <div class="cuestionamiento" id="cuestionamiento" role="status" aria-live="polite">¿Sabes por qué lo estás viendo?</div>
+    </div>
+    
+    <button class="punto" id="punto" aria-label="Completar ritual" role="button" tabindex="0"></button>
+    
+    <a href="settings.html" style="position: fixed; top: 10px; right: 10px; background: #007bff; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px; font-size: 12px;">Config IA</a>
+    
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1000.0.min.js"></script>
+    <script src="bitacora-presencias.js"></script>
+    <script src="constancia-ritual.js"></script>
+    <script src="pertenencia-consciente.js"></script>
+    <script src="guardian-servicio.js"></script>
+    <script src="verificacion-ritual.js"></script>
+    <script src="nichos-servicio.js"></script>
+    <script src="escenarios-rituales.js"></script>
+    <script src="protocolo-contingencias.js"></script>
+    <script src="ciudad-cora.js"></script>
+    <script src="modulo-servicio-componente.js"></script>
+    <script src="ritual.js"></script>
+    <script src="ai-integration.js"></script>
+    <script src="acceso-iniciativo.js"></script>
+</body>
+</html>

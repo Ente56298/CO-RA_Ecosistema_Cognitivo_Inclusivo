@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-08-27",
+  "scope": "Inventario sanitizado de fuentes locales autorizadas",
+  "privacy": {
+    "contains_local_paths": false,
+    "contains_messages": false,
+    "contains_private_content": false,
+    "automatic_sync_enabled": false
+  },
+  "summary": {
+    "files_observed": 11310,
+    "candidate_files": 4131,
+    "size_mb": 12662.51,
+    "exact_duplicate_groups": 61,
+    "copies_in_duplicate_groups": 177,
+    "estimated_redundant_mb": 128.51
+  },
+  "sources": [
+    {"name": "FUENTES", "files": 11165, "candidates": 4001, "size_mb": 6746.25, "route": "origen_bruto", "status": "pendiente_indexacion"},
+    {"name": "Gemini", "files": 10, "candidates": 8, "size_mb": 5589.73, "route": "exportaciones_zip", "status": "requiere_inventario_zip"},
+    {"name": "ChatGPT", "files": 7, "candidates": 3, "size_mb": 174.22, "route": "historial_navegacion", "status": "metadatos_sin_mensajes"},
+    {"name": "indices", "files": 24, "candidates": 20, "size_mb": 75.14, "route": "derivados", "status": "no_usar_como_origen"},
+    {"name": "Runable", "files": 7, "candidates": 7, "size_mb": 46.99, "route": "adaptador_runable", "status": "indexable"},
+    {"name": "sin_clasificar", "files": 25, "candidates": 21, "size_mb": 12.81, "route": "encaminamiento", "status": "requiere_clasificacion"},
+    {"name": "Dola", "files": 6, "candidates": 5, "size_mb": 10.2, "route": "adaptador_dola", "status": "indexable_con_duplicados"},
+    {"name": "Qwen", "files": 29, "candidates": 29, "size_mb": 5.39, "route": "adaptador_qwen", "status": "indexable"},
+    {"name": "ChatPDF", "files": 32, "candidates": 32, "size_mb": 1.16, "route": "adaptador_chatpdf", "status": "indexable"},
+    {"name": "Copilot", "files": 2, "candidates": 2, "size_mb": 0.37, "route": "adaptador_copilot", "status": "indexable"},
+    {"name": "Kimi", "files": 2, "candidates": 2, "size_mb": 0.15, "route": "adaptador_kimi", "status": "indexable"},
+    {"name": "Amazon", "files": 1, "candidates": 1, "size_mb": 0.1, "route": "adaptador_texto", "status": "indexable"}
+  ],
+  "routing_corrections": [
+    {"artifact": "nuevo63.json", "records": 2908, "route": "catalogo_agentes", "reason": "Directorio de agentes, no conversaciones"},
+    {"artifact": "history.json", "records": 56193, "route": "historial_navegacion", "reason": "Visitas y localizadores, no mensajes"},
+    {"artifact": "history (1).json", "records": 30121, "route": "historial_navegacion", "reason": "Visitas y localizadores, no mensajes"}
+  ]
+}

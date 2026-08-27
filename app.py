@@ -844,6 +844,54 @@ with sub_conversaciones:
         "No crea conversaciones ni publica su contenido."
     )
 
+    inventario_local = cargar_json_publico(
+        "data/fuentes_locales_publico.json",
+        {},
+    )
+    if inventario_local:
+        resumen_local = inventario_local.get("summary", {})
+        with st.expander("🖥️ Fuentes locales detectadas", expanded=False):
+            st.warning(
+                "Este es un inventario sanitizado. Streamlit Cloud no puede "
+                "leer directamente las carpetas del equipo ni sincronizarlas "
+                "sin un puente local autorizado."
+            )
+            c1, c2, c3, c4 = st.columns(4)
+            c1.metric("Archivos observados", resumen_local.get("files_observed", 0))
+            c2.metric("Candidatos", resumen_local.get("candidate_files", 0))
+            c3.metric("Fuentes", len(inventario_local.get("sources", [])))
+            c4.metric(
+                "Grupos duplicados",
+                resumen_local.get("exact_duplicate_groups", 0),
+            )
+
+            filas_fuentes = [
+                {
+                    "Fuente": fuente.get("name"),
+                    "Candidatos": fuente.get("candidates"),
+                    "Tamaño MB": fuente.get("size_mb"),
+                    "Encaminar a": fuente.get("route", "por_clasificar").replace("_", " "),
+                    "Estado": fuente.get("status", "pendiente").replace("_", " "),
+                }
+                for fuente in inventario_local.get("sources", [])
+            ]
+            if filas_fuentes:
+                st.dataframe(
+                    filas_fuentes,
+                    use_container_width=True,
+                    hide_index=True,
+                )
+
+            correcciones = inventario_local.get("routing_corrections", [])
+            if correcciones:
+                st.markdown("#### Encaminamientos corregidos")
+                for correccion in correcciones:
+                    st.write(
+                        f"- **{correccion.get('artifact')}** → "
+                        f"{correccion.get('route', '').replace('_', ' ')} "
+                        f"({correccion.get('reason', 'sin detalle')})"
+                    )
+
     with st.expander("📤 Registrar o rastrear fuentes", expanded=False):
         archivos_conversacion = st.file_uploader(
             "Sube exportaciones o archivos con conversaciones",

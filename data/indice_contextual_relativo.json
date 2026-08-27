@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-08-27",
+  "purpose": "Mapa contextual agregado sin rutas ni nombres de archivos",
+  "privacy": {
+    "relative_only": true,
+    "contains_absolute_paths": false,
+    "contains_file_names": false,
+    "contains_content": false,
+    "contains_shortcuts": false
+  },
+  "summary": {
+    "records_observed": 8296,
+    "unique_records": 8296,
+    "source_lists": 2,
+    "contexts_overlap": true
+  },
+  "contexts": [
+    {"context": "conversaciones", "matches": 3930, "route": "conversaciones_y_registros", "priority": "high"},
+    {"context": "cora_agentes_memoria", "matches": 2196, "route": "agentes_y_contexto", "priority": "high"},
+    {"context": "municipal_geoespacial", "matches": 245, "route": "trayectoria_y_proyectos", "priority": "high"},
+    {"context": "documentos_oficina", "matches": 183, "route": "documentos_de_apoyo", "priority": "medium"},
+    {"context": "web_capturas", "matches": 430, "route": "referencias_web", "priority": "medium"},
+    {"context": "media", "matches": 185, "route": "artefactos_multimedia", "priority": "low"},
+    {"context": "software_runtime", "matches": 945, "route": "inventario_tecnico", "priority": "low"},
+    {"context": "temporal_respaldo", "matches": 6047, "route": "revision_y_deduplicacion", "priority": "low"}
+  ],
+  "rules": [
+    "Un registro puede pertenecer a más de un contexto.",
+    "Este índice no permite abrir archivos ni reconstruir rutas locales.",
+    "Los títulos y contenidos se recuperan únicamente desde un índice privado autorizado."
+  ]
+}

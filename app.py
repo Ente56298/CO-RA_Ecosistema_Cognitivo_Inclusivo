@@ -895,6 +895,32 @@ with sub_conversaciones:
                         f"({correccion.get('reason', 'sin detalle')})"
                     )
 
+            indice_contextual = cargar_json_publico(
+                "data/indice_contextual_relativo.json",
+                {},
+            )
+            if indice_contextual:
+                st.markdown("#### 🧭 Índice relativo sólo contextual")
+                st.caption(
+                    "Agrupa señales por contexto sin conservar rutas, nombres "
+                    "de archivos, accesos directos ni contenido. Las categorías "
+                    "pueden superponerse."
+                )
+                contextos_relativos = [
+                    {
+                        "Contexto": item.get("context", "sin_contexto").replace("_", " "),
+                        "Coincidencias": item.get("matches", 0),
+                        "Encaminar a": item.get("route", "revision").replace("_", " "),
+                        "Prioridad": item.get("priority", "low"),
+                    }
+                    for item in indice_contextual.get("contexts", [])
+                ]
+                st.dataframe(
+                    contextos_relativos,
+                    use_container_width=True,
+                    hide_index=True,
+                )
+
     with st.expander("📤 Registrar o rastrear fuentes", expanded=False):
         archivos_conversacion = st.file_uploader(
             "Sube exportaciones o archivos con conversaciones",

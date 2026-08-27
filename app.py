@@ -808,197 +808,474 @@ with tab4:
     # --------------------------------------------
     # CONVERSACIONES
     # --------------------------------------------
-    with sub_conversaciones:
-        st.subheader("💬 Conversaciones con agentes")
-        st.caption(
-            "MVP local de contexto y conversación estructurada. "
-            "Por ahora no llama automáticamente a APIs ni a Ollama."
+with sub_conversaciones:
+    st.subheader("💬 Conversaciones con agentes")
+    st.caption(
+        "Conversaciones organizadas por título, agente y proyecto. "
+        "El MVP conserva los datos durante la sesión actual."
+    )
+
+    # ============================================
+    # CARGAR CATÁLOGOS
+    # ============================================
+    catalogo = cargar_json_publico(
+        "data/catalogo_agentes_publico.json",
+        {"agents": []}
+    )
+    agentes = catalogo.get("agents", [])
+
+    mapa_proyectos = cargar_json_publico(
+        "data/proyectos_actuales.json",
+        {"proyectos": []}
+    )
+    proyectos = mapa_proyectos.get("proyectos", [])
+
+    # ============================================
+    # ESTADO DE CONVERSACIONES
+    # ============================================
+    if "agent_conversations" not in st.session_state:
+        st.session_state.agent_conversations = {}
+
+    if "active_conversation_id" not in st.session_state:
+        st.session_state.active_conversation_id = None
+
+    conversaciones_agentes = st.session_state.agent_conversations
+
+    # ============================================
+    # CONTEXTO PARA NUEVA CONVERSACIÓN
+    # ============================================
+    if not agentes:
+        st.warning(
+            "No hay agentes disponibles en "
+            "data/catalogo_agentes_publico.json."
         )
 
-        catalogo = cargar_json_publico(
-            "data/catalogo_agentes_publico.json",
-            {"agents": []}
-        )
-        agentes = catalogo.get("agents", [])
+    else:
+        opciones_agente = {
+            a.get(
+                "display_name",
+                a.get("agent_id", "Agente")
+            ): a
+            for a in agentes
+        }
 
-        mapa_proyectos = cargar_json_publico(
-            "data/proyectos_actuales.json",
-            {"proyectos": []}
-        )
-        proyectos = mapa_proyectos.get("proyectos", [])
-
-        if not agentes:
-            st.warning(
-                "No hay agentes en data/catalogo_agentes_publico.json."
-            )
-        else:
-            opciones_agente = {
-                a.get("display_name", a.get("agent_id", "Agente")): a
-                for a in agentes
+        opciones_proyecto = {
+            "Sin proyecto": {
+                "id": None,
+                "nombre": None,
             }
+        }
 
-            opciones_proyecto = {
-                "Sin proyecto": {
-                    "id": None,
-                    "nombre": None,
-                }
-            }
-            for p in proyectos:
-                opciones_proyecto[p.get("nombre", p.get("id", "Proyecto"))] = p
-
-            col_ctx1, col_ctx2 = st.columns(2)
-
-            with col_ctx1:
-                agente_nombre = st.selectbox(
-                    "Agente",
-                    list(opciones_agente.keys()),
-                    key="conv_agente",
+        for proyecto in proyectos:
+            opciones_proyecto[
+                proyecto.get(
+                    "nombre",
+                    proyecto.get("id", "Proyecto")
                 )
-                agente = opciones_agente[agente_nombre]
+            ] = proyecto
 
-            with col_ctx2:
-                proyecto_nombre = st.selectbox(
-                    "Proyecto activo",
-                    list(opciones_proyecto.keys()),
-                    key="conv_proyecto",
-                )
-                proyecto = opciones_proyecto[proyecto_nombre]
-
-            objetivo_conv = st.text_input(
-                "Objetivo de esta conversación",
-                placeholder="Ej. Diseñar el Skill Evaluator",
-                key="conv_objetivo",
+        # ============================================
+        # NUEVA CONVERSACIÓN
+        # ============================================
+        with st.expander(
+            "➕ Nueva conversación",
+            expanded=not bool(conversaciones_agentes)
+        ):
+            agente_nombre_nuevo = st.selectbox(
+                "Agente",
+                list(opciones_agente.keys()),
+                key="nuevo_conv_agente"
             )
 
-            st.caption(
-                f"Contexto activo: "
-                f"{proyecto.get('nombre') or 'sin proyecto'} · "
-                f"{agente_nombre}"
+            proyecto_nombre_nuevo = st.selectbox(
+                "Proyecto",
+                list(opciones_proyecto.keys()),
+                key="nuevo_conv_proyecto"
             )
 
-            firma = (
-                agente.get("agent_id", agente_nombre),
-                proyecto.get("id"),
-                objetivo_conv.strip(),
+            titulo_nuevo = st.text_input(
+                "Título",
+                placeholder="Ej. Diseño del Skill Evaluator",
+                key="nuevo_conv_titulo"
+            )
+
+            objetivo_nuevo = st.text_area(
+                "Objetivo",
+                placeholder=(
+                    "¿Qué quieres resolver en esta conversación?"
+                ),
+                key="nuevo_conv_objetivo"
+            )
+
+            if st.button(
+                "💬 Crear conversación",
+                type="primary",
+                key="crear_conversacion_agente"
+            ):
+                agente_nuevo = opciones_agente[
+                    agente_nombre_nuevo
+                ]
+
+                proyecto_nuevo = opciones_proyecto[
+                    proyecto_nombre_nuevo
+                ]
+
+                nueva = nueva_conversacion(
+                    agent_id=agente_nuevo.get(
+                        "agent_id",
+                        agente_nombre_nuevo
+                    ),
+                    agent_name=agente_nombre_nuevo,
+                    project_id=proyecto_nuevo.get("id"),
+                    project_name=proyecto_nuevo.get("nombre"),
+                    objective=objetivo_nuevo.strip() or None,
+                    source_type=agente_nuevo.get(
+                        "access_method",
+                        "manual"
+                    ),
+                )
+
+                # Título sin gastar un LLM
+                titulo_final = titulo_nuevo.strip()
+
+                if not titulo_final:
+                    titulo_final = objetivo_nuevo.strip()
+
+                if not titulo_final:
+                    titulo_final = (
+                        f"Conversación con {agente_nombre_nuevo}"
+                    )
+
+                nueva["titulo"] = titulo_final
+
+                conversation_id = nueva["conversation_id"]
+
+                conversaciones_agentes[
+                    conversation_id
+                ] = nueva
+
+                st.session_state.active_conversation_id = (
+                    conversation_id
+                )
+
+                st.rerun()
+
+        st.markdown("---")
+
+        # ============================================
+        # DOS COLUMNAS:
+        # LISTA + CONVERSACIÓN
+        # ============================================
+        col_lista, col_chat = st.columns(
+            [1, 2],
+            gap="large"
+        )
+
+        # ============================================
+        # COLUMNA IZQUIERDA
+        # ============================================
+        with col_lista:
+            st.markdown("### 📚 Conversaciones")
+
+            filtro = st.text_input(
+                "🔎 Buscar",
+                placeholder="Título, agente o proyecto...",
+                key="buscar_conversacion_agente"
+            ).strip().lower()
+
+            lista_conversaciones = list(
+                conversaciones_agentes.values()
+            )
+
+            # Más recientes primero
+            lista_conversaciones.sort(
+                key=lambda c: c.get(
+                    "updated_at",
+                    c.get("created_at", "")
+                ),
+                reverse=True
+            )
+
+            if filtro:
+                lista_conversaciones = [
+                    c
+                    for c in lista_conversaciones
+                    if (
+                        filtro
+                        in c.get(
+                            "titulo",
+                            ""
+                        ).lower()
+                        or filtro
+                        in c.get(
+                            "agent",
+                            {}
+                        ).get(
+                            "display_name",
+                            ""
+                        ).lower()
+                        or filtro
+                        in (
+                            c.get(
+                                "context",
+                                {}
+                            ).get(
+                                "project_name"
+                            )
+                            or ""
+                        ).lower()
+                    )
+                ]
+
+            if not lista_conversaciones:
+                st.info(
+                    "Todavía no hay conversaciones."
+                )
+
+            for conv in lista_conversaciones:
+                cid = conv.get("conversation_id")
+
+                titulo = conv.get(
+                    "titulo",
+                    "Sin título"
+                )
+
+                agente_lista = conv.get(
+                    "agent",
+                    {}
+                ).get(
+                    "display_name",
+                    "Agente"
+                )
+
+                proyecto_lista = conv.get(
+                    "context",
+                    {}
+                ).get(
+                    "project_name"
+                )
+
+                total_mensajes = len(
+                    conv.get("messages", [])
+                )
+
+                activo = (
+                    cid
+                    == st.session_state.active_conversation_id
+                )
+
+                prefijo = "🟢" if activo else "💬"
+
+                if st.button(
+                    f"{prefijo} {titulo}",
+                    key=f"abrir_{cid}",
+                    use_container_width=True
+                ):
+                    st.session_state.active_conversation_id = cid
+                    st.rerun()
+
+                st.caption(
+                    f"{agente_lista}"
+                    + (
+                        f" · {proyecto_lista}"
+                        if proyecto_lista
+                        else ""
+                    )
+                    + f" · {total_mensajes} mensajes"
+                )
+
+        # ============================================
+        # COLUMNA DERECHA
+        # ============================================
+        with col_chat:
+            active_id = (
+                st.session_state.active_conversation_id
             )
 
             if (
-                "agent_conversation" not in st.session_state
-                or st.session_state.get("agent_conversation_signature") != firma
+                active_id
+                and active_id in conversaciones_agentes
             ):
-                st.session_state.agent_conversation = nueva_conversacion(
-                    agent_id=agente.get("agent_id", agente_nombre),
-                    agent_name=agente_nombre,
-                    project_id=proyecto.get("id"),
-                    project_name=proyecto.get("nombre"),
-                    objective=objetivo_conv.strip() or None,
-                    source_type=agente.get("access_method", "manual"),
-                )
-                st.session_state.agent_conversation_signature = firma
-
-            conversacion = st.session_state.agent_conversation
-
-            st.markdown("---")
-
-            # Mostrar historial usando componentes nativos de chat
-            for msg in conversacion.get("messages", []):
-                rol_ui = (
-                    "assistant"
-                    if msg.get("role") == "assistant"
-                    else "user"
-                )
-                with st.chat_message(rol_ui):
-                    if msg.get("author"):
-                        st.caption(msg["author"])
-                    st.write(msg.get("content", ""))
-
-            mensaje_usuario = st.chat_input(
-                "Escribe un mensaje para el agente...",
-                key="chat_input_agente",
-            )
-
-            if mensaje_usuario:
-                agregar_mensaje(
-                    conversacion,
-                    role="user",
-                    content=mensaje_usuario,
-                    author=usuario,
-                )
-                st.session_state.agent_conversation = conversacion
-                st.rerun()
-
-            # MVP: respuesta manual del agente.
-            # Después este bloque será sustituido por un adapter Ollama/API.
-            with st.expander(
-                "🤖 Registrar respuesta del agente",
-                expanded=False,
-            ):
-                respuesta_manual = st.text_area(
-                    "Respuesta",
-                    height=180,
-                    key="respuesta_agente_manual",
-                    placeholder=(
-                        "Pega aquí la respuesta de Qwen, ChatGPT u otro "
-                        "agente mientras el despacho automático está desactivado."
-                    ),
+                conversacion = (
+                    conversaciones_agentes[active_id]
                 )
 
-                if st.button(
-                    "Agregar respuesta",
-                    key="agregar_respuesta_agente",
-                ):
-                    if respuesta_manual.strip():
-                        agregar_mensaje(
-                            conversacion,
-                            role="assistant",
-                            content=respuesta_manual,
-                            author=agente_nombre,
+                titulo_actual = conversacion.get(
+                    "titulo",
+                    "Sin título"
+                )
+
+                agente_actual = conversacion.get(
+                    "agent",
+                    {}
+                ).get(
+                    "display_name",
+                    "Agente"
+                )
+
+                contexto_actual = conversacion.get(
+                    "context",
+                    {}
+                )
+
+                st.markdown(
+                    f"### 💬 {titulo_actual}"
+                )
+
+                st.caption(
+                    f"🤖 {agente_actual}"
+                    + (
+                        f" · 📦 "
+                        f"{contexto_actual.get('project_name')}"
+                        if contexto_actual.get(
+                            "project_name"
                         )
-                        st.session_state.agent_conversation = conversacion
-                        st.session_state.respuesta_agente_manual = ""
-                        st.rerun()
-                    else:
-                        st.warning("Escribe una respuesta antes de agregarla.")
+                        else ""
+                    )
+                )
 
-            st.markdown("---")
+                if contexto_actual.get("objective"):
+                    st.info(
+                        "🎯 "
+                        + contexto_actual["objective"]
+                    )
 
-            col_acc1, col_acc2 = st.columns(2)
+                st.markdown("---")
 
-            with col_acc1:
-                st.download_button(
-                    "⬇️ Descargar conversación JSON",
-                    data=json.dumps(
+                # ====================================
+                # MENSAJES
+                # ====================================
+                for mensaje in conversacion.get(
+                    "messages",
+                    []
+                ):
+                    role = mensaje.get(
+                        "role",
+                        "user"
+                    )
+
+                    role_ui = (
+                        "assistant"
+                        if role == "assistant"
+                        else "user"
+                    )
+
+                    with st.chat_message(role_ui):
+                        autor = mensaje.get("author")
+
+                        if autor:
+                            st.caption(autor)
+
+                        st.write(
+                            mensaje.get(
+                                "content",
+                                ""
+                            )
+                        )
+
+                # ====================================
+                # MENSAJE DEL USUARIO
+                # ====================================
+                mensaje_usuario = st.chat_input(
+                    "Escribe un mensaje...",
+                    key="mensaje_conversacion_agente"
+                )
+
+                if mensaje_usuario:
+                    agregar_mensaje(
                         conversacion,
-                        indent=2,
-                        ensure_ascii=False,
-                    ),
-                    file_name=(
-                        f"{conversacion.get('conversation_id', 'conversacion')}.json"
-                    ),
-                    mime="application/json",
-                    use_container_width=True,
-                )
+                        role="user",
+                        content=mensaje_usuario,
+                        author=usuario,
+                    )
 
-            with col_acc2:
-                entrada_mesa = resumen_para_mesa(conversacion)
-                st.download_button(
-                    "🤝 Preparar para Mesa Redonda",
-                    data=json.dumps(
-                        entrada_mesa,
-                        indent=2,
-                        ensure_ascii=False,
-                    ),
-                    file_name=(
-                        f"mesa_{conversacion.get('conversation_id', 'conversacion')}.json"
-                    ),
-                    mime="application/json",
-                    use_container_width=True,
-                )
+                    conversaciones_agentes[
+                        active_id
+                    ] = conversacion
 
-            st.caption(
-                "La conversación vive sólo en la sesión actual hasta que la "
-                "descargues o conectemos un almacenamiento privado."
-            )
+                    st.rerun()
+
+                # ====================================
+                # RESPUESTA MANUAL DEL AGENTE
+                # ====================================
+                with st.expander(
+                    "🤖 Registrar respuesta del agente",
+                    expanded=False
+                ):
+                    respuesta_manual = st.text_area(
+                        "Respuesta",
+                        height=180,
+                        key="respuesta_agente_manual"
+                    )
+
+                    if st.button(
+                        "Agregar respuesta",
+                        key="agregar_respuesta_agente"
+                    ):
+                        if respuesta_manual.strip():
+                            agregar_mensaje(
+                                conversacion,
+                                role="assistant",
+                                content=respuesta_manual,
+                                author=agente_actual,
+                            )
+
+                            conversaciones_agentes[
+                                active_id
+                            ] = conversacion
+
+                            st.session_state[
+                                "respuesta_agente_manual"
+                            ] = ""
+
+                            st.rerun()
+
+                st.markdown("---")
+
+                # ====================================
+                # EXPORTACIÓN
+                # ====================================
+                col_export1, col_export2 = st.columns(2)
+
+                with col_export1:
+                    st.download_button(
+                        "⬇️ Descargar conversación",
+                        data=json.dumps(
+                            conversacion,
+                            indent=2,
+                            ensure_ascii=False
+                        ),
+                        file_name=(
+                            f"{active_id}.json"
+                        ),
+                        mime="application/json",
+                        use_container_width=True
+                    )
+
+                with col_export2:
+                    entrada_mesa = resumen_para_mesa(
+                        conversacion
+                    )
+
+                    st.download_button(
+                        "🤝 Enviar a Mesa Redonda",
+                        data=json.dumps(
+                            entrada_mesa,
+                            indent=2,
+                            ensure_ascii=False
+                        ),
+                        file_name=(
+                            f"mesa_{active_id}.json"
+                        ),
+                        mime="application/json",
+                        use_container_width=True
+                    )
+
+            else:
+                st.info(
+                    "Selecciona una conversación "
+                    "o crea una nueva."
+                )
 
 # ============================================
 # TAB 5: MESA REDONDA

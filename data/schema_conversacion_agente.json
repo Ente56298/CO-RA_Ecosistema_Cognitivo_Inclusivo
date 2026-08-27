@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CO•RA Agent Conversation",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "conversation_id",
+    "agent",
+    "context",
+    "messages"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "conversation_id": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "updated_at": {
+      "type": "string"
+    },
+    "agent": {
+      "type": "object",
+      "required": [
+        "agent_id",
+        "display_name",
+        "source_type"
+      ],
+      "properties": {
+        "agent_id": {
+          "type": "string"
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "source_type": {
+          "type": "string"
+        },
+        "model": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "project_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "area_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "objective": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "message_id",
+          "timestamp",
+          "role",
+          "content"
+        ],
+        "properties": {
+          "message_id": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "user",
+              "assistant",
+              "system",
+              "tool"
+            ]
+          },
+          "author": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "content": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "status": {
+      "type": "string"
+    }
+  }
+}

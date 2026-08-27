@@ -126,6 +126,14 @@
       "confidence": "alta",
       "focus": ["agentes", "memoria", "rastreo de conversaciones", "recuperación bajo demanda"],
       "evidence": ["conversaciones_indexadas", "catalogo_agentes", "observer_local", "cora_ecosistema"]
+    },
+    {
+      "id": "infraestructura-documentacion-tecnica",
+      "name": "Infraestructura y documentación técnica",
+      "state": "antecedente_por_validar",
+      "confidence": "media",
+      "focus": ["planos", "convenios", "oficios", "obra por terceros", "infraestructura eléctrica"],
+      "evidence": ["expediente_documental_contextual", "activos_tecnicos_locales", "documentos_cfe_por_validar"]
     }
   ],
   "transferable_capabilities": [
@@ -139,6 +147,7 @@
     "Validar cargos, instituciones y entregables antes de publicarlos",
     "Vincular cada resultado reportado con evidencia primaria, metodología y localizador privado",
     "Validar las métricas de error, precisión, incremento y adopción antes de usarlas en propuestas",
+    "Confirmar función, autoría y alcance en los documentos de infraestructura antes de incorporarlos como experiencia",
     "Separar experiencia demostrada de intereses y líneas exploratorias"
   ]
 }

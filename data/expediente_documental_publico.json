@@ -11,15 +11,18 @@
     "public_metadata_only": true
   },
   "summary": {
-    "files_reviewed": 29,
-    "docx_files": 16,
-    "pdf_files": 7,
-    "zip_files": 6,
-    "pdf_pages": 494,
-    "zip_members": 64,
+    "files_reviewed": 44,
+    "docx_files": 20,
+    "pdf_files": 9,
+    "zip_files": 13,
+    "other_files": 2,
+    "pdf_pages": 1050,
+    "zip_members": 89,
     "exact_duplicate_groups": 5,
-    "copies_inside_duplicate_groups": 13,
-    "redundant_copies": 8
+    "copies_inside_duplicate_groups": 14,
+    "redundant_copies": 9,
+    "equivalent_archive_groups": 3,
+    "redundant_archive_containers": 4
   },
   "families": [
     {
@@ -56,8 +59,55 @@
       "status": "contenedores_inventariados",
       "evidence_use": "Recuperación de documentos, imágenes, HTML, JSON, Markdown y código",
       "public_action": "Deduplicar miembros antes de extraer o incorporar"
+    },
+    {
+      "id": "technical-infrastructure",
+      "name": "Infraestructura, planos y documentación de obra",
+      "status": "evidencia_tecnica_privada_por_validar",
+      "evidence_use": "Convenios, oficios, formatos de obra por terceros, planos y hojas de revisión",
+      "public_action": "Relacionar con experiencia técnica sólo después de confirmar autoría, función y proyecto"
     }
   ],
+  "additional_discovery": {
+    "entries_reviewed": 15,
+    "stable_files": 14,
+    "active_partial_downloads": 1,
+    "extracted_directories_reviewed": 9,
+    "archive_content_groups": [
+      {
+        "family": "documentos_umed",
+        "containers": 3,
+        "status": "contenido_equivalente"
+      },
+      {
+        "family": "revision_planos",
+        "containers": 2,
+        "status": "contenido_equivalente"
+      },
+      {
+        "family": "material_investigacion_etapa_2",
+        "containers": 2,
+        "status": "contenido_equivalente_con_nombre_variante"
+      }
+    ],
+    "routing": [
+      {
+        "source": "documentos_umed_y_tesis",
+        "route": "formacion_e_investigacion",
+        "status": "privado_pendiente_clasificacion"
+      },
+      {
+        "source": "convenios_oficios_formatos_y_planos",
+        "route": "infraestructura_y_documentacion_tecnica",
+        "status": "privado_pendiente_validacion"
+      },
+      {
+        "source": "descarga_parcial",
+        "route": "temporal_no_indexar",
+        "status": "archivo_en_uso"
+      }
+    ]
+  },
   "evidence_candidates": [
     {
       "relation": "sistemas_gubernamentales",
@@ -82,6 +132,8 @@
     "La existencia del archivo no confirma autoría, entrega, aceptación o resultado.",
     "Los nombres de archivo pueden contener datos personales y no forman parte del índice público.",
     "Los paquetes ZIP se inventariaron sin extraerlos.",
+    "Un archivo de descarga parcial estaba activo y fue excluido del índice estable.",
+    "La equivalencia de archivos comprimidos se calculó por las huellas de sus miembros, no por el hash externo del ZIP.",
     "Los documentos duplicados se conservan; no se autorizó moverlos ni eliminarlos."
   ]
 }

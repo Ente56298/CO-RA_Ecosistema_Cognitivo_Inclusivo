@@ -1097,6 +1097,58 @@ with sub_conversaciones:
                         f"({correccion.get('reason', 'sin detalle')})"
                     )
 
+            descubrimiento = inventario_local.get("latest_discovery", {})
+            if descubrimiento:
+                st.markdown("#### 🆕 Descubrimiento local reciente")
+                st.caption(descubrimiento.get("policy", ""))
+                fuentes_recientes = descubrimiento.get("sources", [])
+                d1, d2, d3 = st.columns(3)
+                d1.metric("Nuevas fuentes", descubrimiento.get("sources_reviewed", 0))
+                d2.metric(
+                    "Registros índice administrativo",
+                    next(
+                        (
+                            fuente.get("records_observed", 0)
+                            for fuente in fuentes_recientes
+                            if fuente.get("alias") == "indice_administrativo_por_tipo"
+                        ),
+                        0,
+                    ),
+                )
+                d3.metric(
+                    "Registros índice general",
+                    next(
+                        (
+                            fuente.get("records_observed", 0)
+                            for fuente in fuentes_recientes
+                            if fuente.get("alias") == "indice_general_por_tipo"
+                        ),
+                        0,
+                    ),
+                )
+                st.dataframe(
+                    [
+                        {
+                            "Fuente contextual": fuente.get("alias", "").replace("_", " "),
+                            "Tipo": fuente.get("kind", "").replace("_", " "),
+                            "Archivos": fuente.get("files", 0),
+                            "Registros": fuente.get("records_observed"),
+                            "Encaminar a": fuente.get("route", "").replace("_", " "),
+                            "Estado": fuente.get("status", "").replace("_", " "),
+                        }
+                        for fuente in fuentes_recientes
+                    ],
+                    width="stretch",
+                    hide_index=True,
+                )
+                with st.expander("Hallazgos y siguientes acciones", expanded=False):
+                    st.markdown("**Hallazgos**")
+                    for hallazgo in descubrimiento.get("findings", []):
+                        st.write(f"- {hallazgo}")
+                    st.markdown("**Siguientes acciones**")
+                    for accion in descubrimiento.get("next_actions", []):
+                        st.write(f"- {accion}")
+
             indice_contextual = cargar_json_publico(
                 "data/indice_contextual_relativo.json",
                 {},

@@ -34,5 +34,80 @@
     {"artifact": "nuevo63.json", "records": 2908, "route": "catalogo_agentes", "reason": "Directorio de agentes, no conversaciones"},
     {"artifact": "history.json", "records": 56193, "route": "historial_navegacion", "reason": "Visitas y localizadores, no mensajes"},
     {"artifact": "history (1).json", "records": 30121, "route": "historial_navegacion", "reason": "Visitas y localizadores, no mensajes"}
-  ]
+  ],
+  "latest_discovery": {
+    "observed_at": "2026-08-27",
+    "sources_reviewed": 6,
+    "policy": "Metadatos agregados únicamente; sin rutas absolutas, mensajes, nombres internos ni contenido.",
+    "sources": [
+      {
+        "alias": "archivo_web_general",
+        "kind": "activos_visuales_web",
+        "files": 83,
+        "directories": 26,
+        "status": "inventario_provisional",
+        "route": "catalogo_activos_web",
+        "note": "Sólo se detectaron imágenes; no se confirmó código fuente del sitio."
+      },
+      {
+        "alias": "sitio_web_comercial",
+        "kind": "activos_visuales_web",
+        "files": 5,
+        "directories": 2,
+        "status": "inventario_provisional",
+        "route": "catalogo_activos_web",
+        "note": "Colección visual; relación con el proyecto pendiente de validar."
+      },
+      {
+        "alias": "sitio_web_territorial",
+        "kind": "activos_visuales_web",
+        "files": 12,
+        "directories": 2,
+        "status": "inventario_provisional",
+        "route": "catalogo_activos_web",
+        "note": "Colección visual; relación con el proyecto pendiente de validar."
+      },
+      {
+        "alias": "indice_administrativo_por_tipo",
+        "kind": "indice_jsonl_particionado",
+        "files": 12,
+        "directories": 1,
+        "records_observed": 1185870,
+        "status": "derivado_no_canonico",
+        "route": "fuente_para_deduplicacion_y_encaminamiento",
+        "note": "Incluye extractos y localizadores privados; no debe publicarse ni tratarse como origen."
+      },
+      {
+        "alias": "descargas_mensajeria",
+        "kind": "descargas_mixtas",
+        "files": 5,
+        "directories": 0,
+        "status": "no_confirmado_como_exportacion_de_chat",
+        "route": "pendiente_revision_manual",
+        "note": "Mezcla de formatos; no se leyó ni publicó contenido."
+      },
+      {
+        "alias": "indice_general_por_tipo",
+        "kind": "indice_jsonl_particionado",
+        "files": 11,
+        "directories": 0,
+        "records_observed": 61684,
+        "status": "derivado_no_canonico",
+        "route": "fuente_para_deduplicacion_y_encaminamiento",
+        "note": "Comparte esquema con el índice administrativo; el solapamiento está pendiente de medir."
+      }
+    ],
+    "findings": [
+      "Los dos índices comparten un esquema de metadatos de archivos y extractos de contenido.",
+      "Los conteos de ambos índices no deben sumarse hasta deduplicar por localizador relativo y firma.",
+      "Se detectaron al menos dos grupos de imágenes duplicadas entre las fuentes web.",
+      "Dos activos visuales estaban en uso durante el cálculo de hashes; el inventario web permanece provisional."
+    ],
+    "next_actions": [
+      "Comparar índices por firma sin cargar los archivos completos en memoria.",
+      "Encaminar candidatos conversacionales al índice canónico sólo después de validarlos.",
+      "Relacionar los activos web con proyectos vivos mediante identificadores privados.",
+      "Revisar manualmente si la carpeta de mensajería contiene una exportación de chat legítima."
+    ]
+  }
 }

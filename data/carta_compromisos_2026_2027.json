@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-08-27",
+  "title": "Carta de Compromisos 2026–2027",
+  "status": "propuesta_para_aprobacion",
+  "nature": "marco_de_direccion_futura_no_evidencia_historica",
+  "central_direction": "Diseñar soluciones para transformar información dispersa en conocimiento útil para la administración, el territorio y la toma de decisiones.",
+  "declaration": "Convertir experiencia, conocimiento y proyectos en resultados demostrables, útiles, sostenibles y recuperables.",
+  "supreme_commitment": "No volver a perder la propia trayectoria: cada activo nuevo debe nacer registrado, relacionado y recuperable.",
+  "principles": [
+    "Resolver una necesidad concreta antes de elegir tecnología.",
+    "Toda propuesta debe incluir diagnóstico, fundamento, alcance, evidencia, implementación y evaluación.",
+    "Distinguir información pública, institucional y personal, usando cada nivel con autorización y propósito legítimo.",
+    "Priorizar, cerrar ciclos y conservar registro de los avances.",
+    "Diseñar continuidad más allá de una administración, persona, plataforma o proveedor.",
+    "Verificar capacidades antes de prometerlas y resultados antes de declararlos.",
+    "Convertir los proyectos funcionales en metodologías reproducibles."
+  ],
+  "priority_commitments": [
+    {
+      "id": "evidencia",
+      "name": "Compromiso con la evidencia",
+      "rule": "Cada afirmación importante debe enlazar con una prueba localizable y su estado de validación.",
+      "completion_evidence": "Matriz maestra con fuente, localizador privado, fecha, alcance y verificación.",
+      "priority": 1,
+      "state": "en_desarrollo"
+    },
+    {
+      "id": "producto_terminado",
+      "name": "Compromiso con el producto terminado",
+      "rule": "Una idea sólo avanza cuando atraviesa problema, diagnóstico, solución, prototipo, implementación, resultado, evidencia y caso documentado.",
+      "completion_evidence": "Ficha de caso cerrada y demostrador verificable.",
+      "priority": 2,
+      "state": "por_iniciar"
+    },
+    {
+      "id": "direccion",
+      "name": "Compromiso con una dirección",
+      "rule": "Programación, GIS, automatización, IA y evaluación funcionan como herramientas de una misma especialidad.",
+      "completion_evidence": "Oferta profesional y portafolio coherentes con la dirección central.",
+      "priority": 3,
+      "state": "en_definicion"
+    }
+  ],
+  "project_maturity": [
+    {"stage": "idea", "exit_criterion": "Problema y usuario definidos."},
+    {"stage": "experimento", "exit_criterion": "Hipótesis y aprendizaje documentados."},
+    {"stage": "prototipo", "exit_criterion": "Flujo principal demostrable."},
+    {"stage": "implementacion", "exit_criterion": "Uso real, responsable y condiciones registradas."},
+    {"stage": "resultado", "exit_criterion": "Indicadores antes y después con método reproducible."},
+    {"stage": "caso_profesional", "exit_criterion": "Evidencia, límites, documentación y versión pública sanitizada."}
+  ],
+  "measurable_commitments": [
+    {"commitment": "Consolidar la trayectoria", "evidence": "Fuente maestra validada", "current_state": "en_desarrollo", "next_action": "Resolver contradicciones y vincular pruebas primarias."},
+    {"commitment": "Documentar proyectos", "evidence": "Una ficha de caso por proyecto", "current_state": "por_iniciar", "next_action": "Completar primero los cuatro proyectos estrella."},
+    {"commitment": "Definir la oferta profesional", "evidence": "Catálogo de servicios", "current_state": "por_iniciar", "next_action": "Derivarlo sólo de capacidades y casos demostrables."},
+    {"commitment": "Convertir proyectos en demostradores", "evidence": "Tres a cinco prototipos presentables", "current_state": "en_desarrollo", "next_action": "Seleccionar los prototipos con mayor evidencia y utilidad."},
+    {"commitment": "Fortalecer la red profesional", "evidence": "CRM privado de contactos y oportunidades", "current_state": "prototipo", "next_action": "Relacionar oportunidades sin exponer conversaciones privadas."},
+    {"commitment": "Construir presencia pública", "evidence": "Portafolio web único", "current_state": "en_desarrollo", "next_action": "Usar la matriz sanitizada como fuente canónica."},
+    {"commitment": "Proteger información y reputación", "evidence": "Política de datos y evidencias", "current_state": "en_desarrollo", "next_action": "Formalizar niveles público, institucional y personal."},
+    {"commitment": "Terminar antes de expandir", "evidence": "Estados y criterios de salida visibles", "current_state": "iniciado", "next_action": "Limitar el trabajo activo y bloquear nuevas altas sin prioridad."},
+    {"commitment": "Medir resultados", "evidence": "Indicadores antes y después", "current_state": "por_iniciar", "next_action": "Definir método antes de publicar cifras."},
+    {"commitment": "Crear continuidad", "evidence": "Manuales, código y documentación", "current_state": "en_desarrollo", "next_action": "Añadir guía de operación y transferencia a cada caso."}
+  ],
+  "focus_policy": {
+    "maximum_simultaneous_priorities": 3,
+    "new_project_rule": "No abrir un proyecto nuevo sin relacionarlo con la dirección central, asignarle prioridad y registrar qué trabajo se pausa o cierra.",
+    "review_cycle": "mensual",
+    "approval_required": true
+  },
+  "privacy": {
+    "contains_personal_data": false,
+    "contains_private_evidence": false,
+    "contains_absolute_paths": false
+  }
+}

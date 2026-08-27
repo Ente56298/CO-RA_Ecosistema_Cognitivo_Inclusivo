@@ -571,6 +571,78 @@ with tab1:
                     st.write("Versiones: " + " · ".join(conflicto.get("versions", [])))
                     st.caption("Decisión: " + conflicto.get("decision", ""))
 
+        carta_compromisos = cargar_json_publico(
+            "data/carta_compromisos_2026_2027.json",
+            {},
+        )
+        if carta_compromisos:
+            st.subheader("🧭 Compromisos 2026–2027")
+            st.info(carta_compromisos.get("central_direction", ""))
+            st.write(carta_compromisos.get("declaration", ""))
+            st.caption(
+                "Estado: "
+                + carta_compromisos.get("status", "por revisar").replace("_", " ")
+                + " · Este marco orienta trabajo futuro; no es evidencia histórica."
+            )
+
+            compromisos_prioritarios = carta_compromisos.get(
+                "priority_commitments", []
+            )
+            for compromiso in compromisos_prioritarios:
+                with st.expander(
+                    f"{compromiso.get('priority', '–')}. "
+                    f"{compromiso.get('name', 'Compromiso')}",
+                    expanded=compromiso.get("priority") == 1,
+                ):
+                    st.write(compromiso.get("rule", ""))
+                    st.markdown(
+                        "**Evidencia de cumplimiento:** "
+                        + compromiso.get("completion_evidence", "")
+                    )
+                    st.caption(
+                        "Estado: "
+                        + compromiso.get("state", "por revisar").replace("_", " ")
+                    )
+
+            compromisos_medibles = carta_compromisos.get(
+                "measurable_commitments", []
+            )
+            with st.expander("📋 Tablero de compromisos medibles", expanded=True):
+                st.dataframe(
+                    [
+                        {
+                            "Compromiso": item.get("commitment", ""),
+                            "Evidencia de cumplimiento": item.get("evidence", ""),
+                            "Estado": item.get("current_state", "").replace("_", " "),
+                            "Siguiente acción": item.get("next_action", ""),
+                        }
+                        for item in compromisos_medibles
+                    ],
+                    width="stretch",
+                    hide_index=True,
+                )
+
+            with st.expander("🚦 Etapas y criterio para avanzar", expanded=False):
+                st.dataframe(
+                    [
+                        {
+                            "Etapa": etapa.get("stage", "").replace("_", " ").title(),
+                            "Criterio de salida": etapa.get("exit_criterion", ""),
+                        }
+                        for etapa in carta_compromisos.get("project_maturity", [])
+                    ],
+                    width="stretch",
+                    hide_index=True,
+                )
+                politica = carta_compromisos.get("focus_policy", {})
+                st.warning(
+                    "Máximo de prioridades simultáneas: "
+                    + str(politica.get("maximum_simultaneous_priorities", 3))
+                    + ". "
+                    + politica.get("new_project_rule", "")
+                )
+                st.success(carta_compromisos.get("supreme_commitment", ""))
+
         st.markdown("---")
 
     radar_profesional = cargar_json_publico(

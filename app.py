@@ -7,7 +7,7 @@ import requests
 import json
 import hashlib
 import base64
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 # ============================================
@@ -152,7 +152,7 @@ class CORAGitHubBridge:
             hash_forense = hashlib.sha512(payload_str.encode('utf-8')).hexdigest()
             
             nuevo_registro = {
-                "timestamp": datetime.utcnow().isoformat() + "Z",
+                "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
                 "evento_id": evento_id,
                 "usuario": usuario,
                 "hash_sha512": hash_forense,
@@ -509,11 +509,102 @@ with tab5:
     metadata = mesa.get("metadata", {})
     st.write(f"**Tema:** {metadata.get('tema', 'Sin tema')}")
     st.write(f"**Estado:** {metadata.get('estado', 'sin estado')}")
+    st.caption("Los nuevos turnos se preparan y descargan localmente. Publicarlos requiere revisión humana.")
+
     for turno in mesa.get("turnos", []):
         with st.expander(f"Turno {turno.get('turno_numero')} · {turno.get('agente')}"):
             st.write(turno.get("resumen", ""))
             if turno.get("pregunta_para_siguiente"):
                 st.markdown(f"**Pregunta siguiente:** {turno['pregunta_para_siguiente']}")
+
+    sintesis = mesa.get("sintesis_provisional", {})
+    if sintesis:
+        st.markdown("### 🧩 Síntesis provisional")
+        col_acuerdos, col_preguntas = st.columns(2)
+        with col_acuerdos:
+            st.markdown("**Acuerdos**")
+            for acuerdo in sintesis.get("acuerdos", []):
+                st.write(f"- {acuerdo}")
+        with col_preguntas:
+            st.markdown("**Preguntas abiertas**")
+            for pregunta_abierta in sintesis.get("preguntas_abiertas", []):
+                st.write(f"- {pregunta_abierta}")
+
+    st.markdown("---")
+    st.markdown("### ✍️ Preparar siguiente turno")
+    siguiente_numero = max(
+        (turno.get("turno_numero", 0) for turno in mesa.get("turnos", [])),
+        default=0
+    ) + 1
+    turno_anterior = siguiente_numero - 1 if siguiente_numero > 1 else None
+
+    with st.form("form_nuevo_turno", clear_on_submit=False):
+        agente_turno = st.selectbox("Agente", ["Qwen", "ChatGPT", "Jorge/moderador"])
+        contenido_turno = st.text_area(
+            "Contenido del turno",
+            height=220,
+            placeholder="Pega aquí la respuesta completa del siguiente participante."
+        )
+        pregunta_siguiente = st.text_area(
+            "Pregunta para el siguiente participante",
+            height=90
+        )
+        evidencia_texto = st.text_area(
+            "Evidencia referenciada (una entrada por línea)",
+            height=90,
+            placeholder="Turno 2 de ChatGPT\ndata/catalogo_agentes_publico.json"
+        )
+        preparar = st.form_submit_button("🧪 Validar y preparar JSON", type="primary")
+
+    if preparar:
+        contenido_limpio = contenido_turno.strip()
+        pregunta_limpia = pregunta_siguiente.strip()
+        total_palabras = len(contenido_limpio.split())
+        errores_turno = []
+
+        if not contenido_limpio:
+            errores_turno.append("El contenido no puede estar vacío.")
+        if total_palabras > 800:
+            errores_turno.append(f"El contenido tiene {total_palabras} palabras; el máximo es 800.")
+        if not pregunta_limpia:
+            errores_turno.append("Debe existir una pregunta para continuar la mesa.")
+
+        if errores_turno:
+            for error_turno in errores_turno:
+                st.error(error_turno)
+            st.session_state.pop("turno_borrador", None)
+        else:
+            evidencias = [
+                linea.strip()
+                for linea in evidencia_texto.splitlines()
+                if linea.strip()
+            ]
+            st.session_state.turno_borrador = {
+                "turno_numero": siguiente_numero,
+                "agente": agente_turno,
+                "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+                "referencia_a_turno": turno_anterior,
+                "contenido": contenido_limpio,
+                "pregunta_para_siguiente": pregunta_limpia,
+                "evidencia_referenciada": evidencias,
+                "estado": "borrador_pendiente_revision",
+                "conteo_palabras": total_palabras
+            }
+
+    borrador = st.session_state.get("turno_borrador")
+    if borrador:
+        st.success(
+            f"Turno {borrador['turno_numero']} válido: "
+            f"{borrador['conteo_palabras']} de 800 palabras."
+        )
+        st.json(borrador)
+        st.download_button(
+            "⬇️ Descargar turno JSON",
+            data=json.dumps(borrador, indent=2, ensure_ascii=False),
+            file_name=f"turno_{borrador['turno_numero']}_{borrador['agente'].lower().replace('/', '_')}.json",
+            mime="application/json"
+        )
+        st.warning("Descargar no publica el turno. Jorge debe revisarlo antes de integrarlo al repositorio.")
 
 # ============================================
 # FOOTER

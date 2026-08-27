@@ -24,5 +24,18 @@
       "pregunta_para_siguiente": "¿Debe representarse el clasificador con JSON, Python o un esquema híbrido, y cómo dividir tareas cuando ningún agente cubre todas las capacidades?"
     }
   ],
+  "sintesis_provisional": {
+    "acuerdos": [
+      "Clasificar primero el tipo de ejecución, no la marca del agente.",
+      "Aplicar restricciones de privacidad, permisos y disponibilidad antes del ranking.",
+      "Usar evidencia contextualizada por tipo de tarea.",
+      "Exigir aprobación humana antes de cualquier envío o acción externa."
+    ],
+    "preguntas_abiertas": [
+      "¿El clasificador debe representarse con reglas JSON, código Python o un esquema híbrido?",
+      "¿Cómo dividir una tarea cuando ningún agente satisface todas las capacidades requeridas?",
+      "¿Cómo ponderar evidencia con tamaños de muestra diferentes?"
+    ]
+  },
   "sintesis_final": null
 }

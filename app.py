@@ -548,6 +548,34 @@ with tab1:
             for limitacion in radar_profesional.get("limitations", []):
                 st.write(f"- {limitacion}")
 
+        señales_profesionales = radar_profesional.get("anonymized_signals", [])
+        if señales_profesionales:
+            with st.expander("🤝 Señales profesionales anonimizadas", expanded=True):
+                st.caption(
+                    "Se conservan únicamente contexto, estado y próxima acción; "
+                    "no se muestran nombres ni mensajes."
+                )
+                st.dataframe(
+                    [
+                        {
+                            "Fecha": señal.get("date", ""),
+                            "Canal": señal.get("channel", "").replace("_", " "),
+                            "Contexto": señal.get("institutional_context", ""),
+                            "Estado": señal.get("status", "").replace("_", " "),
+                            "Próxima acción": señal.get("next_action", ""),
+                        }
+                        for señal in señales_profesionales
+                    ],
+                    width="stretch",
+                    hide_index=True,
+                )
+
+        reglas_eticas = radar_profesional.get("ethical_guardrails", [])
+        if reglas_eticas:
+            with st.expander("🛡️ Límites éticos y de privacidad", expanded=False):
+                for regla in reglas_eticas:
+                    st.write(f"- {regla}")
+
         st.markdown("---")
 
     # ============================================

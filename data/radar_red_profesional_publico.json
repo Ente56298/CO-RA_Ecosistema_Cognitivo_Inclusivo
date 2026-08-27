@@ -17,7 +17,8 @@
     "configured_public_sources": 5,
     "opportunity_nodes": 12,
     "duplicate_files_detected": 1,
-    "conversation_depurator_versions": 2
+    "conversation_depurator_versions": 2,
+    "anonymized_professional_signals": 2
   },
   "network_layers": [
     "Decisión institucional",
@@ -31,6 +32,40 @@
     "Aliado territorial",
     "Mentor o referente académico",
     "Colaborador con experiencia municipal y de evaluación"
+  ],
+  "anonymized_signals": [
+    {
+      "date": "2026-05-13",
+      "channel": "referencia_profesional_indirecta",
+      "institutional_context": "IGECEM / áreas de desarrollo e informática",
+      "status": "curriculum_referido_seguimiento_pendiente",
+      "evidence_level": "mensaje_reportado",
+      "next_action": "Confirmar recepción y estado sin asumir vacante ni compromiso institucional"
+    },
+    {
+      "date": "2026-08-27",
+      "channel": "contacto_de_confianza_y_posible_referidor",
+      "institutional_context": "gestión municipal en Tejupilco",
+      "topics": [
+        "gestión municipal",
+        "análisis geoespacial",
+        "UIPPE",
+        "mapeo territorial",
+        "análisis electoral agregado",
+        "habitantes y localidades",
+        "investigación para PDM"
+      ],
+      "status": "presentacion_a_tercero_ofrecida",
+      "evidence_level": "conversacion_directa_reportada",
+      "next_action": "Preparar una ficha visual breve y esperar confirmación del enlace"
+    }
+  ],
+  "ethical_guardrails": [
+    "No registrar afiliación, preferencia u opinión política como atributo profesional público.",
+    "No almacenar ni mostrar nombres o mensajes privados en el repositorio público.",
+    "El análisis electoral debe usar datos agregados y respetar la normativa aplicable.",
+    "La ubicación territorial se limita a localidades, servicios e infraestructura; no incluye rastreo individual.",
+    "Una referencia o envío de currículum no equivale a contratación, vacante ni respaldo institucional."
   ],
   "source_groups": [
     {

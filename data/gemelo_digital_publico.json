@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-08-27",
+  "title": "Gemelo Digital Municipal CO•RA",
+  "status": "prototipo_local_documentado_no_sincronizado",
+  "definition": "Representación territorial municipal que relaciona infraestructura, ambiente, población agregada, historia e indicadores para apoyar diagnóstico, planeación y seguimiento.",
+  "privacy": {
+    "contains_coordinates": false,
+    "contains_person_locations": false,
+    "contains_api_keys": false,
+    "contains_absolute_paths": false,
+    "public_metadata_only": true
+  },
+  "discovery": {
+    "unique_local_mentions": 138,
+    "candidate_conversation_files": 126,
+    "text_files": 11,
+    "documents": 1,
+    "source_hints": {
+      "unknown": 81,
+      "gemini": 16,
+      "chatgpt": 15,
+      "kimi": 9,
+      "runable": 7,
+      "qwen": 6,
+      "kilo": 2,
+      "telegram": 1,
+      "whatsapp": 1
+    }
+  },
+  "primary_artifacts": [
+    {
+      "id": "territorial-pillar",
+      "type": "pilar_documental",
+      "status": "concepto_y_linea_de_trabajo",
+      "evidence": "Herramientas GIS, fotogrametría, Tabla Madre LOCALIDAD, diagnóstico territorial y Micro-PDM."
+    },
+    {
+      "id": "municipal-infographic",
+      "type": "infografia_html",
+      "status": "demostracion_conceptual_estatica",
+      "evidence": "Explica el gemelo, su flujo, áreas vinculadas y la visión del municipio en la palma de la mano."
+    },
+    {
+      "id": "interactive-twin-prototype",
+      "type": "prototipo_html_interactivo",
+      "status": "funcional_local_sin_backend",
+      "evidence": "Incluye mapas Leaflet, D3, capas, métricas, cronología, bio-historias, escenas, formularios y persistencia local."
+    },
+    {
+      "id": "technical-strategy-report",
+      "type": "analisis_tecnico_pdf",
+      "status": "documento_estrategico_19_paginas",
+      "evidence": "Evalúa CesiumJS, Google Photorealistic 3D Tiles, OpenStreetMap, GeoJSON, seguridad de claves, privacidad y fases de integración."
+    }
+  ],
+  "reported_baseline": {
+    "localities": 156,
+    "population": 79282,
+    "diagnostic_axes": 5,
+    "status": "cifras_reportadas_pendientes_fuente_periodo_y_validacion"
+  },
+  "maturity": [
+    {"layer": "Visión y narrativa", "status": "documentada"},
+    {"layer": "Interfaz demostrativa", "status": "prototipo_local"},
+    {"layer": "Mapa y capas", "status": "prototipo_leaflet"},
+    {"layer": "Persistencia", "status": "almacenamiento_local_del_navegador"},
+    {"layer": "Base geoespacial canónica", "status": "no_verificada"},
+    {"layer": "APIs y sincronización", "status": "no_implementadas_en_prototipos_revisados"},
+    {"layer": "Sensores o datos en tiempo real", "status": "no_detectados"},
+    {"layer": "3D Cesium", "status": "arquitectura_propuesta_no_confirmada_en_prototipo"}
+  ],
+  "minimum_viable_path": [
+    "Validar la Tabla Madre LOCALIDAD con fuente, periodo y diccionario de datos.",
+    "Definir capas públicas agregadas: localidades, población, servicios, infraestructura, indicadores y proyectos.",
+    "Convertir el prototipo Leaflet en visor de solo lectura conectado a un dataset versionado.",
+    "Añadir procedencia, fecha y calidad a cada capa e indicador.",
+    "Crear relaciones con PDM, PAE, MIR, PbR y UIPPE mediante identificadores territoriales.",
+    "Evaluar CesiumJS y 3D Tiles después de validar cobertura, costos, licencias y valor operativo.",
+    "Incorporar actualización dinámica sólo cuando existan fuentes institucionales autorizadas."
+  ],
+  "guardrails": [
+    "Trabajar con población y resultados electorales agregados; no con perfiles individuales.",
+    "No incorporar ubicación en tiempo real de personas.",
+    "No exponer tokens de Cesium, Google Maps u otros servicios en HTML público.",
+    "Distinguir visualización 3D, modelo urbano y gemelo digital sincronizado.",
+    "No presentar cifras o capas como oficiales hasta verificar fuente, periodo y responsable."
+  ],
+  "external_references": [
+    {
+      "name": "OGC Urban Digital Twins Discussion Paper",
+      "url": "https://docs.ogc.org/dp/24-025.html",
+      "use": "Interoperabilidad, clasificación, infraestructura, ambiente y población"
+    },
+    {
+      "name": "Cesium Photorealistic 3D Tiles",
+      "url": "https://cesium.com/learn/photorealistic-3d-tiles-learn/",
+      "use": "Visualización 3D y ecosistema Cesium"
+    },
+    {
+      "name": "Google Maps Tile API",
+      "url": "https://developers.google.com/maps/documentation/tile/overview",
+      "use": "Acceso a tiles 2D y fotorealistas 3D sujeto a cobertura y políticas"
+    }
+  ]
+}

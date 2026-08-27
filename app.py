@@ -578,6 +578,51 @@ with tab1:
 
         st.markdown("---")
 
+    gemelo_digital = cargar_json_publico(
+        "data/gemelo_digital_publico.json",
+        {},
+    )
+    if gemelo_digital:
+        st.subheader("🌐 Gemelo Digital Municipal")
+        st.write(gemelo_digital.get("definition", ""))
+        st.caption(
+            "Estado actual: "
+            + gemelo_digital.get("status", "por_revisar").replace("_", " ")
+        )
+
+        hallazgo_gemelo = gemelo_digital.get("discovery", {})
+        base_gemelo = gemelo_digital.get("reported_baseline", {})
+        g1, g2, g3, g4 = st.columns(4)
+        g1.metric("Artefactos principales", len(gemelo_digital.get("primary_artifacts", [])))
+        g2.metric("Menciones locales", hallazgo_gemelo.get("unique_local_mentions", 0))
+        g3.metric("Localidades reportadas", base_gemelo.get("localities", 0))
+        g4.metric("Población reportada", base_gemelo.get("population", 0))
+        st.caption(base_gemelo.get("status", "").replace("_", " "))
+
+        col_madurez, col_ruta = st.columns(2)
+        with col_madurez:
+            st.markdown("**Madurez verificada**")
+            for capa in gemelo_digital.get("maturity", []):
+                st.write(
+                    f"- {capa.get('layer', 'Capa')}: "
+                    f"{capa.get('status', 'por revisar').replace('_', ' ')}"
+                )
+        with col_ruta:
+            st.markdown("**Ruta mínima viable**")
+            for numero, paso in enumerate(gemelo_digital.get("minimum_viable_path", []), 1):
+                st.write(f"{numero}. {paso}")
+
+        with st.expander("🛡️ Privacidad y referencias técnicas", expanded=False):
+            for regla in gemelo_digital.get("guardrails", []):
+                st.write(f"- {regla}")
+            for referencia in gemelo_digital.get("external_references", []):
+                st.markdown(
+                    f"- [{referencia.get('name', 'Referencia')}]"
+                    f"({referencia.get('url', '')}) — {referencia.get('use', '')}"
+                )
+
+        st.markdown("---")
+
     # ============================================
     # CONTEXTO INICIAL
     # ============================================

@@ -815,6 +815,82 @@ with sub_conversaciones:
         "El MVP conserva los datos durante la sesión actual."
     )
 
+        # ============================================
+    # IMPORTAR CONVERSACIONES
+    # ============================================
+    with st.expander("📤 Importar conversaciones", expanded=False):
+
+        archivos_conversacion = st.file_uploader(
+            "Sube conversaciones o exportaciones",
+            type=["json", "jsonl", "txt", "md", "zip"],
+            accept_multiple_files=True,
+            key="upload_conversaciones_agentes"
+        )
+
+        st.caption(
+            "Puedes importar conversaciones de ChatGPT, Qwen, "
+            "CO•RA u otros agentes. Los archivos se procesan "
+            "durante la sesión actual."
+        )
+
+        if archivos_conversacion:
+
+            if st.button(
+                "🔎 Procesar conversaciones",
+                type="primary",
+                key="procesar_conversaciones_agentes"
+            ):
+
+                nuevas = []
+
+                for archivo in archivos_conversacion:
+                    nuevas.extend(
+                        procesar_archivo_conversaciones(
+                            archivo
+                        )
+                    )
+
+                if "conversaciones_importadas" not in st.session_state:
+                    st.session_state.conversaciones_importadas = []
+
+                existentes = (
+                    st.session_state.conversaciones_importadas
+                )
+
+                hashes_existentes = {
+                    c.get("hash")
+                    for c in existentes
+                    if c.get("hash")
+                }
+
+                agregadas = 0
+
+                for conv in nuevas:
+
+                    if (
+                        not conv.get("hash")
+                        or conv.get("hash")
+                        not in hashes_existentes
+                    ):
+                        existentes.append(conv)
+
+                        if conv.get("hash"):
+                            hashes_existentes.add(
+                                conv["hash"]
+                            )
+
+                        agregadas += 1
+
+                st.session_state.conversaciones_importadas = (
+                    existentes
+                )
+
+                st.success(
+                    f"✅ {agregadas} conversaciones nuevas detectadas."
+                )
+
+                st.rerun()
+                
     # ============================================
     # CARGAR CATÁLOGOS
     # ============================================

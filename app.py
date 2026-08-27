@@ -307,12 +307,13 @@ with st.sidebar:
     st.write("⚠️ Escritura en Memory Bank desactivada" if not ENABLE_GITHUB_WRITES else "✅ Escritura privada habilitada")
 
 # Tabs principales
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
     "🎯 Trayectoria y proyectos",
     "📚 Conversaciones y registros",
     "🧠 Memoria y contexto",
     "🤝 Agentes y evaluación",
     "🧩 Plantillas y referencias",
+    "🗃️ Activos y recursos",
     "💬 Mesa colaborativa"
 ])
 
@@ -1189,9 +1190,70 @@ with tab5:
                 )
 
 # ============================================
-# TAB 6: MESA REDONDA
+# TAB 6: CATÁLOGO DE ACTIVOS
 # ============================================
 with tab6:
+    st.subheader("🗃️ Catálogo de activos y recursos")
+    st.caption(
+        "Qué existe, para qué sirve, su estado y nivel de acceso. "
+        "Los activos privados se representan mediante referencias contextuales."
+    )
+    catalogo_activos = cargar_json_publico(
+        "data/catalogo_activos_publico.json",
+        {"assets": []},
+    )
+    activos = catalogo_activos.get("assets", [])
+    tipos_activo = sorted({a.get("type", "otro") for a in activos})
+    accesos_activo = sorted({a.get("access", "por_revisar") for a in activos})
+    col_tipo, col_acceso = st.columns(2)
+    with col_tipo:
+        filtro_tipo_activo = st.multiselect(
+            "Tipo de activo",
+            tipos_activo,
+            key="filtro_tipo_activo",
+        )
+    with col_acceso:
+        filtro_acceso_activo = st.multiselect(
+            "Nivel de acceso",
+            accesos_activo,
+            key="filtro_acceso_activo",
+        )
+    activos_visibles = [
+        activo for activo in activos
+        if (not filtro_tipo_activo or activo.get("type") in filtro_tipo_activo)
+        and (not filtro_acceso_activo or activo.get("access") in filtro_acceso_activo)
+    ]
+    a1, a2, a3 = st.columns(3)
+    a1.metric("Activos registrados", len(activos))
+    a2.metric("Públicos o sanitizados", sum(
+        1 for activo in activos
+        if "público" in activo.get("access", "")
+    ))
+    a3.metric("Privados o locales", sum(
+        1 for activo in activos
+        if activo.get("access") in {"privado", "local", "privado_revisable", "privado_sanitizable"}
+    ))
+    filas_activos = [
+        {
+            "Activo": activo.get("name"),
+            "Tipo": activo.get("type"),
+            "Dominio": activo.get("domain", "otro").replace("_", " "),
+            "Estado": activo.get("status", "por_revisar").replace("_", " "),
+            "Acceso": activo.get("access", "por_revisar").replace("_", " "),
+            "Función": activo.get("relation", ""),
+        }
+        for activo in activos_visibles
+    ]
+    st.dataframe(filas_activos, use_container_width=True, hide_index=True)
+    st.info(
+        "El catálogo no permite abrir activos privados. La recuperación exige "
+        "un localizador autorizado y permanece bajo control local."
+    )
+
+# ============================================
+# TAB 7: MESA REDONDA
+# ============================================
+with tab7:
     st.subheader("💬 Mesa Redonda CO•RA")
     mesa = cargar_json_publico("mesa_redonda/router_agentes_v1.json", {"turnos": []})
     metadata = mesa.get("metadata", {})

@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-08-27",
+  "purpose": "Catálogo público de activos conocidos sin rutas ni contenido privado",
+  "privacy": {
+    "contains_absolute_paths": false,
+    "contains_credentials": false,
+    "contains_private_content": false,
+    "contains_precise_physical_locations": false
+  },
+  "assets": [
+    {"asset_id":"repo-cora","name":"Repositorio canónico CO•RA","type":"código","domain":"ecosistema_cora","status":"activo","access":"público","locator_type":"url_publica","relation":"Base versionada de la aplicación"},
+    {"asset_id":"app-cora","name":"Aplicación pública CO•RA","type":"aplicación","domain":"ecosistema_cora","status":"operativo","access":"público","locator_type":"url_publica","relation":"Interfaz desplegada del ecosistema"},
+    {"asset_id":"conversation-index","name":"Índice canónico de conversaciones","type":"índice","domain":"conversaciones","status":"activo","access":"metadatos_públicos","locator_type":"id_anonimo","relation":"Títulos, fuentes, hashes y estados"},
+    {"asset_id":"local-sources","name":"Fuentes locales de conversaciones","type":"colección","domain":"conversaciones","status":"pendiente_indexacion","access":"privado","locator_type":"locator_privado","relation":"Orígenes conservados localmente"},
+    {"asset_id":"memory-bank","name":"Memory Bank e índices HILO","type":"memoria","domain":"conocimiento","status":"prototipo","access":"privado_sanitizable","locator_type":"referencia_contextual","relation":"Síntesis, relaciones y recuperación bajo demanda"},
+    {"asset_id":"observer-local","name":"Observer y puente local","type":"software","domain":"observacion","status":"prototipo","access":"local","locator_type":"modulo_local","relation":"Contexto de ventana y UI activa"},
+    {"asset_id":"pdl-gis","name":"Activos PDL y GIS","type":"datos_geoespaciales","domain":"territorio","status":"activo","access":"privado_revisable","locator_type":"referencia_contextual","relation":"Capas, proyectos y documentación territorial"},
+    {"asset_id":"municipal-docs","name":"Documentación municipal y de evaluación","type":"documentos","domain":"gestion_municipal","status":"activo","access":"privado_revisable","locator_type":"referencia_contextual","relation":"Planes, seguimiento e instrumentos"},
+    {"asset_id":"agent-catalog","name":"Catálogo público de agentes y fuentes de evaluación","type":"catálogo","domain":"agentes","status":"activo","access":"público","locator_type":"url_publica","relation":"Descubrimiento y comparación supervisada"},
+    {"asset_id":"template-catalog","name":"Catálogo de plantillas y referencias","type":"catálogo","domain":"interfaces","status":"activo","access":"público","locator_type":"url_publica","relation":"Patrones externos para integración"},
+    {"asset_id":"keep-inventory","name":"Inventarios KEEP y manifiestos de hashes","type":"inventario","domain":"trazabilidad","status":"prototipo","access":"privado","locator_type":"hash_y_referencia","relation":"Familias, deduplicación y trazabilidad"},
+    {"asset_id":"professional-trajectory","name":"Trayectoria profesional contextual","type":"perfil_contextual","domain":"trayectoria","status":"borrador_revisable","access":"público_sanitizado","locator_type":"indice_contextual","relation":"Líneas profesionales inferidas con revisión humana"}
+  ]
+}

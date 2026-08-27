@@ -307,11 +307,12 @@ with st.sidebar:
     st.write("⚠️ Escritura en Memory Bank desactivada" if not ENABLE_GITHUB_WRITES else "✅ Escritura privada habilitada")
 
 # Tabs principales
-tab1, tab2, tab3, tab4, tab5 = st.tabs([
-    "🎯 Trayectoria y áreas",
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+    "🎯 Trayectoria y proyectos",
     "📚 Conversaciones y registros",
     "🧠 Memoria y contexto",
-    "🤝 Agentes y fuentes",
+    "🤝 Agentes y evaluación",
+    "🧩 Plantillas y referencias",
     "💬 Mesa colaborativa"
 ])
 
@@ -1097,9 +1098,50 @@ with sub_conversaciones:
             )
 
 # ============================================
-# TAB 5: MESA REDONDA
+# TAB 5: PLANTILLAS Y REFERENCIAS
 # ============================================
 with tab5:
+    st.subheader("🧩 Plantillas y referencias para integrar")
+    st.caption(
+        "Patrones externos observados para resolver brechas concretas de CO•RA. "
+        "Son referencias; no se copian aplicaciones ni se presupone su licencia."
+    )
+    catalogo_plantillas = cargar_json_publico(
+        "data/plantillas_publicas.json",
+        {"templates": []},
+    )
+    plantillas = catalogo_plantillas.get("templates", [])
+    categorias_plantilla = sorted({p.get("category", "otra") for p in plantillas})
+    filtro_plantilla = st.multiselect(
+        "Filtrar por patrón",
+        categorias_plantilla,
+        key="filtro_catalogo_plantillas",
+    )
+    visibles = [
+        p for p in plantillas
+        if not filtro_plantilla or p.get("category") in filtro_plantilla
+    ]
+    st.metric("Referencias registradas", len(plantillas))
+    for plantilla in visibles:
+        with st.container(border=True):
+            col_info, col_link = st.columns([4, 1])
+            with col_info:
+                st.markdown(f"**{plantilla.get('name', 'Referencia')}**")
+                st.caption(
+                    f"Patrón: {plantilla.get('category', 'por clasificar')} · "
+                    f"Prioridad: {plantilla.get('priority', 'por revisar')}"
+                )
+            with col_link:
+                st.link_button(
+                    "Abrir referencia",
+                    plantilla.get("url", "https://streamlit.io/"),
+                    use_container_width=True,
+                )
+
+# ============================================
+# TAB 6: MESA REDONDA
+# ============================================
+with tab6:
     st.subheader("💬 Mesa Redonda CO•RA")
     mesa = cargar_json_publico("mesa_redonda/router_agentes_v1.json", {"turnos": []})
     metadata = mesa.get("metadata", {})

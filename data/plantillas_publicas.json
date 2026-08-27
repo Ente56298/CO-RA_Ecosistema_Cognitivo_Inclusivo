@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-08-27",
+  "purpose": "Referencias externas para integrar patrones, no aplicaciones copiadas",
+  "templates": [
+    {"name":"EXIF Analyzer","url":"https://exifaa.streamlit.app/","category":"inspector de metadatos","priority":"alta"},
+    {"name":"Data Science Handover POC","url":"https://data-science-at-swast-handover-poc-handover-yfa2kz.streamlit.app/","category":"entrega de contexto","priority":"alta"},
+    {"name":"Snow Table Catalog","url":"https://snow-table-catalog.streamlit.app/","category":"catálogo de datos","priority":"alta"},
+    {"name":"Prettymapp","url":"https://prettymapp.streamlit.app/","category":"visualización geoespacial","priority":"media"},
+    {"name":"Weaviate Magic Chat","url":"https://weaviate-magic-chat.streamlit.app/","category":"búsqueda híbrida","priority":"alta"},
+    {"name":"DE Zoomcamp Datasets","url":"https://dezoomcamp.streamlit.app/Datasets","category":"catálogo de recursos","priority":"alta"},
+    {"name":"H3 Snow","url":"https://h3-snow.streamlit.app/","category":"índice espacial","priority":"media"},
+    {"name":"LangChain Chat Search","url":"https://langchain-chat-search.streamlit.app/","category":"búsqueda de conversaciones","priority":"alta"},
+    {"name":"Pix Match Game","url":"https://pixmatchgame.streamlit.app/","category":"coincidencia visual","priority":"baja"},
+    {"name":"Top Companies Market Cap","url":"https://topcompaniesmarketcap-7rqhuxkbjdghfaduzg8kwq.streamlit.app/","category":"panel de clasificación","priority":"media"},
+    {"name":"Molecule Icon Generator","url":"https://molecule-icon-generator.streamlit.app/","category":"generador de artefactos","priority":"baja"},
+    {"name":"GW Quickview","url":"https://gw-quickview.streamlit.app/","category":"vista científica rápida","priority":"media"},
+    {"name":"MC Pi Streamlit","url":"https://mesmith027-streamlit-webapps-mc-pistreamlit-app-l4b15e.streamlit.app/","category":"simulación interactiva","priority":"baja"},
+    {"name":"Wordler","url":"https://wordler.streamlit.app/","category":"interacción textual","priority":"baja"},
+    {"name":"Vehicle Incidents in England","url":"https://vehicleincidentsinengland.streamlit.app/All_Main_Towns","category":"panel de incidentes","priority":"media"},
+    {"name":"Webb Compare","url":"https://webb-compare.streamlit.app/","category":"visor comparativo","priority":"media"},
+    {"name":"UBA Electoral","url":"https://uba-electoral.streamlit.app/","category":"portal electoral","priority":"media"},
+    {"name":"Uber Fares 2","url":"https://uberfares2-bwwu3ppswfnzujfisnbeoc.streamlit.app/","category":"estimador","priority":"media"},
+    {"name":"Ubar Dashboard","url":"https://ubar-dash-suren-oraon.streamlit.app/","category":"panel de movilidad","priority":"media"},
+    {"name":"Vélib Notification","url":"https://velib-notif.streamlit.app/","category":"monitor de disponibilidad","priority":"alta"},
+    {"name":"Calculadora VR","url":"https://calculadora-vr-ikzfzyaydlpj4angwqxdts.streamlit.app/","category":"calculadora especializada","priority":"alta"},
+    {"name":"BlueTrips","url":"https://bluetrips-digiruzvrwgjk5daajlc9s.streamlit.app/","category":"explorador de viajes","priority":"media"},
+    {"name":"Geoprocessing DATNLD","url":"https://geoprocessing-datnld.streamlit.app/","category":"procesamiento geoespacial","priority":"media"},
+    {"name":"Proyecto Umbral 2","url":"https://proyectoumbral2.streamlit.app/","category":"flujo de decisión por umbral","priority":"alta"}
+  ]
+}

@@ -1,6 +1,6 @@
 """
 CO•RA Tutor — Trayectoria Adaptativa de Aprendizaje
-Versión 2.0: 8 áreas + Rastreo de contextos + GitHub Bridge
+Versión 2.1: Mapa abierto + Rastreo de contextos + GitHub Bridge
 """
 import streamlit as st
 import requests
@@ -33,7 +33,7 @@ GITHUB_USER = "Ente56298"
 REPO_NAME = "CO-RA_Ecosistema_Cognitivo_Inclusivo"
 
 # ============================================
-# ÁREAS DE CONOCIMIENTO (8 áreas)
+# ÁREAS DE CONOCIMIENTO (accesos frecuentes, no límites)
 # ============================================
 AREAS_CONOCIMIENTO = {
     'redes': {
@@ -99,6 +99,25 @@ AREAS_CONOCIMIENTO = {
         'pregunta': '¿Cómo se estructura una página web básica?',
         'palabras_clave': ['html', 'css', 'javascript', 'streamlit', 'web', 'app', 'frontend', 'backend'],
         'conectadas': ['programacion', 'ia']
+    },
+    'oportunidades': {
+        'nombre': 'Oportunidades e Ingresos',
+        'icono': '💼',
+        'descripcion': 'Trabajo, convocatorias, servicios, financiamiento y sostenibilidad de proyectos',
+        'pregunta': '¿Qué oportunidad puede convertirse en un ingreso verificable y sostenible?',
+        'palabras_clave': [
+            'trabajo', 'vacante', 'oportunidad', 'ingreso', 'freelance', 'workana',
+            'convocatoria', 'financiamiento', 'propuesta', 'cliente', 'servicio'
+        ],
+        'conectadas': ['ia', 'programacion', 'municipal', 'evaluacion']
+    },
+    'mapa_abierto': {
+        'nombre': 'Mapa Abierto de Conocimiento',
+        'icono': '🧭',
+        'descripcion': 'Exploración interdisciplinaria sin una categoría previa obligatoria',
+        'pregunta': '¿Qué observas y con qué ideas podría relacionarse?',
+        'palabras_clave': [],
+        'conectadas': []
     }
 }
 
@@ -253,7 +272,8 @@ with st.sidebar:
     st.markdown("---")
     st.subheader("🔧 Motores Activos")
     st.write("✅ Rastreo de contextos")
-    st.write("✅ 8 áreas de conocimiento")
+    st.write("✅ Mapa abierto de conocimiento")
+    st.write("✅ Radar de oportunidades e ingresos")
     st.write("✅ Catálogo público de agentes")
     st.write("✅ Mesa redonda colaborativa")
     st.write("⚠️ Escritura en Memory Bank desactivada" if not ENABLE_GITHUB_WRITES else "✅ Escritura privada habilitada")
@@ -272,6 +292,58 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 # ============================================
 with tab1:
     st.subheader("📋 Contexto Inicial")
+
+    with st.expander("🧠 Gestión del contexto y las ideas", expanded=False):
+        modo_contexto = st.radio(
+            "¿Cómo quieres trabajar en este momento?",
+            [
+                "Incubación libre",
+                "Consolidar lo que ya surgió",
+            ],
+            horizontal=True,
+            key="modo_contexto",
+        )
+
+        acciones_contexto = []
+        notas_contexto = ""
+        if modo_contexto == "Incubación libre":
+            st.info(
+                "Conversa y explora sin definir una conclusión prematura. "
+                "Cuando aparezca una idea importante, puedes anotarla aquí sin interrumpir el hilo."
+            )
+            notas_contexto = st.text_area(
+                "Idea emergente o conexión que no quieres perder (opcional)",
+                key="nota_incubacion",
+            )
+        else:
+            st.info(
+                "Revisa lo acumulado y decide qué debe convertirse en checkpoint, "
+                "hilo derivado, tarea o idea pendiente."
+            )
+            acciones_contexto = st.multiselect(
+                "¿Qué necesitas organizar?",
+                [
+                    "Crear checkpoint",
+                    "Separar hilos",
+                    "Registrar decisiones",
+                    "Guardar ideas pendientes",
+                    "Relacionar conversaciones",
+                    "Reducir el contexto activo",
+                    "Todavía no estoy seguro",
+                ],
+                key="acciones_contexto",
+                placeholder="Puedes elegir varias acciones",
+            )
+            notas_contexto = st.text_area(
+                "Notas para la consolidación (opcional)",
+                key="nota_consolidacion",
+            )
+
+        st.caption(
+            "CO•RA conserva el texto completo como fuente y trabaja con síntesis, checkpoints "
+            "y fragmentos relevantes. El conteo automático de tokens y la memoria persistente "
+            "todavía no están habilitados en el modo público."
+        )
 
     claridad_objetivo = st.radio(
         "¿Qué tan claro tienes lo que quieres hacer?",
@@ -322,11 +394,49 @@ with tab1:
         nombre = st.text_input("¿Cómo quieres que te llame?", value=usuario)
     
     st.markdown("---")
-    st.subheader("🎯 Selecciona un área para explorar")
-    
-    # Mostrar 8 áreas como botones
+    st.subheader("🧭 Mapa Abierto de Conocimiento")
+    st.caption(
+        "Las áreas frecuentes son puntos de entrada, no límites. Puedes comenzar "
+        "con una disciplina, problema, idea, hipótesis, tesis, teoría, ley o relación todavía sin clasificar."
+    )
+
+    tema_abierto = st.text_input(
+        "¿Qué quieres explorar?",
+        placeholder="Escribe una palabra, observación, pregunta o conexión posible",
+        key="tema_mapa_abierto",
+    )
+    tipos_abiertos = st.multiselect(
+        "¿Cómo describirías lo que tienes? (opcional)",
+        [
+            "Disciplina o área",
+            "Tema",
+            "Problema",
+            "Idea emergente",
+            "Hipótesis",
+            "Tesis",
+            "Teoría",
+            "Ley o principio",
+            "Método o modelo",
+            "Relación entre varias cosas",
+            "Todavía no lo sé",
+        ],
+        key="tipos_mapa_abierto",
+        placeholder="Puedes elegir varias opciones",
+    )
+    if st.button("🧭 Explorar sin limitar el área", use_container_width=True):
+        st.session_state.area_seleccionada = 'mapa_abierto'
+        st.session_state.tema_abierto_activo = tema_abierto.strip()
+        st.session_state.tipos_abiertos_activos = tipos_abiertos
+
+    st.markdown("---")
+    st.subheader("🎯 Áreas frecuentes de tu trayectoria")
+
+    # Mostrar accesos frecuentes como botones; el mapa abierto tiene su propia entrada.
     cols = st.columns(4)
-    areas_lista = list(AREAS_CONOCIMIENTO.items())
+    areas_lista = [
+        item for item in AREAS_CONOCIMIENTO.items()
+        if item[0] != 'mapa_abierto'
+    ]
     
     for idx, (area_id, area_data) in enumerate(areas_lista):
         col = cols[idx % 4]
@@ -341,7 +451,20 @@ with tab1:
     # Cuando se selecciona un área
     if 'area_seleccionada' in st.session_state:
         area_id = st.session_state.area_seleccionada
-        area = AREAS_CONOCIMIENTO[area_id]
+        area = dict(AREAS_CONOCIMIENTO[area_id])
+
+        if area_id == 'mapa_abierto':
+            tema_activo = st.session_state.get('tema_abierto_activo', '')
+            tipos_activos = st.session_state.get('tipos_abiertos_activos', [])
+            if tema_activo:
+                area['nombre'] = tema_activo
+                area['descripcion'] = "Exploración abierta: " + (
+                    ", ".join(tipos_activos) if tipos_activos else "sin clasificación obligatoria"
+                )
+                area['pregunta'] = f"¿Qué quieres comprender, comprobar o relacionar sobre {tema_activo}?"
+                area['palabras_clave'] = [
+                    palabra.lower() for palabra in tema_activo.split() if len(palabra) > 2
+                ]
         
         # Cargar historial y rastrear contextos
         historial = cargar_conversaciones()
@@ -407,6 +530,9 @@ with tab1:
                                 "objetivo": objetivo,
                                 "recursos": recursos,
                                 "observacion": observacion,
+                                "modo_contexto": modo_contexto,
+                                "acciones_contexto": acciones_contexto,
+                                "notas_contexto": notas_contexto,
                                 "contextos_previos": len(contextos)
                             }
                         )
@@ -419,7 +545,10 @@ with tab1:
                             "area": area_id,
                             "pregunta": pregunta,
                             "modelo_mental": modelo_mental,
-                            "respuesta_ejecucion": respuesta_ejecucion
+                            "respuesta_ejecucion": respuesta_ejecucion,
+                            "modo_contexto": modo_contexto,
+                            "acciones_contexto": acciones_contexto,
+                            "notas_contexto": notas_contexto
                         }
                         st.download_button(
                             "⬇️ Descargar evento para revisión local",

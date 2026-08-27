@@ -1,0 +1,453 @@
+"""
+CO•RA Tutor — Trayectoria Adaptativa de Aprendizaje
+Versión 2.0: 8 áreas + Rastreo de contextos + GitHub Bridge
+"""
+import streamlit as st
+import requests
+import json
+import hashlib
+import base64
+from datetime import datetime
+from pathlib import Path
+
+# ============================================
+# CONFIGURACIÓN DE PÁGINA
+# ============================================
+st.set_page_config(
+    page_title="CO•RA Tutor",
+    page_icon="🧭",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# ============================================
+# CONFIGURACIÓN GITHUB
+# ============================================
+GITHUB_TOKEN = st.secrets.get("GITHUB_TOKEN", "")
+GITHUB_USER = "Ente56298"
+REPO_NAME = "CO-RA_Ecosistema_Cognitivo_Inclusivo"
+
+# ============================================
+# ÁREAS DE CONOCIMIENTO (8 áreas)
+# ============================================
+AREAS_CONOCIMIENTO = {
+    'redes': {
+        'nombre': 'Redes y Direccionamiento',
+        'icono': '🌐',
+        'descripcion': 'IP, DNS, protocolos, infraestructura de red',
+        'pregunta': '¿Qué es una dirección IP y para qué sirve?',
+        'palabras_clave': ['ip', 'red', 'dns', 'router', 'protocolo', 'tcp', 'udp'],
+        'conectadas': ['programacion', 'geoespacial']
+    },
+    'programacion': {
+        'nombre': 'Programación y Automatización',
+        'icono': '💻',
+        'descripcion': 'Python, Excel VBA, APIs, scripts, automatización',
+        'pregunta': '¿Qué es una API y cómo permite la comunicación entre sistemas?',
+        'palabras_clave': ['python', 'excel', 'vba', 'macro', 'script', 'api', 'código', 'automat'],
+        'conectadas': ['redes', 'ia', 'desarrollo_web', 'contable']
+    },
+    'contable': {
+        'nombre': 'Contabilidad y Fiscal (SAT/NIF)',
+        'icono': '📊',
+        'descripcion': 'Agrupadores SAT, NIF, catálogo de cuentas, fiscal mexicano',
+        'pregunta': '¿Qué es un agrupador SAT y cómo se relaciona con las NIF?',
+        'palabras_clave': ['sat', 'nif', 'agrupador', 'cuenta', 'activo', 'fiscal', 'contab', 'catálogo'],
+        'conectadas': ['programacion', 'municipal']
+    },
+    'municipal': {
+        'nombre': 'Gestión Municipal y Transparencia',
+        'icono': '🏛️',
+        'descripcion': 'PDM, PAE, transparencia, SAIMEX, gobierno municipal',
+        'pregunta': '¿Qué es el PDM y cómo se evalúa su cumplimiento?',
+        'palabras_clave': ['pdm', 'pai', 'transparencia', 'saimes', 'municipal', 'tejupilco', 'icati', 'ayuntamiento'],
+        'conectadas': ['evaluacion', 'contable', 'geoespacial']
+    },
+    'geoespacial': {
+        'nombre': 'Sistemas de Información Geográfica',
+        'icono': '🗺️',
+        'descripcion': 'QGIS, shapefiles, KMZ, cartografía, georreferenciación',
+        'pregunta': '¿Qué es un shapefile y para qué se usa en análisis territorial?',
+        'palabras_clave': ['qgis', 'shapefile', 'kmz', 'mapa', 'gis', 'coordenadas', 'geoespacial', 'cartografía'],
+        'conectadas': ['municipal', 'redes', 'evaluacion']
+    },
+    'ia': {
+        'nombre': 'Inteligencia Artificial',
+        'icono': '🤖',
+        'descripcion': 'IA, LLM, automatización inteligente, agentes',
+        'pregunta': '¿Cómo aprende un modelo de IA a partir de datos?',
+        'palabras_clave': ['ia', 'inteligencia artificial', 'gpt', 'chatgpt', 'modelo', 'prompt', 'agente', 'machine learning'],
+        'conectadas': ['programacion', 'desarrollo_web']
+    },
+    'evaluacion': {
+        'nombre': 'Evaluación de Programas',
+        'icono': '📈',
+        'descripcion': 'PbR, MIR, indicadores, evaluación de desempeño',
+        'pregunta': '¿Qué es la Metodología de Marco Lógico (MIR)?',
+        'palabras_clave': ['evaluación', 'indicador', 'mir', 'pbr', 'programa', 'meta', 'pae'],
+        'conectadas': ['municipal', 'contable']
+    },
+    'desarrollo_web': {
+        'nombre': 'Desarrollo Web',
+        'icono': '🌍',
+        'descripcion': 'HTML, CSS, JavaScript, Streamlit, aplicaciones interactivas',
+        'pregunta': '¿Cómo se estructura una página web básica?',
+        'palabras_clave': ['html', 'css', 'javascript', 'streamlit', 'web', 'app', 'frontend', 'backend'],
+        'conectadas': ['programacion', 'ia']
+    }
+}
+
+# ============================================
+# CLASE PUENTE GITHUB
+# ============================================
+class CORAGitHubBridge:
+    """Puente de integración entre Streamlit y GitHub Memory Bank"""
+    
+    def __init__(self, token: str, owner: str, repo: str):
+        self.token = token
+        self.owner = owner
+        self.repo = repo
+        self.base_url = f"https://api.github.com/repos/{owner}/{repo}/contents"
+        self.headers = {
+            "Authorization": f"token {token}",
+            "Accept": "application/vnd.github.v3+json"
+        }
+    
+    def leer_contexto(self, ruta: str):
+        """Recupera contexto desde GitHub Memory Bank"""
+        try:
+            url = f"{self.base_url}/{ruta}"
+            response = requests.get(url, headers=self.headers)
+            if response.status_code == 200:
+                content = base64.b64decode(response.json()["content"]).decode('utf-8')
+                return json.loads(content)
+        except Exception as e:
+            st.error(f"Error leyendo contexto: {e}")
+        return None
+    
+    def anclar_evento(self, usuario: str, evento_id: str, payload: dict):
+        """Ancla evento en Matriz Dorsal con hash SHA-512"""
+        try:
+            ruta = f"matriz_dorsal/usuarios/{usuario}/eventos.jsonl"
+            url = f"{self.base_url}/{ruta}"
+            
+            response = requests.get(url, headers=self.headers)
+            contenido_actual = ""
+            sha_actual = ""
+            
+            if response.status_code == 200:
+                contenido_actual = base64.b64decode(response.json()["content"]).decode('utf-8')
+                sha_actual = response.json()["sha"]
+            
+            payload_str = json.dumps(payload, sort_keys=True)
+            hash_forense = hashlib.sha512(payload_str.encode('utf-8')).hexdigest()
+            
+            nuevo_registro = {
+                "timestamp": datetime.utcnow().isoformat() + "Z",
+                "evento_id": evento_id,
+                "usuario": usuario,
+                "hash_sha512": hash_forense,
+                "datos": payload
+            }
+            
+            contenido_nuevo = contenido_actual + json.dumps(nuevo_registro) + "\n"
+            
+            commit_data = {
+                "message": f"🔒 [CO•RA] {evento_id} | {usuario}",
+                "content": base64.b64encode(contenido_nuevo.encode('utf-8')).decode('utf-8'),
+                "branch": "main"
+            }
+            if sha_actual:
+                commit_data["sha"] = sha_actual
+            
+            return requests.put(url, headers=self.headers, json=commit_data)
+        except Exception as e:
+            st.error(f"Error anclando evento: {e}")
+            return None
+
+# ============================================
+# RASTREADOR DE CONTEXTOS
+# ============================================
+def rastrear_contextos_previos(area_id: str, historial: list) -> list:
+    """Rastrea conversaciones previas relacionadas con un área"""
+    area = AREAS_CONOCIMIENTO.get(area_id, {})
+    palabras_clave = area.get('palabras_clave', [])
+    contextos_encontrados = []
+    
+    for conv in historial:
+        titulo = conv.get('titulo', '').lower()
+        coincidencias = sum(1 for palabra in palabras_clave if palabra in titulo)
+        
+        if coincidencias > 0:
+            relevancia = coincidencias / len(palabras_clave)
+            contextos_encontrados.append({
+                'titulo': conv.get('titulo', ''),
+                'relevancia': relevancia,
+                'is_pinned': conv.get('is_pinned', False),
+                'coincidencias': coincidencias
+            })
+    
+    return sorted(contextos_encontrados, key=lambda x: x['relevancia'], reverse=True)
+
+def generar_recomendacion(area_nombre: str, contextos: list) -> str:
+    """Genera recomendación personalizada basada en contextos previos"""
+    if len(contextos) == 0:
+        return f"🌱 Esta es tu primera exploración de {area_nombre}. Empezaremos desde los fundamentos."
+    elif len(contextos) <= 2:
+        return f"🌱 Ya exploraste '{contextos[0]['titulo'][:50]}...'. Podemos construir sobre esa base."
+    elif len(contextos) <= 5:
+        return f"📚 Tienes {len(contextos)} conversaciones previas en esta área. Nivel intermedio detectado."
+    else:
+        return f"🎯 Eres usuario avanzado en {area_nombre} ({len(contextos)} contextos). Podemos ir directo a casos complejos."
+
+# ============================================
+# CARGAR DATOS
+# ============================================
+def cargar_conversaciones():
+    """Carga las conversaciones extraídas"""
+    ruta = Path("data/conversaciones_extraidas.json")
+    if ruta.exists():
+        try:
+            with open(ruta, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except:
+            return []
+    return []
+
+# ============================================
+# INTERFAZ PRINCIPAL
+# ============================================
+st.title("🧭 CO•RA Tutor")
+st.markdown("### Trayectoria adaptativa de aprendizaje")
+st.caption("Contexto abundante por detrás; simplicidad por delante.")
+
+# Sidebar - Configuración
+with st.sidebar:
+    st.header("⚙️ Configuración")
+    token = st.text_input("GitHub Token", type="password", value=GITHUB_TOKEN)
+    usuario = st.text_input("Usuario", value="Jorge")
+    
+    if token:
+        bridge = CORAGitHubBridge(token, GITHUB_USER, REPO_NAME)
+        st.success("✅ Bridge inicializado")
+    
+    st.markdown("---")
+    st.subheader("🔧 Motores Activos")
+    st.write("✅ Rastreo de contextos")
+    st.write("✅ 8 áreas de conocimiento")
+    st.write("✅ GitHub Memory Bank")
+
+# Tabs principales
+tab1, tab2, tab3 = st.tabs([
+    "🎯 Explorar Área",
+    "📚 Historial ChatGPT",
+    "🧠 Memory Bank"
+])
+
+# ============================================
+# TAB 1: EXPLORAR ÁREA
+# ============================================
+with tab1:
+    st.subheader("📋 Contexto Inicial")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        objetivo = st.text_input("¿Qué quieres lograr?")
+        recursos = st.text_area("¿Con qué cuentas ahora?")
+    
+    with col2:
+        observacion = st.text_area("¿Qué estás observando?")
+        nombre = st.text_input("¿Cómo quieres que te llame?", value=usuario)
+    
+    st.markdown("---")
+    st.subheader("🎯 Selecciona un área para explorar")
+    
+    # Mostrar 8 áreas como botones
+    cols = st.columns(4)
+    areas_lista = list(AREAS_CONOCIMIENTO.items())
+    
+    for idx, (area_id, area_data) in enumerate(areas_lista):
+        col = cols[idx % 4]
+        with col:
+            if st.button(
+                f"{area_data['icono']} {area_data['nombre']}",
+                key=f"area_{area_id}",
+                use_container_width=True
+            ):
+                st.session_state.area_seleccionada = area_id
+    
+    # Cuando se selecciona un área
+    if 'area_seleccionada' in st.session_state:
+        area_id = st.session_state.area_seleccionada
+        area = AREAS_CONOCIMIENTO[area_id]
+        
+        # Cargar historial y rastrear contextos
+        historial = cargar_conversaciones()
+        contextos = rastrear_contextos_previos(area_id, historial)
+        
+        st.markdown("---")
+        st.subheader(f"{area['icono']} {area['nombre']}")
+        st.caption(area['descripcion'])
+        
+        # Mostrar recomendación
+        recomendacion = generar_recomendacion(area['nombre'], contextos)
+        st.info(f"**{recomendacion}**")
+        
+        # Mostrar contextos previos detectados
+        if contextos:
+            with st.expander(f"🔍 {len(contextos)} contextos previos detectados"):
+                for ctx in contextos:
+                    pinned = "📌" if ctx['is_pinned'] else "💬"
+                    st.write(f"{pinned} {ctx['titulo']} (relevancia: {ctx['relevancia']:.2f})")
+        
+        # Mostrar áreas conectadas
+        areas_conectadas = area.get('conectadas', [])
+        if areas_conectadas:
+            st.markdown("**🔗 Áreas conectadas con tu trayectoria:**")
+            cols_conn = st.columns(min(3, len(areas_conectadas)))
+            for idx, area_conn_id in enumerate(areas_conectadas):
+                with cols_conn[idx % 3]:
+                    area_conn = AREAS_CONOCIMIENTO.get(area_conn_id, {})
+                    contextos_conn = rastrear_contextos_previos(area_conn_id, historial)
+                    fortaleza = "✅" if len(contextos_conn) >= 3 else ""
+                    st.markdown(
+                        f"**{area_conn.get('icono', '')} {area_conn.get('nombre', area_conn_id)}**\n\n"
+                        f"{fortaleza} {len(contextos_conn)} contextos"
+                    )
+        
+        # Pregunta adaptada
+        pregunta = area['pregunta']
+        st.markdown(f"### 📝 Pregunta · {pregunta}")
+        
+        # Formulario de respuesta
+        st.markdown("#### 1. Punto A · ¿Qué piensas al respecto?")
+        st.caption("Antes de buscar una respuesta correcta, cuéntame cómo lo entiendes tú.")
+        modelo_mental = st.text_area("Tu comprensión actual", height=100, key=f"modelo_{area_id}")
+        
+        st.markdown("#### 2. ¿Qué puedes explicar con lo que sabes ahora?")
+        st.caption("Intenta responder la pregunta")
+        respuesta_ejecucion = st.text_area("Tu respuesta", height=100, key=f"respuesta_{area_id}")
+        
+        # Botón de análisis
+        if st.button("🔍 Analizar y Anclar", type="primary", key=f"analizar_{area_id}"):
+            if modelo_mental and respuesta_ejecucion:
+                with st.spinner("Procesando a través del núcleo CO•RA..."):
+                    if token:
+                        bridge.anclar_evento(
+                            usuario=nombre,
+                            evento_id="TUTOR_MENTAL_MODEL_SUBMITTED",
+                            payload={
+                                "area": area_id,
+                                "area_nombre": area['nombre'],
+                                "pregunta": pregunta,
+                                "modelo_mental": modelo_mental,
+                                "respuesta_ejecucion": respuesta_ejecucion,
+                                "objetivo": objetivo,
+                                "recursos": recursos,
+                                "observacion": observacion,
+                                "contextos_previos": len(contextos)
+                            }
+                        )
+                        st.success("✅ Evento anclado en Matriz Dorsal")
+                    
+                    st.info("🔄 Analizando trayectoria de aprendizaje...")
+            else:
+                st.warning("⚠️ Por favor completa ambos campos para continuar")
+
+# ============================================
+# TAB 2: HISTORIAL CHATGPT
+# ============================================
+with tab2:
+    st.subheader("📚 Historial de Conversaciones ChatGPT")
+    st.caption("Contextos previos detectados de tu trayectoria de aprendizaje")
+    
+    conversaciones = cargar_conversaciones()
+    
+    if conversaciones:
+        # Métricas
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("Total Conversaciones", len(conversaciones))
+        with col2:
+            ancladas = sum(1 for c in conversaciones if c.get('is_pinned'))
+            st.metric("Conversaciones Ancladas", ancladas)
+        with col3:
+            categorias_unicas = len(set(c.get('categoria', 'sin_clasificar') for c in conversaciones))
+            st.metric("Categorías Exploradas", categorias_unicas)
+        
+        st.markdown("---")
+        
+        # Filtros
+        col_filtro1, col_filtro2 = st.columns(2)
+        with col_filtro1:
+            categorias = list(set(c.get('categoria', 'sin_clasificar') for c in conversaciones))
+            filtro_categoria = st.multiselect(
+                "Filtrar por categoría",
+                categorias,
+                default=[]
+            )
+        with col_filtro2:
+            solo_ancladas = st.checkbox("Mostrar solo ancladas 📌")
+        
+        # Aplicar filtros
+        conversaciones_filtradas = conversaciones
+        if filtro_categoria:
+            conversaciones_filtradas = [c for c in conversaciones_filtradas if c.get('categoria') in filtro_categoria]
+        if solo_ancladas:
+            conversaciones_filtradas = [c for c in conversaciones_filtradas if c.get('is_pinned')]
+        
+        st.markdown(f"**{len(conversaciones_filtradas)} conversaciones encontradas**")
+        
+        # Mostrar conversaciones
+        for conv in conversaciones_filtradas[:30]:
+            pinned = "📌" if conv.get('is_pinned') else "💬"
+            categoria = conv.get('categoria', 'sin_clasificar')
+            
+            with st.expander(f"{pinned} {conv.get('titulo', 'Sin título')} [{categoria}]"):
+                st.write(f"**Categoría:** {categoria}")
+                st.write(f"**Anclada:** {'Sí' if conv.get('is_pinned') else 'No'}")
+                st.write(f"**Fecha extracción:** {conv.get('fecha_extraccion', 'N/A')}")
+                if conv.get('url_completa'):
+                    st.link_button("Ver conversación", conv['url_completa'])
+    else:
+        st.info("No hay conversaciones extraídas. Ejecuta `python extractor_conversaciones.py` primero.")
+
+# ============================================
+# TAB 3: MEMORY BANK
+# ============================================
+with tab3:
+    st.subheader("🧠 Memory Bank")
+    st.caption("Conexión con GitHub para persistencia de datos")
+    
+    if token:
+        if st.button("🔄 Cargar contexto desde GitHub"):
+            with st.spinner("Cargando..."):
+                contexto = bridge.leer_contexto(
+                    f"memory_bank/usuarios/{nombre}/contexto_unificado.json"
+                )
+                if contexto:
+                    st.success("✅ Contexto cargado")
+                    st.json(contexto)
+                else:
+                    st.info("No hay contexto previo. Este es tu Punto A inicial.")
+        
+        st.markdown("---")
+        st.subheader("📊 Eventos en Matriz Dorsal")
+        
+        if st.button("Ver eventos recientes"):
+            eventos = bridge.leer_contexto(
+                f"matriz_dorsal/usuarios/{nombre}/eventos.jsonl"
+            )
+            if eventos:
+                st.write(f"**Total de eventos:** {len(eventos) if isinstance(eventos, list) else 'N/A'}")
+            else:
+                st.info("No hay eventos registrados aún.")
+    else:
+        st.warning("⚠️ Configura el GitHub Token en el sidebar para acceder al Memory Bank")
+
+# ============================================
+# FOOTER
+# ============================================
+st.markdown("---")
+st.caption("CO•RA Ecosistema Cognitivo Inclusivo · Ente56298 · 2026")

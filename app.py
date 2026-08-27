@@ -3,7 +3,6 @@ CO•RA Tutor — Trayectoria Adaptativa de Aprendizaje
 Versión 2.2: Mapa de avances + Mapa abierto + Rastreo de contextos + GitHub Bridge
 """
 import streamlit as st
-import streamlit.components.v1 as components
 import requests
 import json
 import hashlib
@@ -1215,7 +1214,7 @@ with tab5:
             key="mostrar_vista_plantilla",
         )
         if mostrar_previa:
-            components.iframe(
+            st.iframe(
                 plantilla_previa.get("url"),
                 height=520,
                 scrolling=True,

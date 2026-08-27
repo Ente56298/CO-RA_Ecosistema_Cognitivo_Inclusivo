@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.1",
+  "schema_version": "1.2",
   "updated_at": "2026-08-27",
   "purpose": "Catálogo público de capacidades observadas y pendientes de validación.",
   "routing_policy": {
@@ -12,6 +12,7 @@
       "source_id": "arena-agent-leaderboard",
       "display_name": "Agent Arena",
       "url": "https://arena.ai/leaderboard/agent?rankBy=labs",
+      "source_type": "agent_performance_leaderboard",
       "status": "referencia_externa",
       "ranking_is_dynamic": true,
       "last_reviewed_at": "2026-08-27",
@@ -24,6 +25,38 @@
         "cost_per_task"
       ],
       "usage_note": "Referencia comparativa; no determina por sí sola qué agente debe usar CO•RA."
+    },
+    {
+      "source_id": "aarena-battleboard",
+      "display_name": "AArena Battleboard",
+      "url": "https://aarena.ai/arena/battleboard",
+      "source_type": "community_model_battleboard",
+      "status": "referencia_externa",
+      "ranking_is_dynamic": true,
+      "last_reviewed_at": "2026-08-27",
+      "signals": [
+        "elo_rating",
+        "win_rate",
+        "battle_count",
+        "community_votes"
+      ],
+      "usage_note": "Evidencia comparativa basada en batallas; debe revisarse junto con la tarea, el costo y otras fuentes."
+    },
+    {
+      "source_id": "ai-agents-directory",
+      "display_name": "AI Agents Directory",
+      "url": "https://aiagentsdirectory.com/agents",
+      "source_type": "agent_discovery_directory",
+      "status": "referencia_externa",
+      "ranking_is_dynamic": true,
+      "last_reviewed_at": "2026-08-27",
+      "signals": [
+        "category",
+        "access_type",
+        "open_source_availability",
+        "api_availability"
+      ],
+      "usage_note": "Fuente para descubrir candidatos. La presencia en el directorio no implica validación ni recomendación de CO•RA."
     }
   ],
   "agents": [

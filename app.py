@@ -788,11 +788,15 @@ with tab4:
 
         fuentes_evaluacion = catalogo.get("evaluation_sources", [])
         if fuentes_evaluacion:
-            st.markdown("### 📊 Fuentes públicas de evaluación")
+            st.markdown("### 📊 Fuentes públicas de descubrimiento y evaluación")
             for fuente in fuentes_evaluacion:
                 col_fuente, col_enlace = st.columns([3, 1])
                 with col_fuente:
                     st.write(f"**{fuente.get('display_name', 'Fuente externa')}**")
+                    tipo_fuente = fuente.get("source_type", "referencia_externa")
+                    st.caption(
+                        "Tipo: " + tipo_fuente.replace("_", " ")
+                    )
                     st.caption(fuente.get("usage_note", "Referencia comparativa."))
                     senales = fuente.get("signals", [])
                     if senales:
@@ -803,7 +807,7 @@ with tab4:
                 with col_enlace:
                     if fuente.get("url"):
                         st.link_button(
-                            "Abrir ranking vivo",
+                            "Abrir fuente viva",
                             fuente["url"],
                             use_container_width=True,
                         )

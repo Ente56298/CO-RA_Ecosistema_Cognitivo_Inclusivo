@@ -1054,6 +1054,20 @@ with sub_conversaciones:
         mime="application/json",
         use_container_width=False,
     )
+    with st.expander("📥 Integrar un historial grande (+1,500 títulos)", expanded=False):
+        st.markdown(
+            "1. Solicita la exportación de datos de ChatGPT.\n"
+            "2. Localiza `conversations.json` dentro del ZIP.\n"
+            "3. Súbelo en **Registrar o rastrear fuentes**.\n"
+            "4. CO•RA extraerá títulos y metadatos, deduplicará y permitirá "
+            "exportar el índice.\n"
+            "5. Revisa los títulos sensibles antes de publicar el archivo resultante."
+        )
+        st.warning(
+            "El historial del navegador no equivale al historial completo de "
+            "conversaciones. Para recuperar más de 1,500 títulos se necesita "
+            "la exportación `conversations.json`."
+        )
 
     st.markdown("---")
     col_lista, col_detalle = st.columns([1, 2], gap="large")
@@ -1074,6 +1088,21 @@ with sub_conversaciones:
             key=lambda c: c.get("updated_at") or c.get("fecha") or "",
             reverse=True,
         )
+
+        fuentes_lista = sorted({
+            str(conv.get("fuente") or "sin_fuente")
+            for conv in lista
+        })
+        filtro_fuente = st.selectbox(
+            "Fuente",
+            ["Todas"] + fuentes_lista,
+            key="filtro_fuente_conversaciones",
+        )
+        if filtro_fuente != "Todas":
+            lista = [
+                conv for conv in lista
+                if str(conv.get("fuente") or "sin_fuente") == filtro_fuente
+            ]
         if filtro:
             lista = [
                 conv for conv in lista
@@ -1088,7 +1117,29 @@ with sub_conversaciones:
         if not lista:
             st.info("No hay conversaciones indexadas con este filtro.")
 
-        for conv in lista:
+        tamano_pagina = st.selectbox(
+            "Títulos por página",
+            [25, 50, 100],
+            index=0,
+            key="tamano_pagina_conversaciones",
+        )
+        total_paginas = max(1, (len(lista) + tamano_pagina - 1) // tamano_pagina)
+        pagina = st.number_input(
+            "Página",
+            min_value=1,
+            max_value=total_paginas,
+            value=1,
+            step=1,
+            key="pagina_conversaciones",
+        )
+        inicio_pagina = (pagina - 1) * tamano_pagina
+        lista_pagina = lista[inicio_pagina:inicio_pagina + tamano_pagina]
+        st.caption(
+            f"Página {pagina} de {total_paginas} · "
+            f"{len(lista)} títulos coincidentes"
+        )
+
+        for conv in lista_pagina:
             cid = conv.get("conversation_id") or conv.get("id")
             activo = cid == st.session_state.active_conversation_id
             prefijo = "🟢" if activo else "💬"

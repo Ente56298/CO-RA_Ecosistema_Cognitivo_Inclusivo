@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-08-27",
+  "title": "Expediente documental contextual",
+  "purpose": "Relacionar documentos locales con trayectoria, proyectos y formación sin publicar expedientes personales ni contenido completo.",
+  "privacy": {
+    "contains_person_names": false,
+    "contains_absolute_paths": false,
+    "contains_document_text": false,
+    "contains_identification_numbers": false,
+    "public_metadata_only": true
+  },
+  "summary": {
+    "files_reviewed": 29,
+    "docx_files": 16,
+    "pdf_files": 7,
+    "zip_files": 6,
+    "pdf_pages": 494,
+    "zip_members": 64,
+    "exact_duplicate_groups": 5,
+    "copies_inside_duplicate_groups": 13,
+    "redundant_copies": 8
+  },
+  "families": [
+    {
+      "id": "research-thesis",
+      "name": "Investigación, metodología y tesis",
+      "status": "expediente_privado_por_clasificar",
+      "evidence_use": "Formación, metodología, capítulos, entregas y verificación académica",
+      "public_action": "Registrar sólo tipo, periodo, relación y estado de validación"
+    },
+    {
+      "id": "municipal-proposal-2016",
+      "name": "Propuesta municipal de atención al vecino (2016)",
+      "status": "antecedente_reportado_pendiente_revision",
+      "evidence_use": "Continuidad histórica en sistemas gubernamentales y atención ciudadana",
+      "public_action": "Verificar autoría, alcance, destinatario y entregables antes de promoverla"
+    },
+    {
+      "id": "professional-trajectory-pack",
+      "name": "Presentaciones de trayectoria profesional",
+      "status": "borradores_y_exportacion_pdf",
+      "evidence_use": "Síntesis profesional y catálogo de capacidades",
+      "public_action": "Contrastar cada afirmación con evidencia primaria"
+    },
+    {
+      "id": "reports-and-registrations",
+      "name": "Reportes, registros y constancias",
+      "status": "privado_requiere_revision",
+      "evidence_use": "Validación documental y antecedentes",
+      "public_action": "No publicar hasta determinar sensibilidad y procedencia"
+    },
+    {
+      "id": "mixed-cloud-exports",
+      "name": "Exportaciones mixtas de nube",
+      "status": "contenedores_inventariados",
+      "evidence_use": "Recuperación de documentos, imágenes, HTML, JSON, Markdown y código",
+      "public_action": "Deduplicar miembros antes de extraer o incorporar"
+    }
+  ],
+  "evidence_candidates": [
+    {
+      "relation": "sistemas_gubernamentales",
+      "candidate": "Propuesta municipal de atención al vecino",
+      "period": "2016",
+      "status": "pendiente_revision_completa"
+    },
+    {
+      "relation": "trayectoria_profesional",
+      "candidate": "Presentación ejecutiva en formatos editables y PDF",
+      "period": "por_confirmar",
+      "status": "borradores_no_equivalentes_detectados"
+    },
+    {
+      "relation": "formacion_e_investigacion",
+      "candidate": "Corpus de actividades, metodología, capítulos y tesis",
+      "period": "por_confirmar",
+      "status": "pendiente_cronologia_y_autoria"
+    }
+  ],
+  "limitations": [
+    "La existencia del archivo no confirma autoría, entrega, aceptación o resultado.",
+    "Los nombres de archivo pueden contener datos personales y no forman parte del índice público.",
+    "Los paquetes ZIP se inventariaron sin extraerlos.",
+    "Los documentos duplicados se conservan; no se autorizó moverlos ni eliminarlos."
+  ]
+}

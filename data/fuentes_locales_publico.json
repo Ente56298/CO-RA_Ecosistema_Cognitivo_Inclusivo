@@ -33,7 +33,9 @@
   "routing_corrections": [
     {"artifact": "nuevo63.json", "records": 2908, "route": "catalogo_agentes", "reason": "Directorio de agentes, no conversaciones"},
     {"artifact": "history.json", "records": 56193, "route": "historial_navegacion", "reason": "Visitas y localizadores, no mensajes"},
-    {"artifact": "history (1).json", "records": 30121, "route": "historial_navegacion", "reason": "Visitas y localizadores, no mensajes"}
+    {"artifact": "history (1).json", "records": 30121, "route": "historial_navegacion", "reason": "Visitas y localizadores, no mensajes"},
+    {"artifact": "indice_grande_etiquetado_como_conversaciones", "records": 61689, "route": "separacion_semantica", "reason": "Sólo 5 registros fueron conservados como conversaciones; 61,684 se encaminaron como recursos locales"},
+    {"artifact": "indice_corregido", "records": 5, "route": "indice_canonico_revisable", "reason": "Coincide en conteo y esquema con el índice público actual; no se copió contenido privado"}
   ],
   "latest_discovery": {
     "observed_at": "2026-08-27",

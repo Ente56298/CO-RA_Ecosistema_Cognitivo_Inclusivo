@@ -1591,6 +1591,45 @@ with tab6:
                 use_container_width=True,
                 hide_index=True,
             )
+
+    expediente_documental = cargar_json_publico(
+        "data/expediente_documental_publico.json",
+        {},
+    )
+    if expediente_documental:
+        with st.expander("📂 Expediente documental contextual", expanded=True):
+            st.caption(expediente_documental.get("purpose", ""))
+            resumen_documental = expediente_documental.get("summary", {})
+            e1, e2, e3, e4 = st.columns(4)
+            e1.metric("Archivos revisados", resumen_documental.get("files_reviewed", 0))
+            e2.metric("Familias", len(expediente_documental.get("families", [])))
+            e3.metric("Duplicados exactos", resumen_documental.get("exact_duplicate_groups", 0))
+            e4.metric("Copias redundantes", resumen_documental.get("redundant_copies", 0))
+
+            st.dataframe(
+                [
+                    {
+                        "Familia": familia.get("name", ""),
+                        "Estado": familia.get("status", "").replace("_", " "),
+                        "Uso como evidencia": familia.get("evidence_use", ""),
+                        "Acción pública": familia.get("public_action", ""),
+                    }
+                    for familia in expediente_documental.get("families", [])
+                ],
+                width="stretch",
+                hide_index=True,
+            )
+
+            with st.expander("Candidatos de evidencia y límites", expanded=False):
+                for candidato in expediente_documental.get("evidence_candidates", []):
+                    st.write(
+                        f"- **{candidato.get('candidate', 'Evidencia')}** · "
+                        f"{candidato.get('relation', '').replace('_', ' ')} · "
+                        f"{candidato.get('status', '').replace('_', ' ')}"
+                    )
+                st.markdown("**Límites de interpretación**")
+                for limite in expediente_documental.get("limitations", []):
+                    st.write(f"- {limite}")
     st.info(
         "El catálogo no permite abrir activos privados. La recuperación exige "
         "un localizador autorizado y permanece bajo control local."

@@ -643,6 +643,30 @@ with tab1:
                 )
                 st.success(carta_compromisos.get("supreme_commitment", ""))
 
+            ejecucion_compromiso = carta_compromisos.get(
+                "commitment_2_execution", {}
+            )
+            if ejecucion_compromiso:
+                st.subheader("🛠️ Compromiso 2 activo · Producto terminado")
+                st.write(ejecucion_compromiso.get("objective", ""))
+                st.dataframe(
+                    [
+                        {
+                            "Orden": item.get("order", ""),
+                            "Proyecto": item.get("project", ""),
+                            "Etapa actual": item.get("current_stage", "").replace("_", " "),
+                            "Siguiente puerta": item.get("next_gate", ""),
+                        }
+                        for item in ejecucion_compromiso.get("ordered_backlog", [])
+                    ],
+                    width="stretch",
+                    hide_index=True,
+                )
+                with st.expander("Definición común de terminado", expanded=False):
+                    for criterio in ejecucion_compromiso.get("definition_of_done", []):
+                        st.write(f"- {criterio}")
+                    st.warning(ejecucion_compromiso.get("rule", ""))
+
         st.markdown("---")
 
     radar_profesional = cargar_json_publico(

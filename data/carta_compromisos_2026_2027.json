@@ -2,7 +2,9 @@
   "schema_version": "1.0",
   "updated_at": "2026-08-27",
   "title": "Carta de Compromisos 2026–2027",
-  "status": "propuesta_para_aprobacion",
+  "status": "aprobada_y_activa",
+  "approved_at": "2026-08-27",
+  "active_commitment_id": "producto_terminado",
   "nature": "marco_de_direccion_futura_no_evidencia_historica",
   "central_direction": "Diseñar soluciones para transformar información dispersa en conocimiento útil para la administración, el territorio y la toma de decisiones.",
   "declaration": "Convertir experiencia, conocimiento y proyectos en resultados demostrables, útiles, sostenibles y recuperables.",
@@ -31,7 +33,7 @@
       "rule": "Una idea sólo avanza cuando atraviesa problema, diagnóstico, solución, prototipo, implementación, resultado, evidencia y caso documentado.",
       "completion_evidence": "Ficha de caso cerrada y demostrador verificable.",
       "priority": 2,
-      "state": "por_iniciar"
+      "state": "activo"
     },
     {
       "id": "direccion",
@@ -67,6 +69,26 @@
     "new_project_rule": "No abrir un proyecto nuevo sin relacionarlo con la dirección central, asignarle prioridad y registrar qué trabajo se pausa o cierra.",
     "review_cycle": "mensual",
     "approval_required": true
+  },
+  "commitment_2_execution": {
+    "objective": "Transformar proyectos existentes en productos terminados y casos profesionales demostrables.",
+    "starting_scope": "Cuatro proyectos estrella ya registrados en la matriz maestra.",
+    "ordered_backlog": [
+      {"order": 1, "project": "Gemelo Digital Municipal / CO•RA", "current_stage": "prototipo", "next_gate": "delimitar alcance y recuperar evidencia primaria faltante"},
+      {"order": 2, "project": "COBRA y Traslado de Dominio", "current_stage": "documentado", "next_gate": "vincular constancias de uso, arquitectura y resultado"},
+      {"order": 3, "project": "Fotogrametría del panteón municipal", "current_stage": "documentado", "next_gate": "recuperar activo nativo o evidencia técnica equivalente"},
+      {"order": 4, "project": "Procesamiento regional de datos", "current_stage": "resultado_reportado", "next_gate": "recuperar método, muestra, bitácora y cálculo verificable"}
+    ],
+    "definition_of_done": [
+      "Problema y usuario claramente definidos.",
+      "Diagnóstico y alcance documentados.",
+      "Arquitectura o metodología reproducible.",
+      "Demostrador o evidencia de implementación.",
+      "Resultado medido con método explícito.",
+      "Evidencia primaria vinculada mediante localizador privado.",
+      "Caso público sanitizado y revisado."
+    ],
+    "rule": "No iniciar un quinto caso hasta cerrar, pausar justificadamente o descartar uno de los cuatro casos priorizados."
   },
   "privacy": {
     "contains_personal_data": false,

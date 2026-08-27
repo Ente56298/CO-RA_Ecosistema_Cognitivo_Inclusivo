@@ -215,6 +215,22 @@
       "next_action": "Usar el tablero para revisar prioridades y actualizar estados con evidencia.",
       "completion_evidence": "Dashboard funcional, validado y publicado.",
       "updated_at": "2026-08-27"
+    },
+    {
+      "id": "act-013",
+      "title": "Integrar widget persistente de foco y atención",
+      "project_id": "cora-ecosistema",
+      "project": "CO•RA Ecosistema Cognitivo Inclusivo",
+      "commitment": "producto_terminado",
+      "layer": 3,
+      "stage": "implementacion",
+      "priority": "alta",
+      "state": "completada",
+      "progress": 100,
+      "evidence_status": "widget_temporizador_audio_interacciones_validado",
+      "next_action": "Usar el widget y ajustar duraciones o señales según experiencia real.",
+      "completion_evidence": "Widget lateral funcional con selección, temporizador, audio opcional y registro privado de sesión.",
+      "updated_at": "2026-08-27"
     }
   ]
 }

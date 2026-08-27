@@ -7,6 +7,11 @@ import requests
 import json
 import hashlib
 import base64
+import io
+import math
+import struct
+import time
+import wave
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -258,6 +263,140 @@ def cargar_json_publico(ruta: str, valor_por_defecto):
     except (OSError, json.JSONDecodeError):
         return valor_por_defecto
 
+
+@st.cache_data
+def generar_senal_foco(frecuencias=(660, 880), duracion=0.16, volumen=0.20):
+    """Genera una señal WAV breve sin depender de archivos ni servicios externos."""
+    sample_rate = 22050
+    frames = bytearray()
+    for frecuencia in frecuencias:
+        total = int(sample_rate * duracion)
+        for indice in range(total):
+            envolvente = min(1.0, indice / max(total * 0.08, 1))
+            envolvente *= min(1.0, (total - indice) / max(total * 0.18, 1))
+            muestra = volumen * envolvente * math.sin(
+                2 * math.pi * frecuencia * indice / sample_rate
+            )
+            frames.extend(struct.pack("<h", int(32767 * muestra)))
+
+    salida = io.BytesIO()
+    with wave.open(salida, "wb") as wav:
+        wav.setnchannels(1)
+        wav.setsampwidth(2)
+        wav.setframerate(sample_rate)
+        wav.writeframes(bytes(frames))
+    return salida.getvalue()
+
+
+@st.fragment(run_every=1)
+def render_widget_foco(actividades):
+    """Widget de foco persistente durante la sesión y visible en toda la app."""
+    candidatas = [
+        item for item in actividades
+        if item.get("state") not in {"completada", "bloqueada"}
+    ] or actividades
+
+    with st.container(border=True):
+        st.markdown("### 🎯 Foco activo")
+        st.caption("Una actividad. Un bloque. Un siguiente paso.")
+
+        if not candidatas:
+            st.info("No hay actividades disponibles para enfocar.")
+            return
+
+        ids = [item.get("id", "") for item in candidatas]
+        por_id = {item.get("id", ""): item for item in candidatas}
+        seleccion = st.selectbox(
+            "Actividad actual",
+            ids,
+            format_func=lambda activity_id: por_id.get(activity_id, {}).get(
+                "title", activity_id
+            ),
+            key="foco_actividad_id",
+        )
+        actividad = por_id.get(seleccion, {})
+        st.caption(
+            f"{actividad.get('project', 'Sin proyecto')} · "
+            f"Prioridad {actividad.get('priority', 'sin prioridad')}"
+        )
+        st.write("**Ahora:** " + actividad.get("next_action", "Sin siguiente acción."))
+
+        duracion = st.select_slider(
+            "Duración del bloque",
+            options=[5, 10, 15, 25, 45],
+            value=15,
+            format_func=lambda minutos: f"{minutos} min",
+            key="foco_duracion_minutos",
+        )
+        audio_activo = st.toggle(
+            "Señales de audio",
+            value=False,
+            key="foco_audio_activo",
+            help="Sonido breve al iniciar y terminar. Puede requerir interacción con el navegador.",
+        )
+
+        if "foco_activo" not in st.session_state:
+            st.session_state.foco_activo = False
+        if "foco_checkins" not in st.session_state:
+            st.session_state.foco_checkins = 0
+        if "foco_fin_emitido" not in st.session_state:
+            st.session_state.foco_fin_emitido = False
+
+        iniciar, detener = st.columns(2)
+        with iniciar:
+            if st.button("▶️ Iniciar", use_container_width=True, key="foco_iniciar"):
+                ahora = time.time()
+                st.session_state.foco_activo = True
+                st.session_state.foco_inicio_epoch = ahora
+                st.session_state.foco_fin_epoch = ahora + duracion * 60
+                st.session_state.foco_duracion_segundos = duracion * 60
+                st.session_state.foco_fin_emitido = False
+                if audio_activo:
+                    st.audio(generar_senal_foco(), format="audio/wav", autoplay=True)
+        with detener:
+            if st.button("⏹️ Detener", use_container_width=True, key="foco_detener"):
+                st.session_state.foco_activo = False
+
+        if st.session_state.get("foco_activo"):
+            ahora = time.time()
+            restante = max(0, int(st.session_state.get("foco_fin_epoch", ahora) - ahora))
+            total = max(1, int(st.session_state.get("foco_duracion_segundos", 1)))
+            transcurrido = total - restante
+            minutos, segundos = divmod(restante, 60)
+            st.metric("Tiempo restante", f"{minutos:02d}:{segundos:02d}")
+            st.progress(min(1.0, max(0.0, transcurrido / total)))
+
+            if restante <= 0:
+                st.session_state.foco_activo = False
+                st.success("Bloque terminado. Respira y registra el avance.")
+                if audio_activo and not st.session_state.foco_fin_emitido:
+                    st.session_state.foco_fin_emitido = True
+                    st.audio(generar_senal_foco((880, 1040)), format="audio/wav", autoplay=True)
+        else:
+            st.progress(0)
+
+        sigo, cerrar, cambiar = st.columns(3)
+        with sigo:
+            if st.button("👁️ Sigo", key="foco_sigo", help="Registra un retorno amable al foco."):
+                st.session_state.foco_checkins += 1
+                st.toast("Aquí seguimos. Retoma sólo el siguiente paso.")
+        with cerrar:
+            if st.button("✅ Cerrar", key="foco_cerrar", help="Cierra este bloque, no toda la actividad."):
+                st.session_state.foco_activo = False
+                st.session_state.foco_ultimo_cierre = datetime.now(
+                    timezone.utc
+                ).isoformat().replace("+00:00", "Z")
+                st.success("Bloque registrado en esta sesión.")
+        with cambiar:
+            if st.button("🔄 Cambiar", key="foco_cambiar", help="Detiene el bloque para elegir otra actividad."):
+                st.session_state.foco_activo = False
+                st.toast("Elige otra actividad sin perder la matriz.")
+
+        st.caption(
+            f"Retornos al foco en esta sesión: {st.session_state.foco_checkins}. "
+            "No se publica este registro."
+        )
+
 # ============================================
 # AMPLIAR ÁREAS DESDE CATÁLOGO EXTERNO
 # ============================================
@@ -305,6 +444,13 @@ with st.sidebar:
     st.write("✅ Catálogo público de agentes")
     st.write("✅ Mesa redonda colaborativa")
     st.write("⚠️ Escritura en Memory Bank desactivada" if not ENABLE_GITHUB_WRITES else "✅ Escritura privada habilitada")
+
+    st.markdown("---")
+    actividades_foco = cargar_json_publico(
+        "data/actividades_seguimiento.json",
+        {"activities": []},
+    ).get("activities", [])
+    render_widget_foco(actividades_foco)
 
 # Tabs principales
 tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([

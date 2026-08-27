@@ -1,0 +1,33 @@
+{
+  "actualizado": "2026-08-27",
+  "proyectos": [
+    {
+      "id": "cora-tutor",
+      "nombre": "CO•RA Tutor",
+      "estado": "en_desarrollo",
+      "ahora": "Perfil Adaptativo y mapa de avances",
+      "siguiente": "Skill Evaluator basado en evidencia"
+    },
+    {
+      "id": "agentes-locales",
+      "nombre": "Agentes Locales CO•RA",
+      "estado": "exploracion",
+      "ahora": "Qwen + segundo agente local",
+      "siguiente": "Diagnóstico de hardware y primera comunicación agente-agente"
+    },
+    {
+      "id": "pdl",
+      "nombre": "PDL Tejupilco",
+      "estado": "operativo",
+      "ahora": "Integración territorial y GIS",
+      "siguiente": "Completar georreferenciación y capas"
+    },
+    {
+      "id": "inventario",
+      "nombre": "Inventario CO•RA",
+      "estado": "prototipo",
+      "ahora": "Objetos, ubicación y trazabilidad",
+      "siguiente": "Definir esquema de identificación y movimiento"
+    }
+  ]
+}

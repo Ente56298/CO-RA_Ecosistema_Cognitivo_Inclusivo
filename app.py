@@ -531,80 +531,104 @@ with tab5:
                 st.write(f"- {pregunta_abierta}")
 
     st.markdown("---")
-    st.markdown("### ✍️ Preparar siguiente turno")
-    siguiente_numero = max(
-        (turno.get("turno_numero", 0) for turno in mesa.get("turnos", [])),
-        default=0
-    ) + 1
-    turno_anterior = siguiente_numero - 1 if siguiente_numero > 1 else None
+    st.markdown("### 🧠 Comparación colaborativa")
+    st.caption("Una pregunta común, dos perspectivas independientes y una respuesta unificada por el moderador.")
 
-    with st.form("form_nuevo_turno", clear_on_submit=False):
-        agente_turno = st.selectbox("Agente", ["Qwen", "ChatGPT", "Jorge/moderador"])
-        contenido_turno = st.text_area(
-            "Contenido del turno",
+    with st.form("form_comparacion_agentes", clear_on_submit=False):
+        pregunta_comun = st.text_area(
+            "Pregunta para ambos agentes",
+            height=110,
+            placeholder="Escribe una sola pregunta para Qwen y ChatGPT."
+        )
+
+        col_qwen, col_chatgpt = st.columns(2)
+        with col_qwen:
+            st.markdown("#### Agente 1 · Qwen")
+            respuesta_qwen = st.text_area(
+                "Respuesta de Qwen",
+                height=260,
+                placeholder="Pega aquí la respuesta de Qwen."
+            )
+        with col_chatgpt:
+            st.markdown("#### Agente 2 · ChatGPT")
+            respuesta_chatgpt = st.text_area(
+                "Respuesta de ChatGPT",
+                height=260,
+                placeholder="Pega aquí la respuesta de ChatGPT."
+            )
+
+        respuesta_unificada = st.text_area(
+            "Respuesta unificada de la mesa",
             height=220,
-            placeholder="Pega aquí la respuesta completa del siguiente participante."
+            placeholder="Integra acuerdos, desacuerdos, evidencia y decisión final."
         )
-        pregunta_siguiente = st.text_area(
-            "Pregunta para el siguiente participante",
-            height=90
+        preparar_comparacion = st.form_submit_button(
+            "🧪 Validar y preparar mesa",
+            type="primary"
         )
-        evidencia_texto = st.text_area(
-            "Evidencia referenciada (una entrada por línea)",
-            height=90,
-            placeholder="Turno 2 de ChatGPT\ndata/catalogo_agentes_publico.json"
-        )
-        preparar = st.form_submit_button("🧪 Validar y preparar JSON", type="primary")
 
-    if preparar:
-        contenido_limpio = contenido_turno.strip()
-        pregunta_limpia = pregunta_siguiente.strip()
-        total_palabras = len(contenido_limpio.split())
-        errores_turno = []
+    if preparar_comparacion:
+        pregunta_limpia = pregunta_comun.strip()
+        qwen_limpia = respuesta_qwen.strip()
+        chatgpt_limpia = respuesta_chatgpt.strip()
+        unificada_limpia = respuesta_unificada.strip()
+        conteos = {
+            "qwen": len(qwen_limpia.split()),
+            "chatgpt": len(chatgpt_limpia.split()),
+            "unificada": len(unificada_limpia.split())
+        }
+        errores_mesa = []
 
-        if not contenido_limpio:
-            errores_turno.append("El contenido no puede estar vacío.")
-        if total_palabras > 800:
-            errores_turno.append(f"El contenido tiene {total_palabras} palabras; el máximo es 800.")
         if not pregunta_limpia:
-            errores_turno.append("Debe existir una pregunta para continuar la mesa.")
+            errores_mesa.append("Escribe la pregunta común.")
+        if not qwen_limpia:
+            errores_mesa.append("Falta la respuesta de Qwen.")
+        if not chatgpt_limpia:
+            errores_mesa.append("Falta la respuesta de ChatGPT.")
+        if not unificada_limpia:
+            errores_mesa.append("Falta la respuesta unificada.")
+        for agente_nombre, total_palabras in conteos.items():
+            if total_palabras > 800:
+                errores_mesa.append(
+                    f"La respuesta {agente_nombre} tiene {total_palabras} palabras; el máximo es 800."
+                )
 
-        if errores_turno:
-            for error_turno in errores_turno:
-                st.error(error_turno)
-            st.session_state.pop("turno_borrador", None)
+        if errores_mesa:
+            for error_mesa in errores_mesa:
+                st.error(error_mesa)
+            st.session_state.pop("comparacion_borrador", None)
         else:
-            evidencias = [
-                linea.strip()
-                for linea in evidencia_texto.splitlines()
-                if linea.strip()
-            ]
-            st.session_state.turno_borrador = {
-                "turno_numero": siguiente_numero,
-                "agente": agente_turno,
+            st.session_state.comparacion_borrador = {
+                "tipo": "mesa_redonda_comparativa",
                 "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
-                "referencia_a_turno": turno_anterior,
-                "contenido": contenido_limpio,
-                "pregunta_para_siguiente": pregunta_limpia,
-                "evidencia_referenciada": evidencias,
-                "estado": "borrador_pendiente_revision",
-                "conteo_palabras": total_palabras
+                "pregunta": pregunta_limpia,
+                "agentes": {
+                    "qwen": {
+                        "respuesta": qwen_limpia,
+                        "conteo_palabras": conteos["qwen"]
+                    },
+                    "chatgpt": {
+                        "respuesta": chatgpt_limpia,
+                        "conteo_palabras": conteos["chatgpt"]
+                    }
+                },
+                "respuesta_unificada": unificada_limpia,
+                "conteo_palabras_unificada": conteos["unificada"],
+                "moderador": "Jorge Hernández",
+                "estado": "borrador_pendiente_revision"
             }
 
-    borrador = st.session_state.get("turno_borrador")
-    if borrador:
-        st.success(
-            f"Turno {borrador['turno_numero']} válido: "
-            f"{borrador['conteo_palabras']} de 800 palabras."
-        )
-        st.json(borrador)
+    comparacion = st.session_state.get("comparacion_borrador")
+    if comparacion:
+        st.success("Mesa comparativa válida y lista para revisión.")
+        st.json(comparacion)
         st.download_button(
-            "⬇️ Descargar turno JSON",
-            data=json.dumps(borrador, indent=2, ensure_ascii=False),
-            file_name=f"turno_{borrador['turno_numero']}_{borrador['agente'].lower().replace('/', '_')}.json",
+            "⬇️ Descargar mesa JSON",
+            data=json.dumps(comparacion, indent=2, ensure_ascii=False),
+            file_name="mesa_redonda_comparativa.json",
             mime="application/json"
         )
-        st.warning("Descargar no publica el turno. Jorge debe revisarlo antes de integrarlo al repositorio.")
+        st.warning("La descarga no publica las respuestas ni las envía a ningún agente.")
 
 # ============================================
 # FOOTER

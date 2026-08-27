@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-08-27",
+  "title": "Matriz maestra de trayectoria y evidencias",
+  "positioning": "Arquitectura de soluciones para integración de datos, gobierno digital y territorio",
+  "purpose": "Conectar experiencia, proyectos, capacidades y evidencia sin publicar documentos personales ni convertir afirmaciones reportadas en hechos certificados.",
+  "privacy": {
+    "contains_personal_name": false,
+    "contains_contact_data": false,
+    "contains_absolute_paths": false,
+    "contains_private_document_content": false
+  },
+  "evidence_scale": [
+    {"id": "primaria_verificada", "meaning": "Documento o artefacto original inspeccionado localmente."},
+    {"id": "documentada_local", "meaning": "Aparece en un documento local, pero éste no prueba por sí solo autoría, empleo o resultado."},
+    {"id": "consolidacion_derivada", "meaning": "Síntesis construida desde CV, perfil o entrevista; requiere regresar a sus fuentes."},
+    {"id": "reportada_pendiente", "meaning": "Afirmación útil para investigar, todavía no apta como logro público certificado."}
+  ],
+  "source_layers": [
+    {"layer": "CV histórico", "kind": "documentada_local", "use": "Cronología y funciones declaradas", "limitation": "Incluye texto repetido y narrativas generadas; no equivale a constancia laboral."},
+    {"layer": "Perfil maestro consolidado", "kind": "consolidacion_derivada", "use": "Normalización de experiencia, educación, habilidades y proyectos", "limitation": "Cruza CV, perfil web y entrevista; conserva afirmaciones que necesitan evidencia primaria."},
+    {"layer": "Expediente técnico local", "kind": "primaria_verificada", "use": "Probar existencia, fecha y contenido de propuestas, código y prototipos", "limitation": "La existencia de un archivo no demuestra automáticamente adopción, impacto o autoría exclusiva."},
+    {"layer": "Presentación ejecutiva", "kind": "consolidacion_derivada", "use": "Comunicación y selección de proyectos", "limitation": "Debe heredar el estado de verificación de la matriz, no sustituirlo."}
+  ],
+  "experience": [
+    {"period": "2000–2015", "scope": "Experiencia temprana privada y social", "role": "Administración, atención, cobranza, captura y promoción social", "projects": "Antecedentes agrupados por privacidad", "evidence": "CV histórico local", "level": "documentada_local", "status": "revisar_periodos_y_constancias"},
+    {"period": "2015–2019", "scope": "Gobierno municipal de Tejupilco", "role": "Catastro, Predial, recaudación e informática", "projects": "COBRA, expedientes, automatización y georreferenciación", "evidence": "CV histórico y consolidación", "level": "documentada_local", "status": "validar_cargo_periodo_y_entregables"},
+    {"period": "2019–2022", "scope": "Gobierno estatal / operación regional", "role": "Gestión, depuración y análisis de información", "projects": "Cobertura regional reportada de 33 municipios", "evidence": "Perfil consolidado", "level": "consolidacion_derivada", "status": "validar_nombramiento_y_cobertura"},
+    {"period": "2021–vigencia por confirmar", "scope": "San Simón de Guerrero", "role": "Consultoría y automatización municipal", "projects": "Traslado de Dominio con VBA y Excel", "evidence": "CV histórico y perfil consolidado", "level": "documentada_local", "status": "validar_adquisicion_uso_y_administraciones"},
+    {"period": "2022–2025", "scope": "Planeación y evaluación municipal", "role": "Evaluación, TdR, PAE, PDM, PbR y MIR", "projects": "Tlatlaya y otros expedientes municipales", "evidence": "Perfil consolidado y documentos por vincular", "level": "consolidacion_derivada", "status": "vincular_entregables_publicos_y_autoria"},
+    {"period": "2023", "scope": "Sector salud estatal", "role": "Consultoría, planeación y estructuración de proyectos", "projects": "Intervención de duración y alcance por precisar", "evidence": "Perfil consolidado", "level": "consolidacion_derivada", "status": "validar_contrato_funciones_y_fechas"},
+    {"period": "2023–actualidad", "scope": "Actividad independiente", "role": "Arquitectura de soluciones y consultoría tecnológica", "projects": "CO•RA, territorio, automatización, CCTV y gestión del conocimiento", "evidence": "Repositorios, prototipos e inventarios locales", "level": "primaria_verificada", "status": "delimitar_resultados_por_proyecto"}
+  ],
+  "capability_matrix": [
+    {"domain": "Programación y datos", "capabilities": ["VBA", "Python", "PHP", "SQL", "Excel", "limpieza y análisis de datos"], "evidence": "Código, hojas e índices locales", "status": "mixta_por_proyecto"},
+    {"domain": "Geoespacial", "capabilities": ["QGIS", "ArcGIS", "Global Mapper", "AutoCAD", "Pix4D", "georreferenciación"], "evidence": "Prototipos, documentos y referencias locales", "status": "mixta_por_proyecto"},
+    {"domain": "Gobierno digital", "capabilities": ["PbR", "MIR", "PAE", "PDM", "indicadores", "TdR"], "evidence": "Expediente municipal por vincular", "status": "consolidacion_derivada"},
+    {"domain": "IA y conocimiento", "capabilities": ["IA generativa", "LLM locales", "agentes", "automatización", "memoria contextual"], "evidence": "Repositorio CO•RA e inventario local", "status": "primaria_verificada_en_prototipos"}
+  ],
+  "star_projects": [
+    {"project": "Gemelo Digital Municipal / CO•RA", "problem": "Información territorial fragmentada", "architecture": "Visores, GeoJSON, datos institucionales e índice contextual", "result": "Prototipos y evolución documental recuperados", "evidence": "Artefactos de 2016–2017, Leaflet y Three.js", "status": "prototipo_verificado_alcance_por_delimitar"},
+    {"project": "COBRA y Traslado de Dominio", "problem": "Procesos administrativos y de recaudación manuales", "architecture": "Sistema de recaudación y automatización VBA/Excel", "result": "Uso y mejoras reportados", "evidence": "CV histórico y consolidación; faltan constancias de uso", "status": "documentado_pendiente_impacto"},
+    {"project": "Fotogrametría del panteón municipal", "problem": "Representación y gestión espacial del panteón", "architecture": "Dron, Pix4D, modelo 3D y mapa digital", "result": "Caso reiteradamente documentado", "evidence": "Referencias locales; activo nativo 3D no recuperado", "status": "documentado_activo_primario_pendiente"},
+    {"project": "Procesamiento regional de datos", "problem": "Volumen y calidad de registros administrativos", "architecture": "Limpieza, automatización, Excel y scraping reportado", "result": "Más de 50,000 registros y reducción de error reportados", "evidence": "Perfil consolidado; falta muestra, bitácora y método", "status": "resultado_reportado_pendiente"}
+  ],
+  "open_conflicts": [
+    {"topic": "Cronología académica del antecedente municipal", "versions": ["2015 en narrativas retrospectivas", "2017 en documentos académicos recuperados"], "decision": "Usar 2017 para esos documentos hasta localizar evidencia primaria de 2015."},
+    {"topic": "Tasa de error en procesamiento masivo", "versions": ["menor al 2%", "menor al 2.5%"], "decision": "No publicar porcentaje hasta recuperar método, muestra y cálculo."},
+    {"topic": "Incremento de recaudación", "versions": ["aproximadamente 30%", "sin línea base vinculada"], "decision": "Mantener como resultado reportado, no certificado."},
+    {"topic": "Precisión electoral", "versions": ["cercana al 90%", "sin definición de métrica ni validación"], "decision": "Excluir la cifra del perfil público hasta documentar metodología."},
+    {"topic": "Adopción del Traslado de Dominio", "versions": ["dos administraciones consecutivas", "sin constancia vinculada"], "decision": "Conservar como afirmación pendiente de evidencia de uso."},
+    {"topic": "Modelo 3D del panteón", "versions": ["caso documentado", "archivo nativo Pix4D o modelo no recuperado"], "decision": "Mostrar el caso con esta limitación explícita."}
+  ],
+  "publication_rules": [
+    "Publicar capacidades y proyectos, no domicilios, teléfonos, correos ni rutas locales.",
+    "Toda cifra debe enlazar con fuente, método y fecha antes de convertirse en logro certificado.",
+    "Una consolidación orienta la búsqueda; una evidencia primaria sostiene la afirmación.",
+    "Las contradicciones permanecen visibles hasta resolverse; no se elige la versión más favorable."
+  ]
+}

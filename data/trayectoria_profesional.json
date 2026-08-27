@@ -4,6 +4,7 @@
   "title": "Trayectoria profesional contextual",
   "summary": "Continuidad reportada entre gobierno municipal y estatal, desarrollo de sistemas, datos masivos, GIS y fotogrametría, automatización, planeación, evaluación e IA contextual.",
   "status": "borrador_contextual_con_resultados_reportados_requiere_revision",
+  "master_matrix": "data/matriz_trayectoria_evidencias_publico.json",
   "privacy": {
     "contains_personal_documents": false,
     "contains_institutions": true,

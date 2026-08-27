@@ -505,6 +505,72 @@ with tab1:
             for pendiente in trayectoria_profesional.get("review_pending", []):
                 st.write(f"- {pendiente}")
 
+        matriz_maestra = cargar_json_publico(
+            trayectoria_profesional.get(
+                "master_matrix",
+                "data/matriz_trayectoria_evidencias_publico.json",
+            ),
+            {},
+        )
+        if matriz_maestra:
+            st.subheader("🧾 Matriz maestra de trayectoria y evidencias")
+            st.write(matriz_maestra.get("purpose", ""))
+            st.caption(
+                "Posicionamiento: " + matriz_maestra.get("positioning", "por revisar")
+            )
+
+            experiencias = matriz_maestra.get("experience", [])
+            proyectos_estrella = matriz_maestra.get("star_projects", [])
+            conflictos = matriz_maestra.get("open_conflicts", [])
+            primarias = sum(
+                1 for item in experiencias
+                if item.get("level") == "primaria_verificada"
+            )
+            m1, m2, m3, m4 = st.columns(4)
+            m1.metric("Registros", len(experiencias))
+            m2.metric("Evidencia primaria", primarias)
+            m3.metric("Proyectos estrella", len(proyectos_estrella))
+            m4.metric("Conflictos abiertos", len(conflictos))
+
+            st.dataframe(
+                [
+                    {
+                        "Periodo": item.get("period", ""),
+                        "Ámbito": item.get("scope", ""),
+                        "Función": item.get("role", ""),
+                        "Proyectos": item.get("projects", ""),
+                        "Nivel": item.get("level", "").replace("_", " "),
+                        "Revisión": item.get("status", "").replace("_", " "),
+                    }
+                    for item in experiencias
+                ],
+                width="stretch",
+                hide_index=True,
+            )
+
+            with st.expander("⭐ Cuatro proyectos para el portafolio", expanded=True):
+                for proyecto in proyectos_estrella:
+                    st.markdown(f"**{proyecto.get('project', 'Proyecto')}**")
+                    st.write(
+                        f"Problema: {proyecto.get('problem', '')} · "
+                        f"Arquitectura: {proyecto.get('architecture', '')}"
+                    )
+                    st.write(f"Resultado: {proyecto.get('result', '')}")
+                    st.caption(
+                        f"Evidencia: {proyecto.get('evidence', '')} · "
+                        f"Estado: {proyecto.get('status', '').replace('_', ' ')}"
+                    )
+
+            with st.expander("⚖️ Contradicciones y decisiones de publicación", expanded=False):
+                st.warning(
+                    "Estos puntos permanecen abiertos: la aplicación no elige "
+                    "automáticamente la versión más favorable."
+                )
+                for conflicto in conflictos:
+                    st.markdown(f"**{conflicto.get('topic', 'Por revisar')}**")
+                    st.write("Versiones: " + " · ".join(conflicto.get("versions", [])))
+                    st.caption("Decisión: " + conflicto.get("decision", ""))
+
         st.markdown("---")
 
     radar_profesional = cargar_json_publico(

@@ -10,6 +10,16 @@ import base64
 from datetime import datetime, timezone
 from pathlib import Path
 
+
+from core.agent_conversations import (
+    nueva_conversacion,
+    agregar_mensaje,
+    resumen_para_mesa,
+)
+
+
+
+
 # ============================================
 # CONFIGURACIÓN DE PÁGINA
 # ============================================
@@ -755,19 +765,240 @@ with tab3:
         st.info("Memory Bank privado no configurado. Los visitantes no necesitan proporcionar tokens.")
 
 # ============================================
-# TAB 4: CATÁLOGO PÚBLICO DE AGENTES
+# TAB 4: AGENTES + CONVERSACIONES
 # ============================================
 with tab4:
-    st.subheader("🤝 Catálogo público de agentes")
-    st.caption("Capacidades observadas y pendientes de validación; no ejecuta ni envía tareas.")
-    catalogo = cargar_json_publico("data/catalogo_agentes_publico.json", {"agents": []})
-    for agente in catalogo.get("agents", []):
-        with st.expander(f"{agente.get('display_name', agente.get('agent_id'))} · {agente.get('status', 'sin estado')}"):
-            st.write(f"**Acceso:** {agente.get('access_method', 'por definir')}")
-            st.write("**Capacidades:**")
-            for capacidad in agente.get("capabilities", []):
-                st.write(f"- {capacidad}")
-    st.info("El despacho automático está desactivado y todo envío externo requiere aprobación humana.")
+    sub_catalogo, sub_conversaciones = st.tabs([
+        "🧩 Catálogo",
+        "💬 Conversaciones",
+    ])
+
+    # --------------------------------------------
+    # CATÁLOGO PÚBLICO
+    # --------------------------------------------
+    with sub_catalogo:
+        st.subheader("🤝 Catálogo público de agentes")
+        st.caption(
+            "Capacidades observadas y pendientes de validación; "
+            "no ejecuta ni envía tareas."
+        )
+
+        catalogo = cargar_json_publico(
+            "data/catalogo_agentes_publico.json",
+            {"agents": []}
+        )
+
+        for agente in catalogo.get("agents", []):
+            with st.expander(
+                f"{agente.get('display_name', agente.get('agent_id'))} · "
+                f"{agente.get('status', 'sin estado')}"
+            ):
+                st.write(
+                    f"**Acceso:** {agente.get('access_method', 'por definir')}"
+                )
+                st.write("**Capacidades:**")
+                for capacidad in agente.get("capabilities", []):
+                    st.write(f"- {capacidad}")
+
+        st.info(
+            "El despacho automático está desactivado y todo envío externo "
+            "requiere aprobación humana."
+        )
+
+    # --------------------------------------------
+    # CONVERSACIONES
+    # --------------------------------------------
+    with sub_conversaciones:
+        st.subheader("💬 Conversaciones con agentes")
+        st.caption(
+            "MVP local de contexto y conversación estructurada. "
+            "Por ahora no llama automáticamente a APIs ni a Ollama."
+        )
+
+        catalogo = cargar_json_publico(
+            "data/catalogo_agentes_publico.json",
+            {"agents": []}
+        )
+        agentes = catalogo.get("agents", [])
+
+        mapa_proyectos = cargar_json_publico(
+            "data/proyectos_actuales.json",
+            {"proyectos": []}
+        )
+        proyectos = mapa_proyectos.get("proyectos", [])
+
+        if not agentes:
+            st.warning(
+                "No hay agentes en data/catalogo_agentes_publico.json."
+            )
+        else:
+            opciones_agente = {
+                a.get("display_name", a.get("agent_id", "Agente")): a
+                for a in agentes
+            }
+
+            opciones_proyecto = {
+                "Sin proyecto": {
+                    "id": None,
+                    "nombre": None,
+                }
+            }
+            for p in proyectos:
+                opciones_proyecto[p.get("nombre", p.get("id", "Proyecto"))] = p
+
+            col_ctx1, col_ctx2 = st.columns(2)
+
+            with col_ctx1:
+                agente_nombre = st.selectbox(
+                    "Agente",
+                    list(opciones_agente.keys()),
+                    key="conv_agente",
+                )
+                agente = opciones_agente[agente_nombre]
+
+            with col_ctx2:
+                proyecto_nombre = st.selectbox(
+                    "Proyecto activo",
+                    list(opciones_proyecto.keys()),
+                    key="conv_proyecto",
+                )
+                proyecto = opciones_proyecto[proyecto_nombre]
+
+            objetivo_conv = st.text_input(
+                "Objetivo de esta conversación",
+                placeholder="Ej. Diseñar el Skill Evaluator",
+                key="conv_objetivo",
+            )
+
+            st.caption(
+                f"Contexto activo: "
+                f"{proyecto.get('nombre') or 'sin proyecto'} · "
+                f"{agente_nombre}"
+            )
+
+            firma = (
+                agente.get("agent_id", agente_nombre),
+                proyecto.get("id"),
+                objetivo_conv.strip(),
+            )
+
+            if (
+                "agent_conversation" not in st.session_state
+                or st.session_state.get("agent_conversation_signature") != firma
+            ):
+                st.session_state.agent_conversation = nueva_conversacion(
+                    agent_id=agente.get("agent_id", agente_nombre),
+                    agent_name=agente_nombre,
+                    project_id=proyecto.get("id"),
+                    project_name=proyecto.get("nombre"),
+                    objective=objetivo_conv.strip() or None,
+                    source_type=agente.get("access_method", "manual"),
+                )
+                st.session_state.agent_conversation_signature = firma
+
+            conversacion = st.session_state.agent_conversation
+
+            st.markdown("---")
+
+            # Mostrar historial usando componentes nativos de chat
+            for msg in conversacion.get("messages", []):
+                rol_ui = (
+                    "assistant"
+                    if msg.get("role") == "assistant"
+                    else "user"
+                )
+                with st.chat_message(rol_ui):
+                    if msg.get("author"):
+                        st.caption(msg["author"])
+                    st.write(msg.get("content", ""))
+
+            mensaje_usuario = st.chat_input(
+                "Escribe un mensaje para el agente...",
+                key="chat_input_agente",
+            )
+
+            if mensaje_usuario:
+                agregar_mensaje(
+                    conversacion,
+                    role="user",
+                    content=mensaje_usuario,
+                    author=usuario,
+                )
+                st.session_state.agent_conversation = conversacion
+                st.rerun()
+
+            # MVP: respuesta manual del agente.
+            # Después este bloque será sustituido por un adapter Ollama/API.
+            with st.expander(
+                "🤖 Registrar respuesta del agente",
+                expanded=False,
+            ):
+                respuesta_manual = st.text_area(
+                    "Respuesta",
+                    height=180,
+                    key="respuesta_agente_manual",
+                    placeholder=(
+                        "Pega aquí la respuesta de Qwen, ChatGPT u otro "
+                        "agente mientras el despacho automático está desactivado."
+                    ),
+                )
+
+                if st.button(
+                    "Agregar respuesta",
+                    key="agregar_respuesta_agente",
+                ):
+                    if respuesta_manual.strip():
+                        agregar_mensaje(
+                            conversacion,
+                            role="assistant",
+                            content=respuesta_manual,
+                            author=agente_nombre,
+                        )
+                        st.session_state.agent_conversation = conversacion
+                        st.session_state.respuesta_agente_manual = ""
+                        st.rerun()
+                    else:
+                        st.warning("Escribe una respuesta antes de agregarla.")
+
+            st.markdown("---")
+
+            col_acc1, col_acc2 = st.columns(2)
+
+            with col_acc1:
+                st.download_button(
+                    "⬇️ Descargar conversación JSON",
+                    data=json.dumps(
+                        conversacion,
+                        indent=2,
+                        ensure_ascii=False,
+                    ),
+                    file_name=(
+                        f"{conversacion.get('conversation_id', 'conversacion')}.json"
+                    ),
+                    mime="application/json",
+                    use_container_width=True,
+                )
+
+            with col_acc2:
+                entrada_mesa = resumen_para_mesa(conversacion)
+                st.download_button(
+                    "🤝 Preparar para Mesa Redonda",
+                    data=json.dumps(
+                        entrada_mesa,
+                        indent=2,
+                        ensure_ascii=False,
+                    ),
+                    file_name=(
+                        f"mesa_{conversacion.get('conversation_id', 'conversacion')}.json"
+                    ),
+                    mime="application/json",
+                    use_container_width=True,
+                )
+
+            st.caption(
+                "La conversación vive sólo en la sesión actual hasta que la "
+                "descargues o conectemos un almacenamiento privado."
+            )
 
 # ============================================
 # TAB 5: MESA REDONDA

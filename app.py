@@ -851,6 +851,56 @@ with tab4:
             "no ejecuta ni envía tareas."
         )
 
+        inventario_agentes = cargar_json_publico(
+            "data/inventario_agentes_publico.json",
+            {},
+        )
+        if inventario_agentes:
+            resumen_agentes = inventario_agentes.get("summary", {})
+            st.markdown("### 🗺️ Panorama e inventario de agentes")
+            i1, i2, i3 = st.columns(3)
+            i1.metric("Agentes indexados", resumen_agentes.get("agents_indexed_locally", 0))
+            i2.metric("Categorías", resumen_agentes.get("categories", 0))
+            i3.metric("Con metadatos de acceso", resumen_agentes.get("with_access_metadata", 0))
+            st.link_button(
+                "Abrir paisaje público de referencia",
+                inventario_agentes.get("source_reference"),
+            )
+
+            with st.expander("📈 Línea de avance del inventario", expanded=True):
+                estados_avance = {
+                    "completado": "✅",
+                    "en_progreso": "🟡",
+                    "pendiente": "⚪",
+                }
+                for paso in inventario_agentes.get("progress_line", []):
+                    icono_paso = estados_avance.get(paso.get("status"), "⚪")
+                    st.write(
+                        f"{icono_paso} **{paso.get('step')}. {paso.get('name')}** — "
+                        f"{paso.get('result')}"
+                    )
+
+            with st.expander("📊 Cobertura por categoría y acceso", expanded=False):
+                st.markdown("**Categorías principales**")
+                st.dataframe(
+                    inventario_agentes.get("top_categories", []),
+                    use_container_width=True,
+                    hide_index=True,
+                )
+                col_access, col_pricing = st.columns(2)
+                with col_access:
+                    st.markdown("**Acceso**")
+                    st.dataframe(inventario_agentes.get("access", []), hide_index=True)
+                with col_pricing:
+                    st.markdown("**Precio**")
+                    st.dataframe(inventario_agentes.get("pricing", []), hide_index=True)
+
+            st.warning(
+                "Las fichas completas permanecen locales hasta revisar fuente, "
+                "vigencia, licencia, duplicados y pertinencia para cada proyecto."
+            )
+            st.markdown("---")
+
         catalogo = cargar_json_publico(
             "data/catalogo_agentes_publico.json",
             {"agents": []}

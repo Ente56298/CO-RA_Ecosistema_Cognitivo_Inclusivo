@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-08-27",
+  "source_reference": "https://aiagentsdirectory.com/landscape",
+  "purpose": "Panorama agregado del inventario local de agentes para evaluación y conexión con proyectos",
+  "privacy_and_rights": {
+    "full_records_published": false,
+    "descriptions_copied": false,
+    "logos_copied": false,
+    "local_paths_published": false,
+    "requires_source_and_license_review": true
+  },
+  "summary": {"agents_indexed_locally":2908,"categories":79,"with_name":2908,"with_description":2908,"with_access_metadata":2908},
+  "access": [
+    {"name":"Closed Source","count":1599},
+    {"name":"Open Source","count":863},
+    {"name":"API","count":446}
+  ],
+  "pricing": [
+    {"name":"Freemium","count":1364},
+    {"name":"Paid","count":898},
+    {"name":"Free","count":646}
+  ],
+  "top_categories": [
+    {"name":"AI Agents Platform","count":274}, {"name":"AI Video Agents","count":251},
+    {"name":"Images","count":249}, {"name":"Productivity","count":171},
+    {"name":"Content Creation","count":150}, {"name":"AI Agents Frameworks","count":138},
+    {"name":"Voice AI Agents","count":128}, {"name":"Customer Service","count":86},
+    {"name":"Personal Assistant","count":79}, {"name":"Sales","count":67},
+    {"name":"AI Avatar","count":65}, {"name":"Data Analysis","count":65},
+    {"name":"Research","count":59}, {"name":"Education","count":57},
+    {"name":"Marketing","count":56}, {"name":"Digital Workers","count":56},
+    {"name":"AI Directories","count":49}, {"name":"Music","count":48},
+    {"name":"Workflow","count":40}, {"name":"Coding Agent","count":39}
+  ],
+  "progress_line": [
+    {"step":1,"name":"Descubrir","status":"completado","result":"2908 agentes detectados"},
+    {"step":2,"name":"Clasificar","status":"completado","result":"79 categorías y metadatos de acceso"},
+    {"step":3,"name":"Deduplicar y verificar","status":"en_progreso","result":"Revisión de identidad, vigencia y fuente"},
+    {"step":4,"name":"Evaluar por tarea","status":"pendiente","result":"Capacidad, costo, privacidad y evidencia"},
+    {"step":5,"name":"Conectar con proyectos","status":"pendiente","result":"Shortlists supervisadas por necesidad"},
+    {"step":6,"name":"Validar resultados","status":"pendiente","result":"Pruebas comparables y decisión humana"}
+  ]
+}

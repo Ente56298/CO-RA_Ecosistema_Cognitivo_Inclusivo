@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "updated_at": "2026-08-27",
   "purpose": "Catálogo público de capacidades observadas y pendientes de validación.",
   "routing_policy": {
@@ -7,6 +7,25 @@
     "require_user_approval_before_external_send": true,
     "sensitive_data_external_send_allowed": false
   },
+  "evaluation_sources": [
+    {
+      "source_id": "arena-agent-leaderboard",
+      "display_name": "Agent Arena",
+      "url": "https://arena.ai/leaderboard/agent?rankBy=labs",
+      "status": "referencia_externa",
+      "ranking_is_dynamic": true,
+      "last_reviewed_at": "2026-08-27",
+      "signals": [
+        "confirmed_success",
+        "praise_vs_complaint",
+        "steerability",
+        "bash_recovery",
+        "tool_hallucination",
+        "cost_per_task"
+      ],
+      "usage_note": "Referencia comparativa; no determina por sí sola qué agente debe usar CO•RA."
+    }
+  ],
   "agents": [
     {
       "agent_id": "qwen-desktop",

@@ -786,6 +786,33 @@ with tab4:
             {"agents": []}
         )
 
+        fuentes_evaluacion = catalogo.get("evaluation_sources", [])
+        if fuentes_evaluacion:
+            st.markdown("### 📊 Fuentes públicas de evaluación")
+            for fuente in fuentes_evaluacion:
+                col_fuente, col_enlace = st.columns([3, 1])
+                with col_fuente:
+                    st.write(f"**{fuente.get('display_name', 'Fuente externa')}**")
+                    st.caption(fuente.get("usage_note", "Referencia comparativa."))
+                    senales = fuente.get("signals", [])
+                    if senales:
+                        st.caption(
+                            "Señales: "
+                            + ", ".join(s.replace("_", " ") for s in senales)
+                        )
+                with col_enlace:
+                    if fuente.get("url"):
+                        st.link_button(
+                            "Abrir ranking vivo",
+                            fuente["url"],
+                            use_container_width=True,
+                        )
+            st.caption(
+                "Los rankings externos cambian con el tiempo y se usan como "
+                "evidencia complementaria, no como decisión automática."
+            )
+            st.markdown("---")
+
         for agente in catalogo.get("agents", []):
             with st.expander(
                 f"{agente.get('display_name', agente.get('agent_id'))} · "

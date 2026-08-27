@@ -315,6 +315,35 @@
         "professional_premise": "La ausencia de presupuesto no reduce la escala de la visión; exige una construcción gradual, modular, documentada y sustentada en conocimiento, integración y reutilización.",
         "privacy_rule": "Usar información pública o autorizada y análisis territorial agregado; no perfilar afinidades políticas individuales ni enumerar consultas individuales masivamente."
       }
+    },
+    {
+      "id": "act-015",
+      "title": "Recuperar y validar las 27 leyes universales de CO•RA",
+      "project_id": "cora-marco-metodologico",
+      "project": "Marco metodológico de CO•RA",
+      "commitment": "evidencia",
+      "layer": 0,
+      "stage": "recuperacion_historica",
+      "priority": "media",
+      "state": "pendiente",
+      "progress": 10,
+      "focus_default": false,
+      "evidence_status": "antecedente_recordado_y_principios_parciales_no_validados",
+      "next_action": "Localizar la formulación original en historiales y reglas de Amazon Q, extraer cada ley con su locator y comparar versiones sin completar vacíos por inferencia.",
+      "completion_evidence": "Lista de 27 leyes con fuente, locator, fragmento verificable, versión comparada y aprobación explícita antes de declararla canónica.",
+      "updated_at": "2026-08-27",
+      "recovery_protocol": {
+        "states": ["recordada", "localizada", "validada", "aprobada", "canonica"],
+        "current_state": "recordada",
+        "partial_candidates": 10,
+        "canonical_count": 0,
+        "rules": [
+          "No inventar leyes faltantes.",
+          "No confundir reconstrucciones posteriores con la formulación original.",
+          "Conservar procedencia y locator por cada hallazgo.",
+          "No publicar historiales privados completos."
+        ]
+      }
     }
   ]
 }

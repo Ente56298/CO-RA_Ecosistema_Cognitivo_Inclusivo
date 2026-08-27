@@ -12,3 +12,4 @@ dist/
 *.log
 data/conversaciones_extraidas.json
 data/actividades*.json
+!data/actividades_seguimiento.json

@@ -307,14 +307,15 @@ with st.sidebar:
     st.write("⚠️ Escritura en Memory Bank desactivada" if not ENABLE_GITHUB_WRITES else "✅ Escritura privada habilitada")
 
 # Tabs principales
-tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
     "🎯 Trayectoria y proyectos",
     "📚 Conversaciones y registros",
     "🧠 Memoria y contexto",
     "🤝 Agentes y evaluación",
     "🧩 Plantillas y referencias",
     "🗃️ Activos y recursos",
-    "💬 Mesa colaborativa"
+    "💬 Mesa colaborativa",
+    "✅ Seguimiento de actividades"
 ])
 
 # ============================================
@@ -2044,6 +2045,201 @@ with tab7:
             mime="application/json"
         )
         st.warning("La descarga no publica las respuestas ni las envía a ningún agente.")
+
+# ============================================
+# TAB 8: SEGUIMIENTO DE ACTIVIDADES
+# ============================================
+with tab8:
+    st.subheader("✅ Dashboard de seguimiento de actividades")
+    st.caption(
+        "Matriz operativa conectada con proyectos, compromisos, capas de "
+        "contexto y evidencia de cierre. Una actividad no equivale a un proyecto."
+    )
+
+    matriz_actividades = cargar_json_publico(
+        "data/actividades_seguimiento.json",
+        {"activities": []},
+    )
+    actividades = matriz_actividades.get("activities", [])
+
+    if not actividades:
+        st.info("Todavía no hay actividades registradas en la matriz de organización.")
+    else:
+        estados = sorted({item.get("state", "sin_estado") for item in actividades})
+        prioridades = sorted({item.get("priority", "sin_prioridad") for item in actividades})
+        proyectos_actividad = sorted({item.get("project", "Sin proyecto") for item in actividades})
+        capas = sorted({int(item.get("layer", 0)) for item in actividades})
+
+        f1, f2, f3, f4 = st.columns(4)
+        with f1:
+            filtro_estados = st.multiselect(
+                "Estado",
+                estados,
+                default=estados,
+                format_func=lambda valor: valor.replace("_", " ").title(),
+                key="seguimiento_estados",
+            )
+        with f2:
+            filtro_prioridades = st.multiselect(
+                "Prioridad",
+                prioridades,
+                default=prioridades,
+                format_func=lambda valor: valor.title(),
+                key="seguimiento_prioridades",
+            )
+        with f3:
+            filtro_proyectos = st.multiselect(
+                "Proyecto",
+                proyectos_actividad,
+                default=proyectos_actividad,
+                key="seguimiento_proyectos",
+            )
+        with f4:
+            filtro_capas = st.multiselect(
+                "Capa",
+                capas,
+                default=capas,
+                format_func=lambda valor: f"Capa {valor}",
+                key="seguimiento_capas",
+            )
+
+        actividades_visibles = [
+            item for item in actividades
+            if item.get("state", "sin_estado") in filtro_estados
+            and item.get("priority", "sin_prioridad") in filtro_prioridades
+            and item.get("project", "Sin proyecto") in filtro_proyectos
+            and int(item.get("layer", 0)) in filtro_capas
+        ]
+
+        total_actividades = len(actividades_visibles)
+        en_movimiento = sum(
+            1 for item in actividades_visibles
+            if item.get("state") in {"en_curso", "en_revision"}
+        )
+        completadas = sum(
+            1 for item in actividades_visibles
+            if item.get("state") == "completada"
+        )
+        alta_prioridad = sum(
+            1 for item in actividades_visibles
+            if item.get("priority") == "alta"
+            and item.get("state") != "completada"
+        )
+        avance_promedio = round(
+            sum(int(item.get("progress", 0)) for item in actividades_visibles)
+            / max(total_actividades, 1)
+        )
+
+        k1, k2, k3, k4, k5 = st.columns(5)
+        k1.metric("Actividades", total_actividades)
+        k2.metric("En movimiento", en_movimiento)
+        k3.metric("Completadas", completadas)
+        k4.metric("Prioridad alta abierta", alta_prioridad)
+        k5.metric("Avance promedio", f"{avance_promedio}%")
+        st.progress(avance_promedio / 100)
+        st.caption(
+            "Fuente: " + matriz_actividades.get("source_of_truth", "sin fuente")
+            + " · Actualización: " + matriz_actividades.get("updated_at", "sin fecha")
+            + " · Unidad: " + matriz_actividades.get("grain", "actividad")
+        )
+
+        if actividades_visibles:
+            conteo_estados = {
+                estado: sum(
+                    1 for item in actividades_visibles
+                    if item.get("state") == estado
+                )
+                for estado in estados
+            }
+            conteo_capas = {
+                capa: sum(
+                    1 for item in actividades_visibles
+                    if int(item.get("layer", 0)) == capa
+                )
+                for capa in capas
+            }
+
+            c1, c2 = st.columns(2)
+            with c1:
+                st.markdown("#### Distribución por estado")
+                st.bar_chart(
+                    {
+                        "Estado": [clave.replace("_", " ").title() for clave in conteo_estados],
+                        "Actividades": list(conteo_estados.values()),
+                    },
+                    x="Estado",
+                    y="Actividades",
+                    color="#21618C",
+                )
+            with c2:
+                st.markdown("#### Distribución por capa de contexto")
+                st.bar_chart(
+                    {
+                        "Capa": [f"Capa {clave}" for clave in conteo_capas],
+                        "Actividades": list(conteo_capas.values()),
+                    },
+                    x="Capa",
+                    y="Actividades",
+                    color="#1E8449",
+                )
+
+            st.markdown("#### Próximas actividades prioritarias")
+            orden_prioridad = {"alta": 0, "media": 1, "baja": 2}
+            proximas = sorted(
+                [item for item in actividades_visibles if item.get("state") != "completada"],
+                key=lambda item: (
+                    orden_prioridad.get(item.get("priority", "baja"), 3),
+                    -int(item.get("progress", 0)),
+                    item.get("id", ""),
+                ),
+            )[:3]
+            for item in proximas:
+                with st.container(border=True):
+                    st.markdown(
+                        f"**{item.get('title', 'Actividad')}** · "
+                        f"{item.get('priority', 'sin prioridad').title()}"
+                    )
+                    st.caption(
+                        f"{item.get('project', 'Sin proyecto')} · "
+                        f"Capa {item.get('layer', 0)} · "
+                        f"{item.get('state', 'sin estado').replace('_', ' ')}"
+                    )
+                    st.progress(int(item.get("progress", 0)) / 100)
+                    st.write("**Siguiente acción:** " + item.get("next_action", ""))
+                    st.write(
+                        "**Cierre verificable:** "
+                        + item.get("completion_evidence", "")
+                    )
+
+            st.markdown("#### Matriz completa de actividades")
+            st.dataframe(
+                [
+                    {
+                        "ID": item.get("id", ""),
+                        "Actividad": item.get("title", ""),
+                        "Proyecto": item.get("project", ""),
+                        "Capa": item.get("layer", 0),
+                        "Etapa": item.get("stage", "").replace("_", " "),
+                        "Prioridad": item.get("priority", "").title(),
+                        "Estado": item.get("state", "").replace("_", " "),
+                        "Avance": f"{item.get('progress', 0)}%",
+                        "Evidencia": item.get("evidence_status", "").replace("_", " "),
+                        "Siguiente acción": item.get("next_action", ""),
+                    }
+                    for item in actividades_visibles
+                ],
+                width="stretch",
+                hide_index=True,
+            )
+
+            st.download_button(
+                "⬇️ Descargar matriz de actividades",
+                data=json.dumps(matriz_actividades, indent=2, ensure_ascii=False),
+                file_name="cora_actividades_seguimiento.json",
+                mime="application/json",
+            )
+        else:
+            st.warning("Los filtros actuales no devuelven actividades.")
 
 # ============================================
 # FOOTER

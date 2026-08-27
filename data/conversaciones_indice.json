@@ -1,1 +1,14 @@
-
+{
+  "conversaciones": [
+    {
+      "id": "conv-001",
+      "titulo": "CO•RA initial tracking implementation plan",
+      "fuente": "chatgpt",
+      "fecha": null,
+      "agente": "ChatGPT",
+      "proyecto": "CO•RA",
+      "archivo_origen": null,
+      "hash": null
+    }
+  ]
+}

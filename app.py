@@ -281,7 +281,7 @@ AREAS_CONOCIMIENTO.update(AREAS_EXTRA)
 # INTERFAZ PRINCIPAL
 # ============================================
 st.title("🧭 CO•RA Tutor")
-st.markdown("### Trayectoria adaptativa de aprendizaje")
+st.markdown("### Trayectoria adaptativa de aprendizaje y conocimiento")
 st.caption("Contexto abundante por detrás; simplicidad por delante.")
 
 # Sidebar - Configuración
@@ -308,11 +308,11 @@ with st.sidebar:
 
 # Tabs principales
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
-    "🎯 Explorar Área",
-    "📚 Historial ChatGPT",
-    "🧠 Memory Bank",
-    "🤝 Agentes",
-    "💬 Mesa Redonda"
+    "🎯 Trayectoria y áreas",
+    "📚 Conversaciones y registros",
+    "🧠 Memoria y contexto",
+    "🤝 Agentes y fuentes",
+    "💬 Mesa colaborativa"
 ])
 
 # ============================================
@@ -672,11 +672,14 @@ with tab1:
                 st.warning("⚠️ Por favor completa ambos campos para continuar")
 
 # ============================================
-# TAB 2: HISTORIAL CHATGPT
+# TAB 2: CONVERSACIONES Y REGISTROS
 # ============================================
 with tab2:
-    st.subheader("📚 Historial de Conversaciones ChatGPT")
-    st.caption("Contextos previos detectados de tu trayectoria de aprendizaje")
+    st.subheader("📚 Conversaciones y registros rastreados")
+    st.caption(
+        "Títulos y metadatos procedentes de ChatGPT, Qwen, Gemini, "
+        "Copilot, Kimi, Runable y otras fuentes autorizadas."
+    )
     
     conversaciones = cargar_conversaciones()
     
@@ -684,7 +687,7 @@ with tab2:
         # Métricas
         col1, col2, col3 = st.columns(3)
         with col1:
-            st.metric("Total Conversaciones", len(conversaciones))
+            st.metric("Registros indexados", len(conversaciones))
         with col2:
             ancladas = sum(1 for c in conversaciones if c.get('is_pinned'))
             st.metric("Conversaciones Ancladas", ancladas)
@@ -713,7 +716,7 @@ with tab2:
         if solo_ancladas:
             conversaciones_filtradas = [c for c in conversaciones_filtradas if c.get('is_pinned')]
         
-        st.markdown(f"**{len(conversaciones_filtradas)} conversaciones encontradas**")
+        st.markdown(f"**{len(conversaciones_filtradas)} registros encontrados**")
         
         # Mostrar conversaciones
         for conv in conversaciones_filtradas[:30]:

@@ -465,6 +465,49 @@ with tab1:
 
         st.markdown("---")
 
+    radar_profesional = cargar_json_publico(
+        "data/radar_red_profesional_publico.json",
+        {},
+    )
+    if radar_profesional:
+        st.subheader("📡 Red profesional y radar de oportunidades")
+        st.write(radar_profesional.get("purpose", ""))
+        st.caption(
+            "Vista pública agregada: nombres, mensajes, rutas locales y evidencia "
+            "visual permanecen privados."
+        )
+
+        resumen_radar = radar_profesional.get("summary", {})
+        r1, r2, r3, r4 = st.columns(4)
+        r1.metric("Registros de ruta", resumen_radar.get("route_records", 0))
+        r2.metric("Fuentes configuradas", resumen_radar.get("configured_public_sources", 0))
+        r3.metric("Nodos de oportunidad", resumen_radar.get("opportunity_nodes", 0))
+        r4.metric("Duplicados detectados", resumen_radar.get("duplicate_files_detected", 0))
+
+        with st.expander("🧭 Línea de avance", expanded=True):
+            for numero, paso in enumerate(radar_profesional.get("progress_line", []), 1):
+                st.write(f"{numero}. {paso}")
+
+        col_red, col_fuentes = st.columns(2)
+        with col_red:
+            st.markdown("**Capas de la red**")
+            for capa in radar_profesional.get("network_layers", []):
+                st.write(f"- {capa}")
+        with col_fuentes:
+            st.markdown("**Familias rastreadas**")
+            for grupo in radar_profesional.get("source_groups", []):
+                st.write(
+                    f"- {grupo.get('name', 'Fuente')} · "
+                    f"{grupo.get('files', 0)} archivo(s) · "
+                    f"{grupo.get('status', 'por_revisar').replace('_', ' ')}"
+                )
+
+        with st.expander("⚠️ Limitaciones técnicas actuales", expanded=False):
+            for limitacion in radar_profesional.get("limitations", []):
+                st.write(f"- {limitacion}")
+
+        st.markdown("---")
+
     # ============================================
     # CONTEXTO INICIAL
     # ============================================

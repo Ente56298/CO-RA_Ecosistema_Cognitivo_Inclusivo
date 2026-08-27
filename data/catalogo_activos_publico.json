@@ -22,6 +22,7 @@
     {"asset_id":"keep-notes","name":"Notas KEEP","type":"notas","domain":"memoria","status":"indexado_local","access":"privado","locator_type":"id_cora_privado","relation":"Contexto, ideas y señales para proyectos"},
     {"asset_id":"keep-physical-inventory","name":"Inventario físico KEEP","type":"inventario_fisico","domain":"activos","status":"indexado_local","access":"privado","locator_type":"id_cora_privado","relation":"Registro contextual de activos físicos"},
     {"asset_id":"keep-inventory","name":"Familias KEEP y manifiestos de hashes","type":"inventario","domain":"trazabilidad","status":"prototipo","access":"metadatos_sanitizados","locator_type":"hash_y_referencia","relation":"Familias, deduplicación y trazabilidad"},
-    {"asset_id":"professional-trajectory","name":"Trayectoria profesional contextual","type":"perfil_contextual","domain":"trayectoria","status":"borrador_revisable","access":"público_sanitizado","locator_type":"indice_contextual","relation":"Líneas profesionales inferidas con revisión humana"}
+    {"asset_id":"professional-trajectory","name":"Trayectoria profesional contextual","type":"perfil_contextual","domain":"trayectoria","status":"borrador_revisable","access":"público_sanitizado","locator_type":"indice_contextual","relation":"Líneas profesionales inferidas con revisión humana"},
+    {"asset_id":"professional-opportunity-radar","name":"Radar de red profesional y oportunidades","type":"índice_contextual","domain":"trayectoria","status":"prototipo","access":"público_sanitizado","locator_type":"resumen_agregado","relation":"Conecta señales existentes, contactos privados, oportunidades y proyectos vivos"}
   ]
 }

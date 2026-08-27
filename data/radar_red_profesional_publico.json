@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-08-27",
+  "title": "Radar de red profesional y oportunidades",
+  "purpose": "Rastrear señales existentes, normalizarlas y conectarlas con proyectos vivos sin crear contactos, conversaciones u oportunidades ficticias.",
+  "privacy": {
+    "contains_names": false,
+    "contains_messages": false,
+    "contains_absolute_paths": false,
+    "contains_private_content": false,
+    "public_data_is_aggregate_only": true
+  },
+  "summary": {
+    "local_files_reviewed": 12,
+    "route_records": 114486,
+    "route_columns_detected": 205,
+    "configured_public_sources": 5,
+    "opportunity_nodes": 12,
+    "duplicate_files_detected": 1,
+    "conversation_depurator_versions": 2
+  },
+  "network_layers": [
+    "Decisión institucional",
+    "Enlaces y referidores",
+    "Aliados territoriales",
+    "Academia y conocimiento"
+  ],
+  "source_groups": [
+    {
+      "id": "route-family",
+      "name": "Familia de rutas y candidatos",
+      "files": 5,
+      "status": "misma_fuente_en_formatos_distintos",
+      "public_detail": "Un solo universo de registros representado como texto, JSON, Markdown, CSV y Excel."
+    },
+    {
+      "id": "conversation-depurators",
+      "name": "Depuradores de conversaciones",
+      "files": 2,
+      "status": "versiones_detectadas",
+      "public_detail": "Herramientas locales para detectar proveedor, extraer candidatos, puntuar y deduplicar."
+    },
+    {
+      "id": "opportunity-radar",
+      "name": "Configuración del radar de oportunidades",
+      "files": 3,
+      "status": "configuracion_rastreada",
+      "public_detail": "Fuentes, nodos, políticas de normalización y puntuación; una copia exacta fue detectada."
+    },
+    {
+      "id": "visual-evidence",
+      "name": "Evidencia visual",
+      "files": 1,
+      "status": "pendiente_revision_humana",
+      "public_detail": "Captura conservada como evidencia privada; no se publica ni se transcribe automáticamente."
+    },
+    {
+      "id": "unclassified-text",
+      "name": "Texto de origen por clasificar",
+      "files": 1,
+      "status": "relacionado_con_familia_de_rutas",
+      "public_detail": "Registro estructurado línea por línea; requiere normalización antes de promover metadatos."
+    }
+  ],
+  "progress_line": [
+    "Descubrir archivos locales",
+    "Agrupar representaciones equivalentes",
+    "Detectar conversaciones y señales candidatas",
+    "Deduplicar por firma y procedencia",
+    "Clasificar contacto, oportunidad y proyecto",
+    "Relacionar con proyectos vivos",
+    "Revisión humana antes de cualquier seguimiento"
+  ],
+  "limitations": [
+    "El libro Excel es demasiado grande para importarlo completo en el lector seguro; sólo se verificó su estructura mínima.",
+    "La familia de rutas contiene un esquema ancho y todavía no está normalizada como índice canónico.",
+    "Los datos personales y mensajes deben permanecer en almacenamiento local privado.",
+    "Una señal detectada no equivale a una oportunidad confirmada hasta que exista revisión humana."
+  ]
+}

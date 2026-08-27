@@ -26,7 +26,10 @@
       "kilo": 2,
       "telegram": 1,
       "whatsapp": 1
-    }
+    },
+    "manual_history_mentions": 8,
+    "panteon_related_mentions": 67,
+    "threejs_related_files": 68
   },
   "primary_artifacts": [
     {
@@ -52,6 +55,56 @@
       "type": "analisis_tecnico_pdf",
       "status": "documento_estrategico_19_paginas",
       "evidence": "Evalúa CesiumJS, Google Photorealistic 3D Tiles, OpenStreetMap, GeoJSON, seguridad de claves, privacidad y fases de integración."
+    },
+    {
+      "id": "threejs-municipal-map",
+      "type": "codigo_javascript_3d",
+      "status": "prototipo_local_confirmado",
+      "evidence": "Código Three.js con escena, edificios, cámara, renderer, métricas demostrativas, carga de GeoJSON local y consulta a Overpass/OpenStreetMap."
+    },
+    {
+      "id": "historical-online-manual",
+      "type": "referencia_de_historial_web",
+      "status": "existencia_historica_rastreada_sitio_actual_no_confirmado",
+      "evidence": "Ocho registros derivados refieren un manual técnico y páginas de gestión relacionadas; el dominio no pudo verificarse actualmente."
+    },
+    {
+      "id": "panteon-photogrammetry-case",
+      "type": "caso_geoespacial_documentado",
+      "status": "metodo_y_narrativa_rastreados_activo_nativo_no_recuperado",
+      "evidence": "Múltiples antecedentes describen dron, Pix4D, modelo 3D, identificación y vinculación municipal; no se localizó un archivo nativo Pix4D o modelo 3D en los índices revisados."
+    }
+  ],
+  "evolution_timeline": [
+    {
+      "period": "2016",
+      "milestone": "Sistema Web de Atención al Vecino",
+      "verification": "pdf_primario_verificado",
+      "evidence": "Tickets, seguimiento, base centralizada, reportes, estadísticas y detección de cuellos de botella."
+    },
+    {
+      "period": "2017",
+      "milestone": "Plataforma empresarial municipal e investigación académica",
+      "verification": "documentos_docx_verificados",
+      "evidence": "Identifica información aislada por departamento y propone una plataforma web centralizada para gestión y servicios ciudadanos."
+    },
+    {
+      "period": "fecha_por_confirmar",
+      "milestone": "Fotogrametría del panteón municipal",
+      "verification": "antecedente_documentado_sin_activo_nativo",
+      "evidence": "Flujo reportado con dron, Pix4D, modelo 3D e identificación territorial."
+    },
+    {
+      "period": "evolucion_posterior",
+      "milestone": "Gemelo Digital Municipal",
+      "verification": "prototipos_html_y_javascript_confirmados",
+      "evidence": "Visualización conceptual, mapa 2D, escena Three.js, cronologías, capas e integración con GeoJSON y OpenStreetMap."
+    },
+    {
+      "period": "linea_actual",
+      "milestone": "PDL y CO•RA territorial",
+      "verification": "continuidad_contextual_rastreada",
+      "evidence": "Diagnóstico por localidad, indicadores, planeación, evaluación y recuperación de conocimiento territorial."
     }
   ],
   "reported_baseline": {
@@ -66,9 +119,19 @@
     {"layer": "Mapa y capas", "status": "prototipo_leaflet"},
     {"layer": "Persistencia", "status": "almacenamiento_local_del_navegador"},
     {"layer": "Base geoespacial canónica", "status": "no_verificada"},
-    {"layer": "APIs y sincronización", "status": "no_implementadas_en_prototipos_revisados"},
+    {"layer": "Fuentes geoespaciales", "status": "geojson_local_y_consulta_overpass_detectados"},
+    {"layer": "APIs y sincronización institucional", "status": "no_implementadas_en_prototipos_revisados"},
     {"layer": "Sensores o datos en tiempo real", "status": "no_detectados"},
+    {"layer": "3D Three.js", "status": "prototipo_de_codigo_confirmado"},
     {"layer": "3D Cesium", "status": "arquitectura_propuesta_no_confirmada_en_prototipo"}
+  ],
+  "excluded_unverified_claims": [
+    "Cantidad exacta de módulos funcionales",
+    "Más de 35 APIs integradas",
+    "Más de 1,200 usuarios",
+    "Reducciones porcentuales de tiempos o costos",
+    "Marketplace o cobertura operativa no demostrada",
+    "Disponibilidad actual del manual alojado en un dominio histórico"
   ],
   "minimum_viable_path": [
     "Validar la Tabla Madre LOCALIDAD con fuente, periodo y diccionario de datos.",

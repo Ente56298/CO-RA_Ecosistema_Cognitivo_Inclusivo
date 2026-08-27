@@ -621,6 +621,24 @@ with tab1:
                     f"({referencia.get('url', '')}) — {referencia.get('use', '')}"
                 )
 
+        with st.expander("🧵 Evolución y evidencia localizada", expanded=True):
+            for etapa in gemelo_digital.get("evolution_timeline", []):
+                st.markdown(
+                    f"**{etapa.get('period', 'Periodo por confirmar')} · "
+                    f"{etapa.get('milestone', 'Hito')}**"
+                )
+                st.write(etapa.get("evidence", ""))
+                st.caption(
+                    "Verificación: "
+                    + etapa.get("verification", "por_revisar").replace("_", " ")
+                )
+
+        afirmaciones_excluidas = gemelo_digital.get("excluded_unverified_claims", [])
+        if afirmaciones_excluidas:
+            with st.expander("🚫 Afirmaciones todavía no demostradas", expanded=False):
+                for afirmacion in afirmaciones_excluidas:
+                    st.write(f"- {afirmacion}")
+
         st.markdown("---")
 
     # ============================================

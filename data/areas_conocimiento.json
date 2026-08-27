@@ -1,0 +1,107 @@
+'base_datos': {
+    'nombre': 'Bases de Datos',
+    'icono': '🗄️',
+    'descripcion': 'SQL, modelado, tablas, relaciones, consultas y reportes',
+    'pregunta': '¿Cómo se relacionan tablas, claves y consultas en una base de datos?',
+    'palabras_clave': [
+        'sql', 'base de datos', 'tabla', 'registro',
+        'select', 'join', 'clave primaria', 'mysql', 'postgresql'
+    ],
+    'conectadas': ['programacion', 'contable', 'evaluacion']
+},
+
+'autocad': {
+    'nombre': 'Diseño 2D y 3D / AutoCAD',
+    'icono': '📐',
+    'descripcion': 'Planos, dibujo técnico, modelado 2D y 3D',
+    'pregunta': '¿Cómo se pasa de un dibujo 2D a un modelo 3D?',
+    'palabras_clave': [
+        'autocad', '2d', '3d', 'plano', 'capa',
+        'offset', 'modelado', 'dibujo'
+    ],
+    'conectadas': ['geoespacial']
+},
+
+'hardware': {
+    'nombre': 'Hardware y Mantenimiento',
+    'icono': '🛠️',
+    'descripcion': 'Diagnóstico, reparación, componentes y mantenimiento de equipos',
+    'pregunta': '¿Cómo identificarías la causa de una falla antes de reemplazar componentes?',
+    'palabras_clave': [
+        'hardware', 'pc', 'motherboard', 'ram', 'cpu',
+        'mantenimiento', 'reparación', 'fuente'
+    ],
+    'conectadas': ['redes', 'seguridad', 'electronica']
+},
+
+'seguridad': {
+    'nombre': 'Seguridad Informática',
+    'icono': '🛡️',
+    'descripcion': 'Seguridad, permisos, sistemas, análisis y protección',
+    'pregunta': '¿Qué diferencia existe entre permiso, privilegio y autorización?',
+    'palabras_clave': [
+        'seguridad', 'permiso', 'privilegio', 'malware',
+        'apk', 'android', 'forense', 'vulnerabilidad'
+    ],
+    'conectadas': ['redes', 'programacion', 'ia']
+},
+
+'electronica': {
+    'nombre': 'Electrónica y Experimentación',
+    'icono': '🔬',
+    'descripcion': 'Componentes, dispositivos, pruebas físicas y experimentación',
+    'pregunta': '¿Qué observación física quieres explicar o comprobar?',
+    'palabras_clave': [
+        'electrónica', 'circuito', 'pantalla', 'sensor',
+        'prisma', 'polarizador', 'óptica', 'componente'
+    ],
+    'conectadas': ['hardware', 'fisica']
+},
+
+'fisica': {
+    'nombre': 'Física y Óptica',
+    'icono': '🌈',
+    'descripcion': 'Luz, polarización, difracción y experimentación visual',
+    'pregunta': '¿Qué fenómeno puede explicar lo que estás observando?',
+    'palabras_clave': [
+        'luz', 'óptica', 'polarización', 'difracción',
+        'prisma', 'reflexión', 'refracción'
+    ],
+    'conectadas': ['electronica']
+},
+
+'ofimatica': {
+    'nombre': 'Ofimática y Productividad',
+    'icono': '📑',
+    'descripcion': 'Excel, Word, presentaciones, macros y automatización',
+    'pregunta': '¿Qué parte de este trabajo podría automatizarse?',
+    'palabras_clave': [
+        'excel', 'word', 'powerpoint', 'office',
+        'macro', 'vba', 'hoja de cálculo'
+    ],
+    'conectadas': ['programacion', 'contable']
+},
+
+'multimedia': {
+    'nombre': 'Multimedia y Diseño Digital',
+    'icono': '🎬',
+    'descripcion': 'Imagen, video, multimedia y contenido para web',
+    'pregunta': '¿Cómo adaptarías este recurso para comunicar mejor una idea?',
+    'palabras_clave': [
+        'photoshop', 'video', 'imagen', 'multimedia',
+        'sony vegas', 'edición', 'web'
+    ],
+    'conectadas': ['desarrollo_web']
+},
+
+'investigacion': {
+    'nombre': 'Investigación y Análisis',
+    'icono': '🔎',
+    'descripcion': 'Investigación, evidencia, encuestas y análisis cuantitativo/cualitativo',
+    'pregunta': '¿Qué evidencia necesitarías para sostener esta conclusión?',
+    'palabras_clave': [
+        'investigación', 'evidencia', 'encuesta',
+        'estadística', 'análisis', 'hipótesis', 'muestra'
+    ],
+    'conectadas': ['evaluacion', 'municipal']
+}

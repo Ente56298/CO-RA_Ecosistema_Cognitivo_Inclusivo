@@ -1,17 +1,25 @@
-from pathlib import Path
-import json
-
-areas = {
+{
   "base_datos": {
     "nombre": "Bases de Datos",
     "icono": "🗄️",
     "descripcion": "SQL, modelado, tablas, relaciones, consultas y reportes",
     "pregunta": "¿Cómo se relacionan tablas, claves y consultas en una base de datos?",
     "palabras_clave": [
-      "sql", "base de datos", "tabla", "registro",
-      "select", "join", "clave primaria", "mysql", "postgresql"
+      "sql",
+      "base de datos",
+      "tabla",
+      "registro",
+      "select",
+      "join",
+      "clave primaria",
+      "mysql",
+      "postgresql"
     ],
-    "conectadas": ["programacion", "contable", "evaluacion"]
+    "conectadas": [
+      "programacion",
+      "contable",
+      "evaluacion"
+    ]
   },
   "autocad": {
     "nombre": "Diseño 2D y 3D / AutoCAD",
@@ -19,10 +27,18 @@ areas = {
     "descripcion": "Planos, dibujo técnico, modelado 2D y 3D",
     "pregunta": "¿Cómo se pasa de un dibujo 2D a un modelo 3D?",
     "palabras_clave": [
-      "autocad", "2d", "3d", "plano", "capa",
-      "offset", "modelado", "dibujo"
+      "autocad",
+      "2d",
+      "3d",
+      "plano",
+      "capa",
+      "offset",
+      "modelado",
+      "dibujo"
     ],
-    "conectadas": ["geoespacial"]
+    "conectadas": [
+      "geoespacial"
+    ]
   },
   "hardware": {
     "nombre": "Hardware y Mantenimiento",
@@ -30,10 +46,20 @@ areas = {
     "descripcion": "Diagnóstico, reparación, componentes y mantenimiento de equipos",
     "pregunta": "¿Cómo identificarías la causa de una falla antes de reemplazar componentes?",
     "palabras_clave": [
-      "hardware", "pc", "motherboard", "ram", "cpu",
-      "mantenimiento", "reparación", "fuente"
+      "hardware",
+      "pc",
+      "motherboard",
+      "ram",
+      "cpu",
+      "mantenimiento",
+      "reparación",
+      "fuente"
     ],
-    "conectadas": ["redes", "seguridad", "electronica"]
+    "conectadas": [
+      "redes",
+      "seguridad",
+      "electronica"
+    ]
   },
   "seguridad": {
     "nombre": "Seguridad Informática",
@@ -41,10 +67,20 @@ areas = {
     "descripcion": "Seguridad, permisos, sistemas, análisis y protección",
     "pregunta": "¿Qué diferencia existe entre permiso, privilegio y autorización?",
     "palabras_clave": [
-      "seguridad", "permiso", "privilegio", "malware",
-      "apk", "android", "forense", "vulnerabilidad"
+      "seguridad",
+      "permiso",
+      "privilegio",
+      "malware",
+      "apk",
+      "android",
+      "forense",
+      "vulnerabilidad"
     ],
-    "conectadas": ["redes", "programacion", "ia"]
+    "conectadas": [
+      "redes",
+      "programacion",
+      "ia"
+    ]
   },
   "electronica": {
     "nombre": "Electrónica y Experimentación",
@@ -52,10 +88,19 @@ areas = {
     "descripcion": "Componentes, dispositivos, pruebas físicas y experimentación",
     "pregunta": "¿Qué observación física quieres explicar o comprobar?",
     "palabras_clave": [
-      "electrónica", "circuito", "pantalla", "sensor",
-      "prisma", "polarizador", "óptica", "componente"
+      "electrónica",
+      "circuito",
+      "pantalla",
+      "sensor",
+      "prisma",
+      "polarizador",
+      "óptica",
+      "componente"
     ],
-    "conectadas": ["hardware", "fisica"]
+    "conectadas": [
+      "hardware",
+      "fisica"
+    ]
   },
   "fisica": {
     "nombre": "Física y Óptica",
@@ -63,10 +108,17 @@ areas = {
     "descripcion": "Luz, polarización, difracción y experimentación visual",
     "pregunta": "¿Qué fenómeno puede explicar lo que estás observando?",
     "palabras_clave": [
-      "luz", "óptica", "polarización", "difracción",
-      "prisma", "reflexión", "refracción"
+      "luz",
+      "óptica",
+      "polarización",
+      "difracción",
+      "prisma",
+      "reflexión",
+      "refracción"
     ],
-    "conectadas": ["electronica"]
+    "conectadas": [
+      "electronica"
+    ]
   },
   "ofimatica": {
     "nombre": "Ofimática y Productividad",
@@ -74,10 +126,18 @@ areas = {
     "descripcion": "Excel, Word, presentaciones, macros y automatización",
     "pregunta": "¿Qué parte de este trabajo podría automatizarse?",
     "palabras_clave": [
-      "excel", "word", "powerpoint", "office",
-      "macro", "vba", "hoja de cálculo"
+      "excel",
+      "word",
+      "powerpoint",
+      "office",
+      "macro",
+      "vba",
+      "hoja de cálculo"
     ],
-    "conectadas": ["programacion", "contable"]
+    "conectadas": [
+      "programacion",
+      "contable"
+    ]
   },
   "multimedia": {
     "nombre": "Multimedia y Diseño Digital",
@@ -85,10 +145,17 @@ areas = {
     "descripcion": "Imagen, video, multimedia y contenido para web",
     "pregunta": "¿Cómo adaptarías este recurso para comunicar mejor una idea?",
     "palabras_clave": [
-      "photoshop", "video", "imagen", "multimedia",
-      "sony vegas", "edición", "web"
+      "photoshop",
+      "video",
+      "imagen",
+      "multimedia",
+      "sony vegas",
+      "edición",
+      "web"
     ],
-    "conectadas": ["desarrollo_web"]
+    "conectadas": [
+      "desarrollo_web"
+    ]
   },
   "investigacion": {
     "nombre": "Investigación y Análisis",
@@ -96,33 +163,17 @@ areas = {
     "descripcion": "Investigación, evidencia, encuestas y análisis cuantitativo/cualitativo",
     "pregunta": "¿Qué evidencia necesitarías para sostener esta conclusión?",
     "palabras_clave": [
-      "investigación", "evidencia", "encuesta",
-      "estadística", "análisis", "hipótesis", "muestra"
+      "investigación",
+      "evidencia",
+      "encuesta",
+      "estadística",
+      "análisis",
+      "hipótesis",
+      "muestra"
     ],
-    "conectadas": ["evaluacion", "municipal"]
+    "conectadas": [
+      "evaluacion",
+      "municipal"
+    ]
   }
 }
-
-out = Path("/mnt/data/areas_conocimiento.json")
-out.write_text(json.dumps(areas, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-
-patch = Path("/mnt/data/integrar_areas_en_app.txt")
-patch.write_text(
-"""Después de la función cargar_json_publico() y antes de # INTERFAZ PRINCIPAL agrega:
-
-# ============================================
-# AMPLIAR ÁREAS DESDE CATÁLOGO EXTERNO
-# ============================================
-AREAS_EXTRA = cargar_json_publico(
-    "data/areas_conocimiento.json",
-    {}
-)
-
-AREAS_CONOCIMIENTO.update(AREAS_EXTRA)
-""",
-encoding="utf-8"
-)
-
-print("✅ JSON validado y listo para subir.")
-print(out)
-print(patch)

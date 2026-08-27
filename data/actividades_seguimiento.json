@@ -261,6 +261,11 @@
         ]
       },
       "methodology": {
+        "structural_principle": "Excavar desde la superficie hasta la unidad mínima significativa y reconstruir desde ella el sistema completo, conservando relaciones, procedencia y sentido.",
+        "depth_route": [
+          "superficie", "estructura", "componentes", "relaciones",
+          "procesos", "variables", "unidad mínima", "reconstrucción", "nuevo diseño"
+        ],
         "sequence": [
           "Cerrar requerimientos",
           "Convertir el checklist en índice del documento maestro",
@@ -300,6 +305,14 @@
           "Riesgo de confundir relaciones profesionales, datos políticos y metodología electoral.",
           "Necesidad de demostrar procedencia desde la fuente hasta el diagnóstico."
         ],
+        "project_narrative_fields": [
+          "origen", "contexto", "proposito", "esfuerzo_empleado",
+          "recursos_disponibles", "restricciones", "roles_asumidos",
+          "integraciones_construidas", "problemas_enfrentados", "decisiones_clave",
+          "profundidad_alcanzada", "hallazgos", "alcance_real", "resultados",
+          "evidencia", "aprendizajes", "reutilizacion", "impacto_profesional", "estado_actual"
+        ],
+        "professional_premise": "La ausencia de presupuesto no reduce la escala de la visión; exige una construcción gradual, modular, documentada y sustentada en conocimiento, integración y reutilización.",
         "privacy_rule": "Usar información pública o autorizada y análisis territorial agregado; no perfilar afinidades políticas individuales ni enumerar consultas individuales masivamente."
       }
     }

@@ -2378,6 +2378,10 @@ with tab8:
                                 for bloqueo in requisitos.get("critical_open", []):
                                     st.write(f"- {bloqueo}")
                             if metodologia:
+                                if metodologia.get("structural_principle"):
+                                    st.markdown("**Principio de excavación estructural**")
+                                    st.write(metodologia["structural_principle"])
+                                    st.caption(" → ".join(metodologia.get("depth_route", [])))
                                 st.markdown("**Secuencia de trabajo**")
                                 st.write(" → ".join(metodologia.get("sequence", [])))
                                 st.markdown("**Hallazgos**")
@@ -2388,6 +2392,11 @@ with tab8:
                                 st.markdown("**Problemáticas**")
                                 for problema in metodologia.get("problems", []):
                                     st.write(f"- {problema}")
+                                if metodologia.get("project_narrative_fields"):
+                                    st.markdown("**Semblanza profesional del proyecto**")
+                                    st.write(" · ".join(metodologia["project_narrative_fields"]))
+                                if metodologia.get("professional_premise"):
+                                    st.info(metodologia["professional_premise"])
                                 st.caption(metodologia.get("privacy_rule", ""))
 
             st.markdown("#### Matriz completa de actividades")

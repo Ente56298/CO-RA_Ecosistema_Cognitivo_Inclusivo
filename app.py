@@ -1,6 +1,6 @@
 """
 CO•RA Tutor — Trayectoria Adaptativa de Aprendizaje
-Versión 2.1: Mapa abierto + Rastreo de contextos + GitHub Bridge
+Versión 2.2: Mapa de avances + Mapa abierto + Rastreo de contextos + GitHub Bridge
 """
 import streamlit as st
 import requests
@@ -271,6 +271,7 @@ with st.sidebar:
     
     st.markdown("---")
     st.subheader("🔧 Motores Activos")
+    st.write("✅ Mapa de avances")
     st.write("✅ Rastreo de contextos")
     st.write("✅ Mapa abierto de conocimiento")
     st.write("✅ Radar de oportunidades e ingresos")
@@ -291,6 +292,88 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 # TAB 1: EXPLORAR ÁREA
 # ============================================
 with tab1:
+    # ============================================
+    # MAPA DE AVANCES
+    # ============================================
+    st.subheader("🗺️ Mapa de Avances")
+    st.caption(
+        "Proyectos vivos, estado actual y siguiente movimiento. "
+        "Los estados representan evidencia de trabajo y continuidad; no son una calificación."
+    )
+
+    mapa_proyectos = cargar_json_publico(
+        "data/proyectos_actuales.json",
+        {"actualizado": None, "proyectos": []},
+    )
+    proyectos = mapa_proyectos.get("proyectos", [])
+
+    iconos_estado = {
+        "idea": "⚪",
+        "exploracion": "🔵",
+        "prototipo": "🟣",
+        "en_desarrollo": "🟡",
+        "bloqueado": "🟠",
+        "operativo": "🟢",
+        "consolidado": "✅",
+        "archivado": "⚫",
+    }
+
+    if proyectos:
+        actualizado = mapa_proyectos.get("actualizado")
+        if actualizado:
+            st.caption(f"Última actualización: {actualizado}")
+
+        total_proyectos = len(proyectos)
+        operativos = sum(1 for p in proyectos if p.get("estado") == "operativo")
+        en_desarrollo = sum(1 for p in proyectos if p.get("estado") == "en_desarrollo")
+        bloqueados = sum(1 for p in proyectos if p.get("estado") == "bloqueado")
+
+        col_m1, col_m2, col_m3, col_m4 = st.columns(4)
+        col_m1.metric("Proyectos", total_proyectos)
+        col_m2.metric("Operativos", operativos)
+        col_m3.metric("En desarrollo", en_desarrollo)
+        col_m4.metric("Bloqueados", bloqueados)
+
+        st.markdown("")
+        columnas_proyectos = st.columns(2)
+
+        for indice, proyecto in enumerate(proyectos):
+            estado = proyecto.get("estado", "idea")
+            icono = iconos_estado.get(estado, "⚪")
+
+            with columnas_proyectos[indice % 2]:
+                with st.container(border=True):
+                    st.markdown(
+                        f"### {icono} {proyecto.get('nombre', 'Proyecto')}"
+                    )
+                    st.caption(estado.replace("_", " ").title())
+
+                    st.markdown("**🔄 Ahora**")
+                    st.write(
+                        proyecto.get(
+                            "ahora",
+                            "Sin actividad registrada.",
+                        )
+                    )
+
+                    st.markdown("**➡️ Siguiente movimiento**")
+                    st.write(
+                        proyecto.get(
+                            "siguiente",
+                            "Pendiente de definir.",
+                        )
+                    )
+    else:
+        st.info(
+            "Todavía no hay proyectos registrados en el mapa de avances. "
+            "Agrega data/proyectos_actuales.json para activarlo."
+        )
+
+    st.markdown("---")
+
+    # ============================================
+    # CONTEXTO INICIAL
+    # ============================================
     st.subheader("📋 Contexto Inicial")
 
     with st.expander("🧠 Gestión del contexto y las ideas", expanded=False):

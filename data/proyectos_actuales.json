@@ -1,33 +1,17 @@
 {
+  "schema_version": "2.0",
   "actualizado": "2026-08-27",
+  "metodo": "Inferencia contextual basada en conversaciones indexadas, código, memoria sanitizada e inventarios relativos. Requiere revisión humana.",
+  "reglas": {"creacion_automatica": false, "minimo_fuentes_para_alta_confianza": 2, "contenido_privado_incluido": false},
   "proyectos": [
-    {
-      "id": "cora-tutor",
-      "nombre": "CO•RA Tutor",
-      "estado": "en_desarrollo",
-      "ahora": "Perfil Adaptativo y mapa de avances",
-      "siguiente": "Skill Evaluator basado en evidencia"
-    },
-    {
-      "id": "agentes-locales",
-      "nombre": "Agentes Locales CO•RA",
-      "estado": "exploracion",
-      "ahora": "Qwen + segundo agente local",
-      "siguiente": "Diagnóstico de hardware y primera comunicación agente-agente"
-    },
-    {
-      "id": "pdl",
-      "nombre": "PDL Tejupilco",
-      "estado": "operativo",
-      "ahora": "Integración territorial y GIS",
-      "siguiente": "Completar georreferenciación y capas"
-    },
-    {
-      "id": "inventario",
-      "nombre": "Inventario CO•RA",
-      "estado": "prototipo",
-      "ahora": "Objetos, ubicación y trazabilidad",
-      "siguiente": "Definir esquema de identificación y movimiento"
-    }
+    {"id": "cora-ecosistema", "nombre": "CO•RA Ecosistema Cognitivo Inclusivo", "estado": "en_desarrollo", "confianza": "alta", "ahora": "Unificación del mapa de trayectoria, conversaciones, agentes y fuentes contextuales.", "siguiente": "Consolidar los índices canónicos y reducir componentes heredados.", "ultima_senal": "2026-08-27", "fuentes": ["conversaciones_indexadas", "repositorio_activo", "memory_bank_sanitizado"]},
+    {"id": "rastreador-conversaciones", "nombre": "Rastreador de conversaciones y registros", "estado": "en_desarrollo", "confianza": "alta", "ahora": "Índice canónico, títulos multifuente, deduplicación y encaminamiento contextual.", "siguiente": "Generar localizadores privados y sincronización local supervisada.", "ultima_senal": "2026-08-27", "fuentes": ["conversaciones_indexadas", "inventario_local_sanitizado", "codigo_activo"]},
+    {"id": "agentes-catalogo", "nombre": "Agentes, evaluación y catálogo público", "estado": "prototipo", "confianza": "alta", "ahora": "Catálogo de capacidades y fuentes públicas de descubrimiento y evaluación.", "siguiente": "Definir criterios propios por tarea sin despacho automático.", "ultima_senal": "2026-08-27", "fuentes": ["catalogo_publico", "agent_arena", "directorio_agentes"]},
+    {"id": "observer-local", "nombre": "CO•RA Observer local", "estado": "prototipo", "confianza": "alta", "ahora": "Lectura de ventana activa, contexto útil y puente local.", "siguiente": "Conectar metadatos locales con consentimiento y sin publicar rutas.", "ultima_senal": "2026-08-27", "fuentes": ["codigo_local_observado", "contextos_locales", "prototipo_fase_1"]},
+    {"id": "memory-bank", "nombre": "Memory Bank e HILO", "estado": "prototipo", "confianza": "alta", "ahora": "Síntesis históricas, relaciones HILO y paquete sanitizado disponibles.", "siguiente": "Indexar referencias relativas y recuperar contexto sólo bajo demanda.", "ultima_senal": "2026-08-27", "fuentes": ["memory_bank_sanitizado", "indices_hilo", "historiales_resumidos"]},
+    {"id": "pdl-gis", "nombre": "PDL y análisis geoespacial", "estado": "operativo", "confianza": "alta", "ahora": "Documentación territorial, planes municipales y activos GIS rastreados.", "siguiente": "Relacionar proyectos, municipios, capas y evidencia documental.", "ultima_senal": "2026-08-27", "fuentes": ["contexto_municipal_geoespacial", "documentos_locales", "proyectos_existentes"]},
+    {"id": "gestion-municipal", "nombre": "Gestión municipal y evaluación", "estado": "exploracion", "confianza": "media", "ahora": "Registros de PDM, evaluación, seguimiento y documentación municipal detectados.", "siguiente": "Separar municipios, periodos, instrumentos e indicadores.", "ultima_senal": "2026-08-27", "fuentes": ["contexto_municipal_geoespacial", "documentos_de_apoyo"]},
+    {"id": "plantillas-integracion", "nombre": "Plantillas e interfaces para integrar", "estado": "exploracion", "confianza": "media", "ahora": "Referencias Streamlit, web y catálogos visuales registradas.", "siguiente": "Seleccionar patrones concretos para cada brecha funcional de CO•RA.", "ultima_senal": "2026-08-27", "fuentes": ["referencias_web", "catalogo_plantillas", "capturas_locales"]},
+    {"id": "inventario-keep", "nombre": "Inventario, KEEP y deduplicación", "estado": "prototipo", "confianza": "alta", "ahora": "Inventarios, familias, manifiestos SHA-256 y grupos duplicados identificados.", "siguiente": "Crear un registro maestro sin mover ni eliminar originales.", "ultima_senal": "2026-08-27", "fuentes": ["cora_keep", "hashes_locales", "indice_contextual_relativo"]}
   ]
 }

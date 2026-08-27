@@ -324,8 +324,9 @@ with tab1:
     # ============================================
     st.subheader("🗺️ Mapa de Avances")
     st.caption(
-        "Proyectos vivos, estado actual y siguiente movimiento. "
-        "Los estados representan evidencia de trabajo y continuidad; no son una calificación."
+        "Proyectos vivos inferidos desde conversaciones, código, memoria, "
+        "documentos e inventarios contextuales. Los estados representan "
+        "evidencia de continuidad; no son una calificación."
     )
 
     mapa_proyectos = cargar_json_publico(
@@ -349,6 +350,8 @@ with tab1:
         actualizado = mapa_proyectos.get("actualizado")
         if actualizado:
             st.caption(f"Última actualización: {actualizado}")
+        if mapa_proyectos.get("metodo"):
+            st.info(mapa_proyectos["metodo"])
 
         total_proyectos = len(proyectos)
         operativos = sum(1 for p in proyectos if p.get("estado") == "operativo")
@@ -374,6 +377,12 @@ with tab1:
                         f"### {icono} {proyecto.get('nombre', 'Proyecto')}"
                     )
                     st.caption(estado.replace("_", " ").title())
+                    confianza = proyecto.get("confianza", "por_revisar")
+                    ultima_senal = proyecto.get("ultima_senal")
+                    st.caption(
+                        f"Evidencia: {confianza.replace('_', ' ').title()}"
+                        + (f" · Última señal: {ultima_senal}" if ultima_senal else "")
+                    )
 
                     st.markdown("**🔄 Ahora**")
                     st.write(
@@ -382,6 +391,12 @@ with tab1:
                             "Sin actividad registrada.",
                         )
                     )
+
+                    fuentes_proyecto = proyecto.get("fuentes", [])
+                    if fuentes_proyecto:
+                        with st.expander("🔎 Señales rastreadas", expanded=False):
+                            for fuente in fuentes_proyecto:
+                                st.write(f"- {fuente.replace('_', ' ')}")
 
                     st.markdown("**➡️ Siguiente movimiento**")
                     st.write(

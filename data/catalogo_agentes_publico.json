@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-08-27",
+  "purpose": "Catálogo público de capacidades observadas y pendientes de validación.",
+  "routing_policy": {
+    "automatic_dispatch_enabled": false,
+    "require_user_approval_before_external_send": true,
+    "sensitive_data_external_send_allowed": false
+  },
+  "agents": [
+    {
+      "agent_id": "qwen-desktop",
+      "display_name": "Qwen",
+      "access_method": "manual",
+      "status": "observado",
+      "capabilities": ["asistencia_conversacional", "análisis_técnico_por_validar"]
+    },
+    {
+      "agent_id": "chatgpt-desktop",
+      "display_name": "ChatGPT",
+      "access_method": "manual",
+      "status": "observado",
+      "capabilities": ["revisión_crítica", "ejecución_local_supervisada"]
+    },
+    {
+      "agent_id": "runable",
+      "display_name": "Runable",
+      "access_method": "importación_manual",
+      "status": "por_validar",
+      "capabilities": ["resultados_exportables_por_validar"]
+    },
+    {
+      "agent_id": "manus",
+      "display_name": "Manus",
+      "access_method": "api_o_manual",
+      "status": "por_validar",
+      "capabilities": ["tareas_autónomas_por_validar"]
+    }
+  ]
+}

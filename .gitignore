@@ -1,6 +1,7 @@
 node_modules/
 .next/
 .env
+.streamlit/secrets.toml
 *.session
 *.session-journal
 __pycache__/
@@ -9,3 +10,5 @@ __pycache__/
 dist/
 .vscode/
 *.log
+data/conversaciones_extraidas.json
+data/actividades*.json

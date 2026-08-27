@@ -23,7 +23,12 @@ st.set_page_config(
 # ============================================
 # CONFIGURACIÓN GITHUB
 # ============================================
-GITHUB_TOKEN = st.secrets.get("GITHUB_TOKEN", "")
+try:
+    GITHUB_TOKEN = st.secrets.get("GITHUB_TOKEN", "")
+    ENABLE_GITHUB_WRITES = st.secrets.get("ENABLE_GITHUB_WRITES", False)
+except st.errors.StreamlitSecretNotFoundError:
+    GITHUB_TOKEN = ""
+    ENABLE_GITHUB_WRITES = False
 GITHUB_USER = "Ente56298"
 REPO_NAME = "CO-RA_Ecosistema_Cognitivo_Inclusivo"
 
@@ -108,18 +113,19 @@ class CORAGitHubBridge:
         self.owner = owner
         self.repo = repo
         self.base_url = f"https://api.github.com/repos/{owner}/{repo}/contents"
-        self.headers = {
-            "Authorization": f"token {token}",
-            "Accept": "application/vnd.github.v3+json"
-        }
+        self.headers = {"Accept": "application/vnd.github+json"}
+        if token:
+            self.headers["Authorization"] = f"Bearer {token}"
     
     def leer_contexto(self, ruta: str):
         """Recupera contexto desde GitHub Memory Bank"""
         try:
             url = f"{self.base_url}/{ruta}"
-            response = requests.get(url, headers=self.headers)
+            response = requests.get(url, headers=self.headers, timeout=15)
             if response.status_code == 200:
                 content = base64.b64decode(response.json()["content"]).decode('utf-8')
+                if ruta.endswith(".jsonl"):
+                    return [json.loads(line) for line in content.splitlines() if line.strip()]
                 return json.loads(content)
         except Exception as e:
             st.error(f"Error leyendo contexto: {e}")
@@ -127,11 +133,14 @@ class CORAGitHubBridge:
     
     def anclar_evento(self, usuario: str, evento_id: str, payload: dict):
         """Ancla evento en Matriz Dorsal con hash SHA-512"""
+        if not ENABLE_GITHUB_WRITES:
+            st.warning("La escritura pública está desactivada. Descarga el evento para revisarlo localmente.")
+            return None
         try:
             ruta = f"matriz_dorsal/usuarios/{usuario}/eventos.jsonl"
             url = f"{self.base_url}/{ruta}"
             
-            response = requests.get(url, headers=self.headers)
+            response = requests.get(url, headers=self.headers, timeout=15)
             contenido_actual = ""
             sha_actual = ""
             
@@ -160,7 +169,7 @@ class CORAGitHubBridge:
             if sha_actual:
                 commit_data["sha"] = sha_actual
             
-            return requests.put(url, headers=self.headers, json=commit_data)
+            return requests.put(url, headers=self.headers, json=commit_data, timeout=20)
         except Exception as e:
             st.error(f"Error anclando evento: {e}")
             return None
@@ -214,6 +223,14 @@ def cargar_conversaciones():
             return []
     return []
 
+
+def cargar_json_publico(ruta: str, valor_por_defecto):
+    """Carga un artefacto público versionado sin exponer datos locales."""
+    try:
+        return json.loads(Path(ruta).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return valor_por_defecto
+
 # ============================================
 # INTERFAZ PRINCIPAL
 # ============================================
@@ -224,24 +241,30 @@ st.caption("Contexto abundante por detrás; simplicidad por delante.")
 # Sidebar - Configuración
 with st.sidebar:
     st.header("⚙️ Configuración")
-    token = st.text_input("GitHub Token", type="password", value=GITHUB_TOKEN)
     usuario = st.text_input("Usuario", value="Jorge")
-    
+    token = GITHUB_TOKEN
+    bridge = CORAGitHubBridge(token, GITHUB_USER, REPO_NAME)
+
     if token:
-        bridge = CORAGitHubBridge(token, GITHUB_USER, REPO_NAME)
-        st.success("✅ Bridge inicializado")
+        st.success("✅ Memory Bank configurado por el servidor")
+    else:
+        st.info("ℹ️ Catálogo y mesa disponibles en modo público")
     
     st.markdown("---")
     st.subheader("🔧 Motores Activos")
     st.write("✅ Rastreo de contextos")
     st.write("✅ 8 áreas de conocimiento")
-    st.write("✅ GitHub Memory Bank")
+    st.write("✅ Catálogo público de agentes")
+    st.write("✅ Mesa redonda colaborativa")
+    st.write("⚠️ Escritura en Memory Bank desactivada" if not ENABLE_GITHUB_WRITES else "✅ Escritura privada habilitada")
 
 # Tabs principales
-tab1, tab2, tab3 = st.tabs([
+tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "🎯 Explorar Área",
     "📚 Historial ChatGPT",
-    "🧠 Memory Bank"
+    "🧠 Memory Bank",
+    "🤝 Agentes",
+    "💬 Mesa Redonda"
 ])
 
 # ============================================
@@ -333,8 +356,8 @@ with tab1:
         if st.button("🔍 Analizar y Anclar", type="primary", key=f"analizar_{area_id}"):
             if modelo_mental and respuesta_ejecucion:
                 with st.spinner("Procesando a través del núcleo CO•RA..."):
-                    if token:
-                        bridge.anclar_evento(
+                    if token and ENABLE_GITHUB_WRITES:
+                        respuesta_github = bridge.anclar_evento(
                             usuario=nombre,
                             evento_id="TUTOR_MENTAL_MODEL_SUBMITTED",
                             payload={
@@ -349,7 +372,23 @@ with tab1:
                                 "contextos_previos": len(contextos)
                             }
                         )
-                        st.success("✅ Evento anclado en Matriz Dorsal")
+                        if respuesta_github and respuesta_github.ok:
+                            st.success("✅ Evento anclado en Matriz Dorsal")
+                        else:
+                            st.error("No fue posible guardar el evento en GitHub.")
+                    else:
+                        evento_local = {
+                            "area": area_id,
+                            "pregunta": pregunta,
+                            "modelo_mental": modelo_mental,
+                            "respuesta_ejecucion": respuesta_ejecucion
+                        }
+                        st.download_button(
+                            "⬇️ Descargar evento para revisión local",
+                            data=json.dumps(evento_local, indent=2, ensure_ascii=False),
+                            file_name="evento_cora.json",
+                            mime="application/json"
+                        )
                     
                     st.info("🔄 Analizando trayectoria de aprendizaje...")
             else:
@@ -411,7 +450,7 @@ with tab2:
                 if conv.get('url_completa'):
                     st.link_button("Ver conversación", conv['url_completa'])
     else:
-        st.info("No hay conversaciones extraídas. Ejecuta `python extractor_conversaciones.py` primero.")
+        st.info("No hay conversaciones públicas disponibles. El historial privado permanece fuera del repositorio.")
 
 # ============================================
 # TAB 3: MEMORY BANK
@@ -444,7 +483,37 @@ with tab3:
             else:
                 st.info("No hay eventos registrados aún.")
     else:
-        st.warning("⚠️ Configura el GitHub Token en el sidebar para acceder al Memory Bank")
+        st.info("Memory Bank privado no configurado. Los visitantes no necesitan proporcionar tokens.")
+
+# ============================================
+# TAB 4: CATÁLOGO PÚBLICO DE AGENTES
+# ============================================
+with tab4:
+    st.subheader("🤝 Catálogo público de agentes")
+    st.caption("Capacidades observadas y pendientes de validación; no ejecuta ni envía tareas.")
+    catalogo = cargar_json_publico("data/catalogo_agentes_publico.json", {"agents": []})
+    for agente in catalogo.get("agents", []):
+        with st.expander(f"{agente.get('display_name', agente.get('agent_id'))} · {agente.get('status', 'sin estado')}"):
+            st.write(f"**Acceso:** {agente.get('access_method', 'por definir')}")
+            st.write("**Capacidades:**")
+            for capacidad in agente.get("capabilities", []):
+                st.write(f"- {capacidad}")
+    st.info("El despacho automático está desactivado y todo envío externo requiere aprobación humana.")
+
+# ============================================
+# TAB 5: MESA REDONDA
+# ============================================
+with tab5:
+    st.subheader("💬 Mesa Redonda CO•RA")
+    mesa = cargar_json_publico("mesa_redonda/router_agentes_v1.json", {"turnos": []})
+    metadata = mesa.get("metadata", {})
+    st.write(f"**Tema:** {metadata.get('tema', 'Sin tema')}")
+    st.write(f"**Estado:** {metadata.get('estado', 'sin estado')}")
+    for turno in mesa.get("turnos", []):
+        with st.expander(f"Turno {turno.get('turno_numero')} · {turno.get('agente')}"):
+            st.write(turno.get("resumen", ""))
+            if turno.get("pregunta_para_siguiente"):
+                st.markdown(f"**Pregunta siguiente:** {turno['pregunta_para_siguiente']}")
 
 # ============================================
 # FOOTER

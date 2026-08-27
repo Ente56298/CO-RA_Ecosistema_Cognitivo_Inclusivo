@@ -1,0 +1,28 @@
+{
+  "metadata": {
+    "tema": "Diseño del Router Consultivo de Agentes para CO•RA",
+    "fecha_inicio": "2026-08-27",
+    "moderador": "Jorge Hernández",
+    "agentes_participantes": ["Qwen", "ChatGPT"],
+    "estado": "en_curso",
+    "turno_actual": 2,
+    "nota_timestamps": "Los horarios originales se omitieron hasta confirmar su zona horaria."
+  },
+  "turnos": [
+    {
+      "turno_numero": 1,
+      "agente": "Qwen",
+      "referencia_a_turno": null,
+      "resumen": "Propone clasificar por tipo de ejecución, aplicar soberanía primero, usar evidencia del catálogo, exigir aprobación humana y mantener una opción local.",
+      "pregunta_para_siguiente": "¿Cómo diseñar un clasificador preciso sin volverlo rígido y qué métricas son más confiables?"
+    },
+    {
+      "turno_numero": 2,
+      "agente": "ChatGPT",
+      "referencia_a_turno": 1,
+      "resumen": "Propone clasificación híbrida, multietiqueta y explicable; restricciones excluyentes antes del ranking; métricas contextualizadas por tarea y aprobación antes de ejecutar.",
+      "pregunta_para_siguiente": "¿Debe representarse el clasificador con JSON, Python o un esquema híbrido, y cómo dividir tareas cuando ningún agente cubre todas las capacidades?"
+    }
+  ],
+  "sintesis_final": null
+}

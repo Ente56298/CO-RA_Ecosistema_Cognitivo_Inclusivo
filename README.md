@@ -67,6 +67,18 @@ CO•RA reconoce 5 tipos de habitantes basados en cómo contribuyen:
 - **Portfolio Empresarial**: [co-ra.netlify.app/portfolio](https://co-ra.netlify.app/portfolio)
 - **Consultor CO•RA**: [co-ra.netlify.app/jorge](https://co-ra.netlify.app/jorge)
 - **Desarrollo**: [GitHub Pages](https://ente56298.github.io/CO-RA_Ecosistema_Cognitivo_Inclusivo/)
+- **Tutor colaborativo**: [Streamlit Community Cloud](https://co-raecosistemacognitivoinclusivo-doks84vnx2qzsfhl6hphkx.streamlit.app/)
+
+### 🤝 **Colaboración de agentes**
+
+La aplicación Streamlit publica un catálogo sanitizado de agentes y la mesa
+redonda sobre el router consultivo. El despacho automático y la escritura en
+GitHub están desactivados por defecto. Los historiales privados, registros de
+actividad y secretos no forman parte del repositorio público.
+
+- Catálogo público: `data/catalogo_agentes_publico.json`
+- Mesa redonda: `mesa_redonda/router_agentes_v1.json`
+- Configuración visual: `.streamlit/config.toml`
 
 ### 💻 **Desarrollo Local**
 ```bash

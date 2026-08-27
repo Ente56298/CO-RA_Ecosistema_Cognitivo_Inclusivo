@@ -11,12 +11,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-from core.agent_conversations import (
-    nueva_conversacion,
-    agregar_mensaje,
-    resumen_para_mesa,
+from core.conversation_tracker import (
+    cargar_indice_como_conversaciones,
+    exportar_indice,
+    fusionar_conversaciones_session,
+    procesar_archivo_conversaciones,
 )
 
+BASE_DIR = Path(__file__).resolve().parent
+INDICE_CONVERSACIONES = BASE_DIR / "data" / "conversaciones_indice.json"
 
 
 
@@ -242,15 +245,10 @@ def generar_recomendacion(area_nombre: str, contextos: list) -> str:
 # CARGAR DATOS
 # ============================================
 def cargar_conversaciones():
-    """Carga las conversaciones extraídas"""
-    ruta = Path("data/conversaciones_extraidas.json")
-    if ruta.exists():
-        try:
-            with open(ruta, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except:
-            return []
-    return []
+    """Carga metadatos desde el índice canónico, nunca contenido privado."""
+    return list(
+        cargar_indice_como_conversaciones(str(INDICE_CONVERSACIONES)).values()
+    )
 
 
 def cargar_json_publico(ruta: str, valor_por_defecto):
@@ -809,549 +807,171 @@ with tab4:
     # CONVERSACIONES
     # --------------------------------------------
 with sub_conversaciones:
-    st.subheader("💬 Conversaciones con agentes")
+    st.subheader("🔎 Rastreo de conversaciones")
     st.caption(
-        "Conversaciones organizadas por título, agente y proyecto. "
-        "El MVP conserva los datos durante la sesión actual."
+        "CO•RA identifica, deduplica e indexa conversaciones existentes. "
+        "No crea conversaciones ni publica su contenido."
     )
 
-        # ============================================
-    # IMPORTAR CONVERSACIONES
-    # ============================================
-    with st.expander("📤 Importar conversaciones", expanded=False):
-
+    with st.expander("📤 Registrar o rastrear fuentes", expanded=False):
         archivos_conversacion = st.file_uploader(
-            "Sube conversaciones o exportaciones",
+            "Sube exportaciones o archivos con conversaciones",
             type=["json", "jsonl", "txt", "md", "zip"],
             accept_multiple_files=True,
-            key="upload_conversaciones_agentes"
+            key="upload_conversaciones_agentes",
         )
-
         st.caption(
-            "Puedes importar conversaciones de ChatGPT, Qwen, "
-            "CO•RA u otros agentes. Los archivos se procesan "
-            "durante la sesión actual."
+            "El contenido se procesa sólo durante esta sesión; "
+            "el índice exportado contiene metadatos y localizadores."
         )
 
-        if archivos_conversacion:
+        if archivos_conversacion and st.button(
+            "🔎 Rastrear conversaciones",
+            type="primary",
+            key="procesar_conversaciones_agentes",
+        ):
+            detectadas = []
+            for archivo in archivos_conversacion:
+                detectadas.extend(procesar_archivo_conversaciones(archivo))
 
-            if st.button(
-                "🔎 Procesar conversaciones",
-                type="primary",
-                key="procesar_conversaciones_agentes"
-            ):
+            anteriores = st.session_state.get(
+                "conversaciones_importadas", []
+            )
+            fusion = fusionar_conversaciones_session(
+                {},
+                anteriores + detectadas,
+                str(INDICE_CONVERSACIONES),
+            )
+            canonicas = cargar_indice_como_conversaciones(
+                str(INDICE_CONVERSACIONES)
+            )
+            st.session_state.conversaciones_importadas = [
+                conv for cid, conv in fusion.items() if cid not in canonicas
+            ]
+            st.session_state.resultado_rastreo = {
+                "detectadas": len(detectadas),
+                "nuevas": max(0, len(fusion) - len(canonicas)),
+            }
+            st.rerun()
 
-                nuevas = []
+    resultado = st.session_state.get("resultado_rastreo")
+    if resultado:
+        st.success(
+            f"✅ {resultado['detectadas']} detectadas; "
+            f"{resultado['nuevas']} entradas nuevas tras deduplicar."
+        )
 
-                for archivo in archivos_conversacion:
-                    nuevas.extend(
-                        procesar_archivo_conversaciones(
-                            archivo
-                        )
-                    )
-
-                if "conversaciones_importadas" not in st.session_state:
-                    st.session_state.conversaciones_importadas = []
-
-                existentes = (
-                    st.session_state.conversaciones_importadas
-                )
-
-                hashes_existentes = {
-                    c.get("hash")
-                    for c in existentes
-                    if c.get("hash")
-                }
-
-                agregadas = 0
-
-                for conv in nuevas:
-
-                    if (
-                        not conv.get("hash")
-                        or conv.get("hash")
-                        not in hashes_existentes
-                    ):
-                        existentes.append(conv)
-
-                        if conv.get("hash"):
-                            hashes_existentes.add(
-                                conv["hash"]
-                            )
-
-                        agregadas += 1
-
-                st.session_state.conversaciones_importadas = (
-                    existentes
-                )
-
-                st.success(
-                    f"✅ {agregadas} conversaciones nuevas detectadas."
-                )
-
-                st.rerun()
-                
-    # ============================================
-    # CARGAR CATÁLOGOS
-    # ============================================
-    catalogo = cargar_json_publico(
-        "data/catalogo_agentes_publico.json",
-        {"agents": []}
+    # El índice canónico siempre alimenta la lista. Las detecciones de la
+    # sesión se superponen sólo en memoria hasta que el usuario las exporta.
+    conversaciones_agentes = fusionar_conversaciones_session(
+        cargar_indice_como_conversaciones(str(INDICE_CONVERSACIONES)),
+        st.session_state.get("conversaciones_importadas", []),
+        str(INDICE_CONVERSACIONES),
     )
-    agentes = catalogo.get("agents", [])
-
-    mapa_proyectos = cargar_json_publico(
-        "data/proyectos_actuales.json",
-        {"proyectos": []}
-    )
-    proyectos = mapa_proyectos.get("proyectos", [])
-
-    # ============================================
-    # ESTADO DE CONVERSACIONES
-    # ============================================
-    if "agent_conversations" not in st.session_state:
-        st.session_state.agent_conversations = {}
-
     if "active_conversation_id" not in st.session_state:
         st.session_state.active_conversation_id = None
 
-    conversaciones_agentes = st.session_state.agent_conversations
+    indice_exportable = exportar_indice(conversaciones_agentes)
+    st.download_button(
+        "⬇️ Exportar índice de metadatos",
+        data=json.dumps(indice_exportable, indent=2, ensure_ascii=False),
+        file_name="conversaciones_indice.json",
+        mime="application/json",
+        use_container_width=False,
+    )
 
-    # ============================================
-    # CONTEXTO PARA NUEVA CONVERSACIÓN
-    # ============================================
-    if not agentes:
-        st.warning(
-            "No hay agentes disponibles en "
-            "data/catalogo_agentes_publico.json."
+    st.markdown("---")
+    col_lista, col_detalle = st.columns([1, 2], gap="large")
+
+    with col_lista:
+        st.markdown("### 📚 Conversaciones detectadas")
+        st.caption(
+            f"{len(conversaciones_agentes)} títulos disponibles en el índice."
         )
+        filtro = st.text_input(
+            "🔎 Buscar",
+            placeholder="Título, agente, fuente o proyecto...",
+            key="buscar_conversacion_agente",
+        ).strip().lower()
 
-    else:
-        opciones_agente = {
-            a.get(
-                "display_name",
-                a.get("agent_id", "Agente")
-            ): a
-            for a in agentes
-        }
+        lista = sorted(
+            conversaciones_agentes.values(),
+            key=lambda c: c.get("updated_at") or c.get("fecha") or "",
+            reverse=True,
+        )
+        if filtro:
+            lista = [
+                conv for conv in lista
+                if filtro in " ".join([
+                    str(conv.get("titulo") or ""),
+                    str(conv.get("fuente") or ""),
+                    str(conv.get("agente") or ""),
+                    str(conv.get("proyecto") or ""),
+                ]).lower()
+            ]
 
-        opciones_proyecto = {
-            "Sin proyecto": {
-                "id": None,
-                "nombre": None,
-            }
-        }
+        if not lista:
+            st.info("No hay conversaciones indexadas con este filtro.")
 
-        for proyecto in proyectos:
-            opciones_proyecto[
-                proyecto.get(
-                    "nombre",
-                    proyecto.get("id", "Proyecto")
-                )
-            ] = proyecto
-
-        # ============================================
-        # NUEVA CONVERSACIÓN
-        # ============================================
-        with st.expander(
-            "➕ Nueva conversación",
-            expanded=not bool(conversaciones_agentes)
-        ):
-            agente_nombre_nuevo = st.selectbox(
-                "Agente",
-                list(opciones_agente.keys()),
-                key="nuevo_conv_agente"
-            )
-
-            proyecto_nombre_nuevo = st.selectbox(
-                "Proyecto",
-                list(opciones_proyecto.keys()),
-                key="nuevo_conv_proyecto"
-            )
-
-            titulo_nuevo = st.text_input(
-                "Título",
-                placeholder="Ej. Diseño del Skill Evaluator",
-                key="nuevo_conv_titulo"
-            )
-
-            objetivo_nuevo = st.text_area(
-                "Objetivo",
-                placeholder=(
-                    "¿Qué quieres resolver en esta conversación?"
-                ),
-                key="nuevo_conv_objetivo"
-            )
-
+        for conv in lista:
+            cid = conv.get("conversation_id") or conv.get("id")
+            activo = cid == st.session_state.active_conversation_id
+            prefijo = "🟢" if activo else "💬"
             if st.button(
-                "💬 Crear conversación",
-                type="primary",
-                key="crear_conversacion_agente"
+                f"{prefijo} {conv.get('titulo', 'Sin título')}",
+                key=f"abrir_{cid}",
+                use_container_width=True,
             ):
-                agente_nuevo = opciones_agente[
-                    agente_nombre_nuevo
-                ]
-
-                proyecto_nuevo = opciones_proyecto[
-                    proyecto_nombre_nuevo
-                ]
-
-                nueva = nueva_conversacion(
-                    agent_id=agente_nuevo.get(
-                        "agent_id",
-                        agente_nombre_nuevo
-                    ),
-                    agent_name=agente_nombre_nuevo,
-                    project_id=proyecto_nuevo.get("id"),
-                    project_name=proyecto_nuevo.get("nombre"),
-                    objective=objetivo_nuevo.strip() or None,
-                    source_type=agente_nuevo.get(
-                        "access_method",
-                        "manual"
-                    ),
-                )
-
-                # Título sin gastar un LLM
-                titulo_final = titulo_nuevo.strip()
-
-                if not titulo_final:
-                    titulo_final = objetivo_nuevo.strip()
-
-                if not titulo_final:
-                    titulo_final = (
-                        f"Conversación con {agente_nombre_nuevo}"
-                    )
-
-                nueva["titulo"] = titulo_final
-
-                conversation_id = nueva["conversation_id"]
-
-                conversaciones_agentes[
-                    conversation_id
-                ] = nueva
-
-                st.session_state.active_conversation_id = (
-                    conversation_id
-                )
-
+                st.session_state.active_conversation_id = cid
                 st.rerun()
-
-        st.markdown("---")
-
-        # ============================================
-        # DOS COLUMNAS:
-        # LISTA + CONVERSACIÓN
-        # ============================================
-        col_lista, col_chat = st.columns(
-            [1, 2],
-            gap="large"
-        )
-
-        # ============================================
-        # COLUMNA IZQUIERDA
-        # ============================================
-        with col_lista:
-            st.markdown("### 📚 Conversaciones")
-
-            filtro = st.text_input(
-                "🔎 Buscar",
-                placeholder="Título, agente o proyecto...",
-                key="buscar_conversacion_agente"
-            ).strip().lower()
-
-            lista_conversaciones = list(
-                conversaciones_agentes.values()
+            st.caption(
+                " · ".join(filter(None, [
+                    conv.get("agente"),
+                    conv.get("fuente"),
+                    conv.get("proyecto"),
+                ]))
             )
 
-            # Más recientes primero
-            lista_conversaciones.sort(
-                key=lambda c: c.get(
-                    "updated_at",
-                    c.get("created_at", "")
+    with col_detalle:
+        active_id = st.session_state.active_conversation_id
+        conversacion = conversaciones_agentes.get(active_id)
+        if not conversacion:
+            st.info("Selecciona una conversación para revisar sus metadatos.")
+        else:
+            st.markdown(
+                f"### 💬 {conversacion.get('titulo', 'Sin título')}"
+            )
+            metadatos = {
+                "fuente": conversacion.get("fuente"),
+                "agente": conversacion.get("agente"),
+                "fecha": conversacion.get("fecha"),
+                "proyecto": conversacion.get("proyecto"),
+                "hash": conversacion.get("hash"),
+                "locator": conversacion.get("locator") or {},
+                "estado": (
+                    conversacion.get("tracking_status")
+                    or conversacion.get("status")
+                    or "indexed"
                 ),
-                reverse=True
+            }
+            for etiqueta, valor in metadatos.items():
+                if etiqueta == "locator":
+                    st.write("**Locator:**")
+                    st.json(valor)
+                else:
+                    st.write(f"**{etiqueta.title()}:** {valor or '—'}")
+
+            with st.expander("🧪 Revisar metadatos", expanded=False):
+                st.json({
+                    "id": active_id,
+                    "titulo": conversacion.get("titulo"),
+                    **metadatos,
+                })
+
+            st.warning(
+                "El índice no contiene el texto completo. Usa el locator "
+                "para recuperar la conversación desde su fuente autorizada."
             )
-
-            if filtro:
-                lista_conversaciones = [
-                    c
-                    for c in lista_conversaciones
-                    if (
-                        filtro
-                        in c.get(
-                            "titulo",
-                            ""
-                        ).lower()
-                        or filtro
-                        in c.get(
-                            "agent",
-                            {}
-                        ).get(
-                            "display_name",
-                            ""
-                        ).lower()
-                        or filtro
-                        in (
-                            c.get(
-                                "context",
-                                {}
-                            ).get(
-                                "project_name"
-                            )
-                            or ""
-                        ).lower()
-                    )
-                ]
-
-            if not lista_conversaciones:
-                st.info(
-                    "Todavía no hay conversaciones."
-                )
-
-            for conv in lista_conversaciones:
-                cid = conv.get("conversation_id")
-
-                titulo = conv.get(
-                    "titulo",
-                    "Sin título"
-                )
-
-                agente_lista = conv.get(
-                    "agent",
-                    {}
-                ).get(
-                    "display_name",
-                    "Agente"
-                )
-
-                proyecto_lista = conv.get(
-                    "context",
-                    {}
-                ).get(
-                    "project_name"
-                )
-
-                total_mensajes = len(
-                    conv.get("messages", [])
-                )
-
-                activo = (
-                    cid
-                    == st.session_state.active_conversation_id
-                )
-
-                prefijo = "🟢" if activo else "💬"
-
-                if st.button(
-                    f"{prefijo} {titulo}",
-                    key=f"abrir_{cid}",
-                    use_container_width=True
-                ):
-                    st.session_state.active_conversation_id = cid
-                    st.rerun()
-
-                st.caption(
-                    f"{agente_lista}"
-                    + (
-                        f" · {proyecto_lista}"
-                        if proyecto_lista
-                        else ""
-                    )
-                    + f" · {total_mensajes} mensajes"
-                )
-
-        # ============================================
-        # COLUMNA DERECHA
-        # ============================================
-        with col_chat:
-            active_id = (
-                st.session_state.active_conversation_id
-            )
-
-            if (
-                active_id
-                and active_id in conversaciones_agentes
-            ):
-                conversacion = (
-                    conversaciones_agentes[active_id]
-                )
-
-                titulo_actual = conversacion.get(
-                    "titulo",
-                    "Sin título"
-                )
-
-                agente_actual = conversacion.get(
-                    "agent",
-                    {}
-                ).get(
-                    "display_name",
-                    "Agente"
-                )
-
-                contexto_actual = conversacion.get(
-                    "context",
-                    {}
-                )
-
-                st.markdown(
-                    f"### 💬 {titulo_actual}"
-                )
-
-                st.caption(
-                    f"🤖 {agente_actual}"
-                    + (
-                        f" · 📦 "
-                        f"{contexto_actual.get('project_name')}"
-                        if contexto_actual.get(
-                            "project_name"
-                        )
-                        else ""
-                    )
-                )
-
-                if contexto_actual.get("objective"):
-                    st.info(
-                        "🎯 "
-                        + contexto_actual["objective"]
-                    )
-
-                st.markdown("---")
-
-                # ====================================
-                # MENSAJES
-                # ====================================
-                for mensaje in conversacion.get(
-                    "messages",
-                    []
-                ):
-                    role = mensaje.get(
-                        "role",
-                        "user"
-                    )
-
-                    role_ui = (
-                        "assistant"
-                        if role == "assistant"
-                        else "user"
-                    )
-
-                    with st.chat_message(role_ui):
-                        autor = mensaje.get("author")
-
-                        if autor:
-                            st.caption(autor)
-
-                        st.write(
-                            mensaje.get(
-                                "content",
-                                ""
-                            )
-                        )
-
-                # ====================================
-                # MENSAJE DEL USUARIO
-                # ====================================
-                mensaje_usuario = st.chat_input(
-                    "Escribe un mensaje...",
-                    key="mensaje_conversacion_agente"
-                )
-
-                if mensaje_usuario:
-                    agregar_mensaje(
-                        conversacion,
-                        role="user",
-                        content=mensaje_usuario,
-                        author=usuario,
-                    )
-
-                    conversaciones_agentes[
-                        active_id
-                    ] = conversacion
-
-                    st.rerun()
-
-                # ====================================
-                # RESPUESTA MANUAL DEL AGENTE
-                # ====================================
-                with st.expander(
-                    "🤖 Registrar respuesta del agente",
-                    expanded=False
-                ):
-                    respuesta_manual = st.text_area(
-                        "Respuesta",
-                        height=180,
-                        key="respuesta_agente_manual"
-                    )
-
-                    if st.button(
-                        "Agregar respuesta",
-                        key="agregar_respuesta_agente"
-                    ):
-                        if respuesta_manual.strip():
-                            agregar_mensaje(
-                                conversacion,
-                                role="assistant",
-                                content=respuesta_manual,
-                                author=agente_actual,
-                            )
-
-                            conversaciones_agentes[
-                                active_id
-                            ] = conversacion
-
-                            st.session_state[
-                                "respuesta_agente_manual"
-                            ] = ""
-
-                            st.rerun()
-
-                st.markdown("---")
-
-                # ====================================
-                # EXPORTACIÓN
-                # ====================================
-                col_export1, col_export2 = st.columns(2)
-
-                with col_export1:
-                    st.download_button(
-                        "⬇️ Descargar conversación",
-                        data=json.dumps(
-                            conversacion,
-                            indent=2,
-                            ensure_ascii=False
-                        ),
-                        file_name=(
-                            f"{active_id}.json"
-                        ),
-                        mime="application/json",
-                        use_container_width=True
-                    )
-
-                with col_export2:
-                    entrada_mesa = resumen_para_mesa(
-                        conversacion
-                    )
-
-                    st.download_button(
-                        "🤝 Enviar a Mesa Redonda",
-                        data=json.dumps(
-                            entrada_mesa,
-                            indent=2,
-                            ensure_ascii=False
-                        ),
-                        file_name=(
-                            f"mesa_{active_id}.json"
-                        ),
-                        mime="application/json",
-                        use_container_width=True
-                    )
-
-            else:
-                st.info(
-                    "Selecciona una conversación "
-                    "o crea una nueva."
-                )
 
 # ============================================
 # TAB 5: MESA REDONDA

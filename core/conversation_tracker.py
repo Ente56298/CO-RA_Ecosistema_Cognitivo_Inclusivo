@@ -124,6 +124,17 @@ def indice_a_conversacion(registro: dict) -> dict:
         base["conversation_id"] = registro["id"]
 
     base["id"] = base["conversation_id"]
+    estado = (
+        registro.get("tracking_status")
+        or registro.get("estado")
+        or registro.get("status")
+        or "indexed"
+    )
+    base["tracking_status"] = estado
+    base["status"] = estado
+    base["updated_at"] = (
+        _fecha_iso(registro.get("updated_at")) or base["updated_at"]
+    )
     return base
 
 
@@ -155,8 +166,23 @@ def fusionar_conversaciones_session(
 ) -> dict[str, dict]:
     salida = cargar_indice_como_conversaciones(ruta_indice)
 
-    for cid, conv in (actuales or {}).items():
+    hashes = {
+        conv.get("hash")
+        for conv in salida.values()
+        if conv.get("hash")
+    }
+
+    def agregar(conv: dict) -> None:
+        cid = conv.get("conversation_id") or conv.get("id")
+        digest = conv.get("hash")
+        if not cid or (digest and digest in hashes and cid not in salida):
+            return
         salida[cid] = conv
+        if digest:
+            hashes.add(digest)
+
+    for conv in (actuales or {}).values():
+        agregar(conv)
 
     for registro in importadas or []:
         conv = (
@@ -164,7 +190,7 @@ def fusionar_conversaciones_session(
             if registro.get("conversation_id")
             else indice_a_conversacion(registro)
         )
-        salida[conv["conversation_id"]] = conv
+        agregar(conv)
 
     return salida
 
@@ -436,6 +462,11 @@ def exportar_indice(
             ),
             "hash": conv.get("hash"),
             "locator": conv.get("locator") or {},
+            "estado": (
+                conv.get("tracking_status")
+                or conv.get("status")
+                or "indexed"
+            ),
         })
 
     indice.sort(
@@ -444,7 +475,7 @@ def exportar_indice(
     )
 
     return {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "actualizado": _ahora_iso(),
         "conversaciones": indice,
     }

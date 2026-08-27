@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-08-27",
+  "title": "Trayectoria profesional contextual",
+  "summary": "Cruce entre gestión y evaluación municipal, análisis territorial, organización de información, automatización y construcción de sistemas de IA centrados en contexto.",
+  "status": "borrador_inferido_requiere_revision",
+  "privacy": {
+    "contains_personal_documents": false,
+    "contains_institutions": false,
+    "contains_contact_data": false,
+    "contains_absolute_paths": false
+  },
+  "principle": "La trayectoria se infiere de evidencia rastreada; no sustituye un currículum validado por la persona.",
+  "lines": [
+    {
+      "id": "gestion-evaluacion-municipal",
+      "name": "Gestión, planeación y evaluación municipal",
+      "state": "experiencia_recurrente",
+      "confidence": "alta",
+      "focus": ["planeación", "evaluación", "seguimiento", "documentación pública"],
+      "evidence": ["contexto_municipal_geoespacial", "documentos_de_apoyo", "proyectos_vivos"]
+    },
+    {
+      "id": "gis-territorio",
+      "name": "Análisis territorial y sistemas de información geográfica",
+      "state": "practica_activa",
+      "confidence": "alta",
+      "focus": ["GIS", "georreferenciación", "capas territoriales", "análisis municipal"],
+      "evidence": ["pdl_gis", "activos_geoespaciales", "documentacion_territorial"]
+    },
+    {
+      "id": "datos-documentos",
+      "name": "Datos, documentos e inventarios de conocimiento",
+      "state": "practica_activa",
+      "confidence": "alta",
+      "focus": ["estructuración", "catálogos", "trazabilidad", "deduplicación"],
+      "evidence": ["cora_keep", "indices_contextuales", "memory_bank_sanitizado"]
+    },
+    {
+      "id": "automatizacion-software",
+      "name": "Programación y automatización aplicada",
+      "state": "en_consolidacion",
+      "confidence": "media",
+      "focus": ["Python", "Streamlit", "integraciones", "flujos reproducibles"],
+      "evidence": ["repositorios_observados", "prototipos_locales", "aplicacion_activa"]
+    },
+    {
+      "id": "ia-agentes-cora",
+      "name": "IA, agentes y arquitectura contextual CO•RA",
+      "state": "linea_emergente_activa",
+      "confidence": "alta",
+      "focus": ["agentes", "memoria", "rastreo de conversaciones", "recuperación bajo demanda"],
+      "evidence": ["conversaciones_indexadas", "catalogo_agentes", "observer_local", "cora_ecosistema"]
+    }
+  ],
+  "transferable_capabilities": [
+    "Conectar información dispersa entre dominios",
+    "Traducir evidencia técnica a decisiones operativas",
+    "Organizar archivos, fuentes y contexto sin perder trazabilidad",
+    "Diseñar herramientas orientadas a usuarios con distintos niveles de detalle"
+  ],
+  "review_pending": [
+    "Confirmar periodos y cronología",
+    "Validar cargos, instituciones y entregables antes de publicarlos",
+    "Separar experiencia demostrada de intereses y líneas exploratorias"
+  ]
+}

@@ -414,6 +414,56 @@ with tab1:
 
     st.markdown("---")
 
+    trayectoria_profesional = cargar_json_publico(
+        "data/trayectoria_profesional.json",
+        {},
+    )
+    if trayectoria_profesional:
+        st.subheader("💼 Trayectoria profesional contextual")
+        st.write(trayectoria_profesional.get("summary", ""))
+        st.caption(trayectoria_profesional.get("principle", ""))
+
+        lineas_profesionales = trayectoria_profesional.get("lines", [])
+        alta_confianza = sum(
+            1 for linea in lineas_profesionales
+            if linea.get("confidence") == "alta"
+        )
+        p1, p2, p3 = st.columns(3)
+        p1.metric("Líneas rastreadas", len(lineas_profesionales))
+        p2.metric("Evidencia alta", alta_confianza)
+        p3.metric(
+            "Pendientes de revisión",
+            len(trayectoria_profesional.get("review_pending", [])),
+        )
+
+        for linea in lineas_profesionales:
+            with st.expander(
+                f"{linea.get('name', 'Línea profesional')} · "
+                f"{linea.get('state', 'por revisar').replace('_', ' ')}",
+                expanded=False,
+            ):
+                st.write(
+                    "**Enfoques:** "
+                    + ", ".join(linea.get("focus", []))
+                )
+                st.caption(
+                    "Confianza: "
+                    + linea.get("confidence", "por revisar").title()
+                )
+                st.write("**Evidencia contextual:**")
+                for evidencia in linea.get("evidence", []):
+                    st.write(f"- {evidencia.replace('_', ' ')}")
+
+        with st.expander("🔄 Capacidades transferibles y revisión", expanded=False):
+            st.markdown("**Capacidades transferibles**")
+            for capacidad in trayectoria_profesional.get("transferable_capabilities", []):
+                st.write(f"- {capacidad}")
+            st.markdown("**Antes de publicar como perfil profesional**")
+            for pendiente in trayectoria_profesional.get("review_pending", []):
+                st.write(f"- {pendiente}")
+
+        st.markdown("---")
+
     # ============================================
     # CONTEXTO INICIAL
     # ============================================

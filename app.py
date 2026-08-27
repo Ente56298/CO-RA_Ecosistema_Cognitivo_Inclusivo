@@ -455,6 +455,48 @@ with tab1:
                 for evidencia in linea.get("evidence", []):
                     st.write(f"- {evidencia.replace('_', ' ')}")
 
+        matriz_experiencia = trayectoria_profesional.get("experience_matrix", [])
+        if matriz_experiencia:
+            with st.expander("🏛️ Trayectoria institucional reportada", expanded=True):
+                st.caption(
+                    "Periodos, cargos y proyectos sujetos a validación documental."
+                )
+                st.dataframe(
+                    [
+                        {
+                            "Institución": registro.get("institution", ""),
+                            "Periodo": registro.get("period", ""),
+                            "Área": registro.get("area", ""),
+                            "Proyectos o funciones": ", ".join(registro.get("projects", [])),
+                            "Verificación": registro.get("evidence_status", "").replace("_", " "),
+                        }
+                        for registro in matriz_experiencia
+                    ],
+                    width="stretch",
+                    hide_index=True,
+                )
+
+        resultados_reportados = trayectoria_profesional.get("reported_results", [])
+        if resultados_reportados:
+            with st.expander("📏 Habilidades con resultados reportados", expanded=True):
+                st.warning(
+                    "Las cifras son antecedentes por verificar; todavía no se presentan "
+                    "como resultados certificados."
+                )
+                st.dataframe(
+                    [
+                        {
+                            "Habilidad": resultado.get("skill", ""),
+                            "Proyecto": resultado.get("project", ""),
+                            "Resultado reportado": resultado.get("result", ""),
+                            "Falta verificar": resultado.get("verification", "").replace("_", " "),
+                        }
+                        for resultado in resultados_reportados
+                    ],
+                    width="stretch",
+                    hide_index=True,
+                )
+
         with st.expander("🔄 Capacidades transferibles y revisión", expanded=False):
             st.markdown("**Capacidades transferibles**")
             for capacidad in trayectoria_profesional.get("transferable_capabilities", []):

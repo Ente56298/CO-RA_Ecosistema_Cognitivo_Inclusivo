@@ -1,23 +1,98 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "updated_at": "2026-08-27",
   "title": "Trayectoria profesional contextual",
-  "summary": "Cruce entre gestión y evaluación municipal, análisis territorial, organización de información, automatización y construcción de sistemas de IA centrados en contexto.",
-  "status": "borrador_inferido_requiere_revision",
+  "summary": "Continuidad reportada entre gobierno municipal y estatal, desarrollo de sistemas, datos masivos, GIS y fotogrametría, automatización, planeación, evaluación e IA contextual.",
+  "status": "borrador_contextual_con_resultados_reportados_requiere_revision",
   "privacy": {
     "contains_personal_documents": false,
-    "contains_institutions": false,
+    "contains_institutions": true,
     "contains_contact_data": false,
     "contains_absolute_paths": false
   },
-  "principle": "La trayectoria se infiere de evidencia rastreada; no sustituye un currículum validado por la persona.",
+  "principle": "La trayectoria reúne antecedentes reportados y evidencia rastreada; no sustituye un currículum validado ni convierte métricas pendientes en resultados certificados.",
+  "experience_matrix": [
+    {
+      "institution": "Ayuntamiento de Tejupilco",
+      "period": "2015–2019",
+      "area": "Catastro, Predial e Informática",
+      "projects": ["Sistema COBRA de recaudación", "automatización administrativa", "georreferenciación"],
+      "evidence_status": "antecedente_reportado_pendiente_validacion_documental"
+    },
+    {
+      "institution": "SEDESEM / Gobierno del Estado de México",
+      "period": "2019–2022",
+      "area": "Informática operativa regional",
+      "projects": ["gestión regional de información", "cobertura reportada de 33 municipios"],
+      "evidence_status": "antecedente_reportado_pendiente_validacion_documental"
+    },
+    {
+      "institution": "Gobierno del Estado de Tlaxcala / sector salud",
+      "period": "2023",
+      "area": "Consultoría, planeación y proyectos",
+      "projects": ["planeación", "gestión de proyectos"],
+      "evidence_status": "antecedente_reportado_pendiente_validacion_documental"
+    },
+    {
+      "institution": "Ayuntamiento de San Simón de Guerrero",
+      "period": "2021–vigencia por confirmar",
+      "area": "Proveedor y consultoría tecnológica",
+      "projects": ["gestión administrativa", "Traslado de Dominio en VBA y Excel"],
+      "evidence_status": "continuidad_y_adopcion_reportadas_pendientes_validacion"
+    },
+    {
+      "institution": "Proyectos independientes",
+      "period": "2023–actualidad",
+      "area": "SCORP.INC, CO•RA y consultoría tecnológica",
+      "projects": ["arquitectura de soluciones", "IA contextual", "automatización", "gestión del conocimiento"],
+      "evidence_status": "continuidad_rastreada_requiere_consolidacion"
+    }
+  ],
+  "reported_results": [
+    {
+      "skill": "Procesamiento de datos",
+      "project": "Procesamiento masivo de registros",
+      "result": "Más de 50,000 registros con error reportado menor al 2%",
+      "verification": "pendiente_evidencia_primaria"
+    },
+    {
+      "skill": "Análisis electoral geoestadístico",
+      "project": "Modelo de análisis electoral",
+      "result": "Precisión reportada cercana al 90%",
+      "verification": "pendiente_metodologia_y_validacion"
+    },
+    {
+      "skill": "Fotogrametría y territorio",
+      "project": "Modelo 3D del panteón de Tejupilco",
+      "result": "Activo técnico reportado",
+      "verification": "pendiente_localizador_y_evidencia_visual"
+    },
+    {
+      "skill": "Gemelo digital",
+      "project": "Gemelo digital municipal",
+      "result": "Desarrollo o conceptualización reportada",
+      "verification": "pendiente_delimitar_alcance"
+    },
+    {
+      "skill": "Sistemas de cobro",
+      "project": "Intervención para cobro de agua",
+      "result": "Incremento aproximado reportado del 30%",
+      "verification": "pendiente_linea_base_y_fuente"
+    },
+    {
+      "skill": "Automatización administrativa",
+      "project": "Traslado de Dominio en VBA",
+      "result": "Adopción reportada por dos administraciones consecutivas",
+      "verification": "pendiente_constancia_de_uso"
+    }
+  ],
   "lines": [
     {
       "id": "gestion-evaluacion-municipal",
       "name": "Gestión, planeación y evaluación municipal",
       "state": "experiencia_recurrente",
       "confidence": "alta",
-      "focus": ["planeación", "evaluación", "seguimiento", "documentación pública"],
+      "focus": ["planeación", "evaluación", "seguimiento", "PDM", "PAE", "MIR", "PbR", "UIPPE"],
       "evidence": ["contexto_municipal_geoespacial", "documentos_de_apoyo", "proyectos_vivos"]
     },
     {
@@ -25,7 +100,7 @@
       "name": "Análisis territorial y sistemas de información geográfica",
       "state": "practica_activa",
       "confidence": "alta",
-      "focus": ["GIS", "georreferenciación", "capas territoriales", "análisis municipal"],
+      "focus": ["GIS", "georreferenciación", "fotogrametría", "gemelo digital", "PDL"],
       "evidence": ["pdl_gis", "activos_geoespaciales", "documentacion_territorial"]
     },
     {
@@ -41,7 +116,7 @@
       "name": "Programación y automatización aplicada",
       "state": "en_consolidacion",
       "confidence": "media",
-      "focus": ["Python", "Streamlit", "integraciones", "flujos reproducibles"],
+      "focus": ["VBA y Excel", "Python", "Streamlit", "sistemas gubernamentales", "flujos reproducibles"],
       "evidence": ["repositorios_observados", "prototipos_locales", "aplicacion_activa"]
     },
     {
@@ -62,6 +137,8 @@
   "review_pending": [
     "Confirmar periodos y cronología",
     "Validar cargos, instituciones y entregables antes de publicarlos",
+    "Vincular cada resultado reportado con evidencia primaria, metodología y localizador privado",
+    "Validar las métricas de error, precisión, incremento y adopción antes de usarlas en propuestas",
     "Separar experiencia demostrada de intereses y líneas exploratorias"
   ]
 }

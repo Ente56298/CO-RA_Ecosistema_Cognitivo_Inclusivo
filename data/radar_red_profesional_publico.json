@@ -25,6 +25,13 @@
     "Aliados territoriales",
     "Academia y conocimiento"
   ],
+  "relationship_roles": [
+    "Contacto institucional",
+    "Enlace y referidor",
+    "Aliado territorial",
+    "Mentor o referente académico",
+    "Colaborador con experiencia municipal y de evaluación"
+  ],
   "source_groups": [
     {
       "id": "route-family",

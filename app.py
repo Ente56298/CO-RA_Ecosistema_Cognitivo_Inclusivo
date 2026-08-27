@@ -3,6 +3,7 @@ CO•RA Tutor — Trayectoria Adaptativa de Aprendizaje
 Versión 2.2: Mapa de avances + Mapa abierto + Rastreo de contextos + GitHub Bridge
 """
 import streamlit as st
+import streamlit.components.v1 as components
 import requests
 import json
 import hashlib
@@ -1162,6 +1163,69 @@ with tab5:
         {"templates": []},
     )
     plantillas = catalogo_plantillas.get("templates", [])
+
+    proyectos_por_patron = {
+        "inspector de metadatos": ["Rastreador de conversaciones", "Inventario KEEP"],
+        "entrega de contexto": ["Memory Bank e HILO", "CO•RA Observer"],
+        "catálogo de datos": ["Inventario KEEP", "PDL y GIS"],
+        "búsqueda híbrida": ["Rastreador de conversaciones", "Memory Bank e HILO"],
+        "búsqueda de conversaciones": ["Rastreador de conversaciones"],
+        "catálogo de recursos": ["Inventario KEEP"],
+        "visualización geoespacial": ["PDL y GIS"],
+        "índice espacial": ["PDL y GIS"],
+        "procesamiento geoespacial": ["PDL y GIS"],
+        "portal electoral": ["Gestión municipal", "PDL y GIS"],
+        "panel de incidentes": ["Gestión municipal", "PDL y GIS"],
+        "monitor de disponibilidad": ["CO•RA Observer", "Agentes y evaluación"],
+        "flujo de decisión por umbral": ["Agentes y evaluación", "Gestión municipal"],
+        "panel de clasificación": ["Agentes y evaluación"],
+        "visor comparativo": ["Agentes y evaluación"],
+        "calculadora especializada": ["Gestión municipal"],
+        "panel de movilidad": ["PDL y GIS"],
+        "explorador de viajes": ["PDL y GIS"],
+        "estimador": ["Gestión municipal"],
+        "coincidencia visual": ["Plantillas e interfaces"],
+        "generador de artefactos": ["Plantillas e interfaces"],
+        "vista científica rápida": ["Plantillas e interfaces"],
+        "simulación interactiva": ["Plantillas e interfaces"],
+        "interacción textual": ["Plantillas e interfaces"],
+    }
+
+    if plantillas:
+        st.markdown("### 👁️ Vista previa y conexión")
+        plantilla_previa = st.selectbox(
+            "Selecciona una plantilla",
+            plantillas,
+            format_func=lambda p: p.get("name", "Referencia"),
+            key="plantilla_vista_previa",
+        )
+        categoria_previa = plantilla_previa.get("category", "otra")
+        proyectos_conectados = proyectos_por_patron.get(
+            categoria_previa,
+            ["CO•RA Ecosistema"],
+        )
+        st.caption(
+            "Conecta con: " + " · ".join(proyectos_conectados)
+            + f" · Patrón: {categoria_previa}"
+        )
+        mostrar_previa = st.checkbox(
+            "Mostrar sitio incrustado",
+            value=True,
+            help="Algunos sitios externos pueden impedir la vista incrustada.",
+            key="mostrar_vista_plantilla",
+        )
+        if mostrar_previa:
+            components.iframe(
+                plantilla_previa.get("url"),
+                height=520,
+                scrolling=True,
+            )
+        st.link_button(
+            "↗️ Abrir plantilla en otra pestaña",
+            plantilla_previa.get("url"),
+        )
+        st.markdown("---")
+
     categorias_plantilla = sorted({p.get("category", "otra") for p in plantillas})
     filtro_plantilla = st.multiselect(
         "Filtrar por patrón",
@@ -1182,6 +1246,11 @@ with tab5:
                     f"Patrón: {plantilla.get('category', 'por clasificar')} · "
                     f"Prioridad: {plantilla.get('priority', 'por revisar')}"
                 )
+                conectados = proyectos_por_patron.get(
+                    plantilla.get("category"),
+                    ["CO•RA Ecosistema"],
+                )
+                st.caption("Proyectos: " + " · ".join(conectados))
             with col_link:
                 st.link_button(
                     "Abrir referencia",

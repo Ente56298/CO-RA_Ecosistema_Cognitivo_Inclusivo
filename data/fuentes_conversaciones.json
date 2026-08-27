@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "fuentes": [
+    {
+      "id": "chatgpt-export",
+      "tipo": "chatgpt_export",
+      "estado": "registrable",
+      "nota": "La ruta concreta se registra al importar; el repositorio público no almacena el contenido privado."
+    },
+    {
+      "id": "cora-session",
+      "tipo": "cora",
+      "estado": "activo",
+      "nota": "Conversaciones creadas dentro de CO•RA durante la sesión."
+    }
+  ]
+}

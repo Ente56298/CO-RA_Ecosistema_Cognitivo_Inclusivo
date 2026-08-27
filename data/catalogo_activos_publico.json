@@ -19,7 +19,9 @@
     {"asset_id":"municipal-docs","name":"Documentación municipal y de evaluación","type":"documentos","domain":"gestion_municipal","status":"activo","access":"privado_revisable","locator_type":"referencia_contextual","relation":"Planes, seguimiento e instrumentos"},
     {"asset_id":"agent-catalog","name":"Catálogo público de agentes y fuentes de evaluación","type":"catálogo","domain":"agentes","status":"activo","access":"público","locator_type":"url_publica","relation":"Descubrimiento y comparación supervisada"},
     {"asset_id":"template-catalog","name":"Catálogo de plantillas y referencias","type":"catálogo","domain":"interfaces","status":"activo","access":"público","locator_type":"url_publica","relation":"Patrones externos para integración"},
-    {"asset_id":"keep-inventory","name":"Inventarios KEEP y manifiestos de hashes","type":"inventario","domain":"trazabilidad","status":"prototipo","access":"privado","locator_type":"hash_y_referencia","relation":"Familias, deduplicación y trazabilidad"},
+    {"asset_id":"keep-notes","name":"Notas KEEP","type":"notas","domain":"memoria","status":"indexado_local","access":"privado","locator_type":"id_cora_privado","relation":"Contexto, ideas y señales para proyectos"},
+    {"asset_id":"keep-physical-inventory","name":"Inventario físico KEEP","type":"inventario_fisico","domain":"activos","status":"indexado_local","access":"privado","locator_type":"id_cora_privado","relation":"Registro contextual de activos físicos"},
+    {"asset_id":"keep-inventory","name":"Familias KEEP y manifiestos de hashes","type":"inventario","domain":"trazabilidad","status":"prototipo","access":"metadatos_sanitizados","locator_type":"hash_y_referencia","relation":"Familias, deduplicación y trazabilidad"},
     {"asset_id":"professional-trajectory","name":"Trayectoria profesional contextual","type":"perfil_contextual","domain":"trayectoria","status":"borrador_revisable","access":"público_sanitizado","locator_type":"indice_contextual","relation":"Líneas profesionales inferidas con revisión humana"}
   ]
 }

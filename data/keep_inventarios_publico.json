@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-08-27",
+  "purpose": "Resumen contextual de Google Keep e inventario físico sin títulos, contenido ni ubicaciones",
+  "privacy": {
+    "contains_note_titles": false,
+    "contains_note_content": false,
+    "contains_locations": false,
+    "contains_absolute_paths": false,
+    "contains_attachments": false
+  },
+  "summary": {
+    "keep_notes": 492,
+    "physical_inventory_records": 163,
+    "explicit_families": 59,
+    "candidate_families": 22,
+    "manifest_entries": 6
+  },
+  "collections": [
+    {"name":"Notas KEEP","records":492,"status":"indexado_local","access":"privado","route":"memoria_y_contexto","connects_to":["Memory Bank e HILO","Proyectos vivos","Trayectoria profesional"]},
+    {"name":"Inventario físico KEEP","records":163,"status":"indexado_local","access":"privado","route":"activos_y_recursos","connects_to":["Inventario KEEP","Proyectos vivos"]},
+    {"name":"Familias explícitas","records":59,"status":"clasificado","access":"metadatos_sanitizados","route":"catalogo_activos","connects_to":["Inventario KEEP"]},
+    {"name":"Familias candidatas","records":22,"status":"requiere_revision","access":"metadatos_sanitizados","route":"revision_humana","connects_to":["Inventario KEEP"]},
+    {"name":"Manifiesto SHA-256","records":6,"status":"verificacion","access":"privado","route":"deduplicacion","connects_to":["Inventario KEEP","Rastreador de conversaciones"]}
+  ],
+  "rules": [
+    "Las notas y objetos no se publican automáticamente.",
+    "Las ubicaciones permanecen en el índice privado local.",
+    "Toda conexión con un proyecto requiere revisión humana."
+  ]
+}

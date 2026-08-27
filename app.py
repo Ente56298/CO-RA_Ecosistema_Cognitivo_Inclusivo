@@ -1363,6 +1363,47 @@ with tab6:
         for activo in activos_visibles
     ]
     st.dataframe(filas_activos, use_container_width=True, hide_index=True)
+
+    keep_publico = cargar_json_publico(
+        "data/keep_inventarios_publico.json",
+        {},
+    )
+    if keep_publico:
+        with st.expander("📝 Notas KEEP e inventario físico", expanded=False):
+            st.caption(
+                "Resumen numérico y conexiones contextuales. Los títulos, "
+                "contenidos y ubicaciones permanecen privados."
+            )
+            resumen_keep = keep_publico.get("summary", {})
+            k1, k2, k3, k4 = st.columns(4)
+            k1.metric("Notas KEEP", resumen_keep.get("keep_notes", 0))
+            k2.metric(
+                "Registros físicos",
+                resumen_keep.get("physical_inventory_records", 0),
+            )
+            k3.metric(
+                "Familias explícitas",
+                resumen_keep.get("explicit_families", 0),
+            )
+            k4.metric(
+                "Familias por revisar",
+                resumen_keep.get("candidate_families", 0),
+            )
+            colecciones_keep = [
+                {
+                    "Colección": item.get("name"),
+                    "Registros": item.get("records"),
+                    "Estado": item.get("status", "pendiente").replace("_", " "),
+                    "Encaminar a": item.get("route", "revision").replace("_", " "),
+                    "Conecta con": " · ".join(item.get("connects_to", [])),
+                }
+                for item in keep_publico.get("collections", [])
+            ]
+            st.dataframe(
+                colecciones_keep,
+                use_container_width=True,
+                hide_index=True,
+            )
     st.info(
         "El catálogo no permite abrir activos privados. La recuperación exige "
         "un localizador autorizado y permanece bajo control local."

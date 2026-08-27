@@ -309,6 +309,13 @@ def render_widget_foco(actividades):
         seleccion = st.selectbox(
             "Actividad actual",
             ids,
+            index=next(
+                (
+                    indice for indice, item in enumerate(candidatas)
+                    if item.get("focus_default")
+                ),
+                0,
+            ),
             format_func=lambda activity_id: por_id.get(activity_id, {}).get(
                 "title", activity_id
             ),
@@ -2356,6 +2363,32 @@ with tab8:
                         "**Cierre verificable:** "
                         + item.get("completion_evidence", "")
                     )
+                    metodologia = item.get("methodology", {})
+                    requisitos = item.get("requirements", {})
+                    if metodologia or requisitos:
+                        with st.expander("Metodología, alcance y bloqueos", expanded=True):
+                            if requisitos:
+                                st.write(
+                                    f"**Checklist:** {requisitos.get('checklist_id', '')} · "
+                                    f"{requisitos.get('closed', 0)}/{requisitos.get('total', 0)} cerrados · "
+                                    f"{requisitos.get('pending', 0)} pendientes · "
+                                    f"{requisitos.get('objectives', 0)} objetivos"
+                                )
+                                st.markdown("**Bloqueos críticos**")
+                                for bloqueo in requisitos.get("critical_open", []):
+                                    st.write(f"- {bloqueo}")
+                            if metodologia:
+                                st.markdown("**Secuencia de trabajo**")
+                                st.write(" → ".join(metodologia.get("sequence", [])))
+                                st.markdown("**Hallazgos**")
+                                for hallazgo in metodologia.get("findings", []):
+                                    st.write(f"- {hallazgo}")
+                                st.markdown("**Alcance**")
+                                st.write(" · ".join(metodologia.get("scope", [])))
+                                st.markdown("**Problemáticas**")
+                                for problema in metodologia.get("problems", []):
+                                    st.write(f"- {problema}")
+                                st.caption(metodologia.get("privacy_rule", ""))
 
             st.markdown("#### Matriz completa de actividades")
             st.dataframe(

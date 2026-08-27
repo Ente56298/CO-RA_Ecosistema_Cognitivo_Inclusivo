@@ -231,6 +231,77 @@
       "next_action": "Usar el widget y ajustar duraciones o señales según experiencia real.",
       "completion_evidence": "Widget lateral funcional con selección, temporizador, audio opcional y registro privado de sesión.",
       "updated_at": "2026-08-27"
+    },
+    {
+      "id": "act-014",
+      "title": "Cerrar requerimientos del Radar PDL y preparar hoja institucional",
+      "project_id": "radar-pdl",
+      "project": "Radar PDL por localidad",
+      "commitment": "producto_terminado",
+      "layer": 3,
+      "stage": "diagnostico",
+      "priority": "alta",
+      "state": "en_curso",
+      "progress": 45,
+      "focus_default": true,
+      "evidence_status": "checklist_40_requerimientos_en_cierre",
+      "next_action": "Cerrar municipio piloto, claves de unión, cobertura, licencias, calidad y reglas de deduplicación antes de redactar el documento maestro.",
+      "completion_evidence": "Checklist RADAR-PDL-001 aprobado, tabla raíz definida, claves territoriales validadas y criterio de uso documentado.",
+      "updated_at": "2026-08-27",
+      "requirements": {
+        "checklist_id": "RADAR-PDL-001",
+        "total": 40,
+        "closed": 18,
+        "pending": 19,
+        "objectives": 3,
+        "critical_open": [
+          "Definir municipio piloto inicial.",
+          "Definir claves de unión entre fuentes sin forzar equivalencias territoriales.",
+          "Cerrar catálogo inicial de fuentes, cobertura, licencia, calidad y actualización."
+        ]
+      },
+      "methodology": {
+        "sequence": [
+          "Cerrar requerimientos",
+          "Convertir el checklist en índice del documento maestro",
+          "Implementar tabla raíz y relaciones",
+          "Validar piloto territorial",
+          "Expandir por fuente y localidad"
+        ],
+        "root_table_fields": [
+          "source_id", "institucion", "nombre_fuente", "categoria",
+          "descripcion", "url", "endpoint", "tipo_acceso", "formato",
+          "cobertura", "periodo", "nivel_geografico", "campos_disponibles",
+          "clave_union", "contiene_datos_personales", "uso_masivo",
+          "fecha_actualizacion", "fecha_observacion", "estado",
+          "nivel_confianza", "notas"
+        ],
+        "relationship_chain": "FUENTE → VARIABLE → TERRITORIO → LOCALIDAD → DIAGNÓSTICO PDL",
+        "capital_blocks": [
+          "territorial", "informacion", "metodologico", "geoespacial",
+          "tecnologico", "politico_electoral_profesional",
+          "institucional_relacional", "documental", "ia_cora"
+        ],
+        "findings": [
+          "El valor del Radar PDL no está sólo en el software, sino en la integración de capacidades, fuentes, territorio y metodología.",
+          "Localidad es la unidad principal; municipio, sección, colonia, AGEB y manzana son relaciones condicionadas por correspondencias válidas.",
+          "Capital político-electoral, datos electorales y producto analítico deben permanecer separados.",
+          "La procedencia y la protección de datos forman parte del producto, no son una revisión posterior."
+        ],
+        "scope": [
+          "Radar y catálogo de fuentes", "matriz territorial",
+          "ficha por fuente", "ficha por localidad", "salida tabular",
+          "salida geográfica", "API JSON", "trazabilidad y vacíos de información"
+        ],
+        "problems": [
+          "Fuentes dispersas y con geografías incompatibles.",
+          "Cobertura temporal, licencia y calidad todavía incompletas.",
+          "Riesgo de duplicar datasets recuperables desde el origen.",
+          "Riesgo de confundir relaciones profesionales, datos políticos y metodología electoral.",
+          "Necesidad de demostrar procedencia desde la fuente hasta el diagnóstico."
+        ],
+        "privacy_rule": "Usar información pública o autorizada y análisis territorial agregado; no perfilar afinidades políticas individuales ni enumerar consultas individuales masivamente."
+      }
     }
   ]
 }

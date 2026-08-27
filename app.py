@@ -251,6 +251,25 @@ def cargar_json_publico(ruta: str, valor_por_defecto):
         return valor_por_defecto
 
 # ============================================
+# AMPLIAR ÁREAS DESDE CATÁLOGO EXTERNO
+# ============================================
+AREAS_EXTRA = cargar_json_publico(
+    "data/areas_conocimiento.json",
+    {}
+)
+
+AREAS_CONOCIMIENTO.update(AREAS_EXTRA)
+
+
+
+
+
+
+
+
+
+
+# ============================================
 # INTERFAZ PRINCIPAL
 # ============================================
 st.title("🧭 CO•RA Tutor")

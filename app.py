@@ -272,13 +272,51 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 # ============================================
 with tab1:
     st.subheader("📋 Contexto Inicial")
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
+
+    claridad_objetivo = st.radio(
+        "¿Qué tan claro tienes lo que quieres hacer?",
+        [
+            "Tengo claro mi objetivo",
+            "Tengo una idea, pero no sé cómo formularla",
+            "Todavía no estoy seguro; quiero explorar",
+        ],
+        horizontal=True,
+    )
+
+    objetivo = ""
+    exploracion = []
+    if claridad_objetivo == "Tengo claro mi objetivo":
         objetivo = st.text_input("¿Qué quieres lograr?")
+    else:
+        st.caption(
+            "No necesitas definir una meta todavía. Selecciona una o varias "
+            "opciones y CO•RA te ayudará a encontrar posibles rutas."
+        )
+        exploracion = st.multiselect(
+            "¿Qué describe mejor lo que está pasando?",
+            [
+                "Observé algo interesante",
+                "Tengo un problema, pero no conozco la causa",
+                "Quiero relacionar varias cosas",
+                "Quiero recuperar algo que trabajé antes",
+                "Quiero evitar repetir trabajo",
+                "Solo quiero explorar",
+                "No estoy seguro",
+            ],
+            placeholder="Puedes elegir varias opciones",
+        )
+        idea_inicial = st.text_area(
+            "Cuéntame lo que tienes en mente (opcional)",
+            placeholder="Puede ser una observación, una duda o algo que te llamó la atención.",
+        )
+        partes_objetivo = exploracion + ([idea_inicial.strip()] if idea_inicial.strip() else [])
+        objetivo = " | ".join(partes_objetivo)
+
+    col1, col2 = st.columns(2)
+
+    with col1:
         recursos = st.text_area("¿Con qué cuentas ahora?")
-    
+
     with col2:
         observacion = st.text_area("¿Qué estás observando?")
         nombre = st.text_input("¿Cómo quieres que te llame?", value=usuario)

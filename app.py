@@ -1849,6 +1849,33 @@ with tab6:
                 hide_index=True,
             )
 
+            manifiesto_reciente = expediente_documental.get(
+                "latest_manifest_observation", {}
+            )
+            if manifiesto_reciente:
+                st.markdown("**Último manifiesto local observado**")
+                l1, l2, l3, l4 = st.columns(4)
+                l1.metric("Entradas", manifiesto_reciente.get("entries", 0))
+                l2.metric("Archivos", manifiesto_reciente.get("files", 0))
+                l3.metric("Carpetas", manifiesto_reciente.get("directories", 0))
+                l4.metric(
+                    "Copias redundantes",
+                    manifiesto_reciente.get("redundant_copies_in_manifest", 0),
+                )
+                st.caption(manifiesto_reciente.get("interpretation", ""))
+                st.dataframe(
+                    [
+                        {
+                            "Familia": ruta.get("family", "").replace("_", " "),
+                            "Encaminar a": ruta.get("route", "").replace("_", " "),
+                            "Estado": ruta.get("status", "").replace("_", " "),
+                        }
+                        for ruta in manifiesto_reciente.get("routes", [])
+                    ],
+                    width="stretch",
+                    hide_index=True,
+                )
+
             with st.expander("Candidatos de evidencia y límites", expanded=False):
                 for candidato in expediente_documental.get("evidence_candidates", []):
                     st.write(

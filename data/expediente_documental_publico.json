@@ -108,6 +108,46 @@
       }
     ]
   },
+  "latest_manifest_observation": {
+    "observed_at": "2026-08-27",
+    "scope": "Listado local aportado por el usuario; comprobación de existencia, tipo, extensión y duplicados exactos sin mover ni extraer archivos.",
+    "entries": 112,
+    "files": 79,
+    "directories": 33,
+    "missing": 0,
+    "file_types": {
+      "docx": 20,
+      "python": 15,
+      "zip": 14,
+      "json": 11,
+      "pdf": 9,
+      "jsonl": 4,
+      "other": 6
+    },
+    "exact_duplicate_groups_in_manifest": 7,
+    "copies_in_exact_duplicate_groups": 18,
+    "redundant_copies_in_manifest": 11,
+    "routes": [
+      {"family": "tesis_formacion_y_metodologia", "route": "expediente_academico_privado", "status": "clasificar_y_validar_autoria"},
+      {"family": "infraestructura_planos_y_cfe", "route": "expediente_tecnico_privado", "status": "validar_funcion_proyecto_y_sensibilidad"},
+      {"family": "trayectoria_y_presentaciones", "route": "matriz_trayectoria_evidencias", "status": "contrastar_afirmaciones"},
+      {"family": "indices_y_depuradores_cora", "route": "inventario_tecnico_y_trazabilidad", "status": "derivados_no_canonicos"},
+      {"family": "observer_y_contexto_local", "route": "observer_local", "status": "datos_operativos_privados"},
+      {"family": "radar_y_red_profesional", "route": "radar_profesional_privado", "status": "metadatos_sanitizables"},
+      {"family": "sitios_y_capturas_web", "route": "catalogo_activos_web", "status": "relacion_pendiente_con_proyectos"},
+      {"family": "conversaciones_e_indices", "route": "rastreador_conversaciones", "status": "validar_antes_de_indice_canonico"}
+    ],
+    "duplicate_findings": [
+      "Tres copias exactas de metodología de caso.",
+      "Cuatro copias exactas de un capítulo de planteamiento del problema.",
+      "Tres copias exactas de una tarjeta de verificación académica.",
+      "Dos copias exactas de primera actividad.",
+      "Dos copias exactas de un documento de asesoría.",
+      "Dos copias exactas de una fuente del radar.",
+      "Dos copias exactas de una versión del indexador local."
+    ],
+    "interpretation": "El listado no representa 112 proyectos: reúne originales, copias, contenedores, derivados, código operativo y carpetas fuente."
+  },
   "evidence_candidates": [
     {
       "relation": "sistemas_gubernamentales",
@@ -135,5 +175,6 @@
     "Un archivo de descarga parcial estaba activo y fue excluido del índice estable.",
     "La equivalencia de archivos comprimidos se calculó por las huellas de sus miembros, no por el hash externo del ZIP.",
     "Los documentos duplicados se conservan; no se autorizó moverlos ni eliminarlos."
+    ,"El nuevo manifiesto se verificó sólo a nivel de metadatos y hash; no implica revisión completa del contenido de sus 79 archivos."
   ]
 }

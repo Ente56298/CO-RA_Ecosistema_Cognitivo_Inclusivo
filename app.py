@@ -1217,7 +1217,6 @@ with tab5:
             st.iframe(
                 plantilla_previa.get("url"),
                 height=520,
-                scrolling=True,
             )
         st.link_button(
             "↗️ Abrir plantilla en otra pestaña",

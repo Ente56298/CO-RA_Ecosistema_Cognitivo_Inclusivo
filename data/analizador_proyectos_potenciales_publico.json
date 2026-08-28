@@ -1,0 +1,351 @@
+{
+  "schema_version": "1.7",
+  "updated_at": "2026-08-27",
+  "purpose": "Matriz maestra sanitizada para rastrear y priorizar proyectos potenciales a partir de inventarios locales, conversaciones, evidencias, contactos y material de soporte.",
+  "methodology": {
+    "principles": [
+      "Un solo objeto por categoría principal.",
+      "Los duplicados se marcan explícitamente sin borrar originales.",
+      "Los contactos se separan de los proyectos técnicos.",
+      "Lo no verificable queda como pendiente de revisión."
+    ],
+    "single_primary_category": true,
+    "private_paths_published": false,
+    "public_summary_only": true
+  },
+  "summary": {
+    "total_items": 26,
+    "core_nucleus": 5,
+    "projects_vivos": 6,
+    "evidence_profesional": 5,
+    "red_contactos": 4,
+    "soporte_tecnico_multimedia": 3,
+    "temporales_descartables": 3,
+    "pendiente_revision": 1,
+    "duplicated_families": 7
+  },
+  "layers": [
+    {"id": "layer_1", "name": "Núcleo madre", "description": "Carpetas y artefactos que sostienen CO•RA, PDL y el rastreo canónico."},
+    {"id": "layer_2", "name": "Proyectos vivos", "description": "Iniciativas con continuidad, entrega o demostrador activo."},
+    {"id": "layer_3", "name": "Evidencia profesional", "description": "Documentos, hojas, presentaciones y matrices que prueban trayectoria."},
+    {"id": "layer_4", "name": "Red de contactos", "description": "Chats y archivos de relaciones que sirven para seguimiento humano."},
+    {"id": "layer_5", "name": "Soporte técnico y multimedia", "description": "Capturas, demos, HTML, GIF, instaladores y material de apoyo."},
+    {"id": "layer_6", "name": "Temporales o descartables", "description": "Duplicados, pendientes de depurar o material transitorio."}
+  ],
+  "ingested_sources": [
+    {
+      "source_id": "gemini-profile-projects-2026-08-27",
+      "source_type": "ai_conversation_summary",
+      "title": "Conversación con Gemini: perfil, trayectoria y proyectos",
+      "captured_at": "2026-08-27",
+      "provenance": "Contenido proporcionado directamente por el usuario en esta conversación.",
+      "evidence_level": "derived_unverified",
+      "privacy": "summary_only",
+      "use": "Descubrimiento de candidatos y preparación de una cola de validación; no constituye evidencia primaria.",
+      "linked_project_ids": [
+        "project-gemelo-digital",
+        "project-portafolio-evidencia",
+        "project-macros-vba",
+        "project-radar-pdl"
+      ]
+    },
+    {
+      "source_id": "google-ai-mode-profile-projects-2026-08-27",
+      "source_type": "ai_search_summary",
+      "title": "Modo IA de Google: resumen de perfil, proyectos y trayectoria",
+      "captured_at": "2026-08-27",
+      "provenance": "Texto de resultados proporcionado directamente por el usuario.",
+      "evidence_level": "derived_unverified",
+      "privacy": "sanitized_metadata_only",
+      "content_retention": "El texto completo y los datos personales sensibles no se incorporan al índice público.",
+      "use": "Comparar menciones recurrentes y detectar proyectos que requieren vinculación documental.",
+      "linked_project_ids": [
+        "project-gemelo-digital",
+        "project-portafolio-evidencia",
+        "project-radar-pdl"
+      ]
+    },
+    {
+      "source_id": "copilot-profile-projects-2026-08-27",
+      "source_type": "ai_conversation_summary",
+      "title": "Copilot: tabla de proyectos y trayectoria",
+      "captured_at": "2026-08-27",
+      "provenance": "Contenido proporcionado directamente por el usuario en esta conversación.",
+      "evidence_level": "derived_conflicting_unverified",
+      "privacy": "sanitized_metadata_only",
+      "content_retention": "La conversación completa y los datos identificativos no se copian al índice público.",
+      "use": "Detectar contradicciones y posibles mezclas de perfil; no alimentar la trayectoria pública.",
+      "linked_project_ids": [
+        "project-portafolio-evidencia"
+      ]
+    },
+    {
+      "source_id": "kimi-workspace-titles-2026-08-27",
+      "source_type": "ai_workspace_catalog",
+      "title": "Kimi: títulos fijados, proyectos y conversaciones visibles",
+      "captured_at": "2026-08-27",
+      "provenance": "Listado de interfaz proporcionado directamente por el usuario.",
+      "evidence_level": "title_locator_only",
+      "privacy": "sanitized_titles_only",
+      "content_retention": "No se almacenan nombres completos de contactos ni contenido de los chats.",
+      "use": "Crear candidatos rastreables a partir de títulos existentes sin inferir contenido ni trayectoria.",
+      "linked_project_ids": [
+        "core-cora",
+        "core-conversations",
+        "project-radar-pdl",
+        "project-gemelo-digital",
+        "project-portafolio-evidencia"
+      ]
+    },
+    {
+      "source_id": "deepai-chat-sidebar-2026-08-27",
+      "source_type": "ai_chat_sidebar_catalog",
+      "title": "DeepAI: títulos históricos visibles y respuesta sin contexto suficiente",
+      "captured_at": "2026-08-27",
+      "provenance": "Contenido de interfaz proporcionado directamente por el usuario.",
+      "evidence_level": "title_locator_only",
+      "privacy": "sanitized_titles_only",
+      "content_retention": "Se excluyen publicidad, enlaces de seguimiento, controles de interfaz y contenido no relacionado.",
+      "use": "Registrar títulos históricos sin inferir que sean proyectos propios o trayectoria confirmada.",
+      "linked_project_ids": [
+        "core-conversations",
+        "project-portafolio-evidencia"
+      ]
+    },
+    {
+      "source_id": "grok-no-context-response-2026-08-27",
+      "source_type": "ai_conversation_response",
+      "title": "Grok: solicitud de tabla sin contexto disponible",
+      "captured_at": "2026-08-27",
+      "provenance": "Respuesta proporcionada directamente por el usuario.",
+      "evidence_level": "no_context_available",
+      "privacy": "summary_only",
+      "discovery_result": "No contiene proyectos, trayectoria, títulos históricos ni afirmaciones verificables.",
+      "content_retention": "Se conserva únicamente el estado de ausencia de contexto.",
+      "use": "Registrar que la fuente fue consultada y no produjo evidencia ni candidatos nuevos.",
+      "linked_project_ids": [
+        "core-conversations"
+      ]
+    },
+    {
+      "source_id": "local-pdl-readonly-scan-2026-08-27",
+      "source_type": "local_readonly_inventory",
+      "title": "Rastreo local PDL y revisión de pdl-territorial (5)",
+      "captured_at": "2026-08-27",
+      "provenance": "Metadatos locales y estructura del paquete revisados directamente, sin publicar rutas privadas.",
+      "evidence_level": "direct_local_metadata",
+      "privacy": "sanitized_metadata_only",
+      "discovery_result": "Se localizó una aplicación PDL con Atlas, indicadores, hub, gaveta electoral, documentación, pruebas y deck de 14 módulos, además de familias de geodatos, PDM, maestros tabulares y fichas.",
+      "content_retention": "El inventario público conserva nombres funcionales y estados; no copia datos personales ni archivos fuente.",
+      "use": "Definir un candidato canónico provisional y alimentar la vista Qué puedo desarrollar.",
+      "linked_project_ids": [
+        "core-pdl-gis",
+        "core-pdl-territorial",
+        "project-radar-pdl",
+        "project-gemelo-digital"
+      ]
+    }
+  ],
+  "discovered_title_candidates": [
+    {"candidate_id":"kimi-forensic-log","display_title":"Bitácora forense CO•RA","candidate_type":"document_or_chat","relation":"CO•RA / trazabilidad","status":"titulo_localizado","confidence":"alta","next_action":"Localizar el contenido y determinar si es evidencia, bitácora o proyecto."},
+    {"candidate_id":"kimi-municipal-trajectory","display_title":"Aplicación municipal y trayectoria territorial","candidate_type":"project_or_chat","relation":"gestión municipal / trayectoria","status":"titulo_sanitizado_pendiente_revision","confidence":"media","next_action":"Separar la aplicación técnica de la narrativa profesional."},
+    {"candidate_id":"kimi-tejupilco-titles","display_title":"Estructura de títulos territoriales","candidate_type":"document_or_chat","relation":"Tejupilco / organización","status":"titulo_localizado","confidence":"media","next_action":"Revisar si se trata de taxonomía, índice documental o datos jurídicos."},
+    {"candidate_id":"kimi-territorial-context","display_title":"Contexto territorial regional","candidate_type":"chat","relation":"territorio","status":"titulo_sanitizado_pendiente_revision","confidence":"baja","next_action":"Abrir sólo para identificar su función y proyecto asociado."},
+    {"candidate_id":"kimi-pdl-dashboard","display_title":"PDL Tejupilco 2027 Dashboard","candidate_type":"project","relation":"Radar PDL","status":"candidato_fuerte","confidence":"alta","next_action":"Vincular con Radar PDL y localizar demo, datos y versión canónica."},
+    {"candidate_id":"kimi-electoral-review","display_title":"Revisión electoral territorial","candidate_type":"analysis_or_chat","relation":"análisis geoestadístico","status":"titulo_sanitizado_pendiente_revision","confidence":"media","next_action":"Determinar alcance, periodo, fuentes y condiciones de publicación."},
+    {"candidate_id":"kimi-certifications","display_title":"Certificaciones tecnológicas","candidate_type":"evidence_or_plan","relation":"trayectoria profesional","status":"titulo_sanitizado_pendiente_revision","confidence":"media","next_action":"Vincular únicamente constancias verificables."},
+    {"candidate_id":"kimi-tomo-zero","display_title":"Integrar Tomo Cero","candidate_type":"project_or_task","relation":"CO•RA editorial","status":"candidato_fuerte","confidence":"alta","next_action":"Localizar manuscrito, índice o estructura y relacionarlo con CO•RA."},
+    {"candidate_id":"kimi-territorial-video","display_title":"Video territorial: edición","candidate_type":"media_project","relation":"territorio / multimedia","status":"titulo_sanitizado_pendiente_revision","confidence":"media","next_action":"Localizar guion, fuentes audiovisuales y versión final."},
+    {"candidate_id":"kimi-dashboard-links","display_title":"Enlaces de dashboard municipal","candidate_type":"resource_catalog","relation":"gestión municipal","status":"titulo_localizado","confidence":"alta","next_action":"Registrar URL, proyecto asociado, estado y fecha de verificación."},
+    {"candidate_id":"kimi-tasks-demos","display_title":"Concretar tareas y demos","candidate_type":"task_group","relation":"seguimiento operativo","status":"titulo_localizado","confidence":"media","next_action":"Convertir tareas en acciones con responsable, evidencia y fecha."},
+    {"candidate_id":"kimi-unified-knowledge","display_title":"Tabla de conocimiento unificada","candidate_type":"project_or_document","relation":"CO•RA / conocimiento","status":"candidato_fuerte","confidence":"alta","next_action":"Comparar con los índices canónicos y evitar una segunda fuente maestra."},
+    {"candidate_id":"kimi-knowledge-gap","display_title":"Seguimiento de brechas de conocimiento","candidate_type":"analysis_or_method","relation":"CO•RA / evaluación","status":"candidato","confidence":"media_alta","next_action":"Definir unidad de brecha, evidencia y criterio de cierre."},
+    {"candidate_id":"kimi-seeds-calendar","display_title":"Calendario de semillas y eventos","candidate_type":"planning_tool","relation":"ideas / actividades","status":"candidato","confidence":"media","next_action":"Relacionar semillas con proyectos y actividades existentes."},
+    {"candidate_id":"kimi-card-reader","display_title":"Lector de tarjetas","candidate_type":"technical_project","relation":"herramienta independiente","status":"pendiente_revision","confidence":"baja","next_action":"Identificar plataforma, propósito, código y relación con CO•RA."},
+    {"candidate_id":"kimi-photo-stickers","display_title":"Creación de stickers desde fotografías","candidate_type":"creative_tool","relation":"multimedia","status":"pendiente_revision","confidence":"baja","next_action":"Clasificar como proyecto, prueba o recurso temporal."},
+    {"candidate_id":"kimi-inaccessible-url","display_title":"URL inaccesible","candidate_type":"incident_or_task","relation":"soporte técnico","status":"no_es_proyecto_confirmado","confidence":"alta","next_action":"Registrar como incidencia vinculada al sitio correspondiente."},
+    {"candidate_id":"kimi-interactive-map","display_title":"Mapa interactivo con dashboard","candidate_type":"project","relation":"PDL / GIS","status":"candidato_fuerte","confidence":"alta","next_action":"Cruzar con PDL territorial, gemelo digital y demos existentes."},
+    {"candidate_id":"kimi-pdm-pdl","display_title":"Adaptación PDM a PDL","candidate_type":"project_or_method","relation":"planeación municipal / PDL","status":"candidato_fuerte","confidence":"alta","next_action":"Localizar documento metodológico y municipios de aplicación."},
+    {"candidate_id":"deepai-project-organization","display_title":"Organización de proyectos y trayectoria profesional","candidate_type":"chat_or_task","relation":"portafolio / matriz maestra","status":"titulo_localizado","confidence":"alta","next_action":"Vincular con el analizador maestro y evitar duplicar la matriz canónica."},
+    {"candidate_id":"deepai-historical-research","display_title":"Investigación histórica: caso criminológico de 1942","candidate_type":"research_chat","relation":"investigación / criminología","status":"titulo_sanitizado_pendiente_revision","confidence":"media","next_action":"Determinar si es investigación académica, conversación aislada o evidencia de formación."},
+    {"candidate_id":"deepai-urban-development-program","display_title":"Programa de Desarrollo Urbano: objetivos, metas y justificación","candidate_type":"research_or_document","relation":"planeación urbana / municipal","status":"candidato","confidence":"media_alta","next_action":"Localizar contenido, municipio, periodo y documento fuente antes de conectarlo con PDL."}
+  ],
+  "contradiction_queue": [
+    {
+      "contradiction_id": "copilot-psychopedagogy-training",
+      "topic": "formacion",
+      "reported_claim": "Formación en Psicopedagogía, creatividad y certificación ICATI entre 2015 y 2019.",
+      "conflicts_with": "La trayectoria consolidada menciona formación en Informática Administrativa, Desarrollo de Software y estudios previos de Criminología.",
+      "status": "cuarentena_no_publicar",
+      "resolution_action": "Comparar títulos, constancias y CV históricos antes de conservar cualquier elemento."
+    },
+    {
+      "contradiction_id": "copilot-pedagogical-research",
+      "topic": "trayectoria",
+      "reported_claim": "Investigación y análisis pedagógico entre 2020 y 2023.",
+      "conflicts_with": "Los antecedentes disponibles sitúan en ese periodo trabajo institucional, datos regionales y consultoría municipal.",
+      "status": "cuarentena_no_publicar",
+      "resolution_action": "Buscar entregables fechados; descartar si no existe evidencia primaria."
+    },
+    {
+      "contradiction_id": "copilot-book-title",
+      "topic": "proyecto_potencial",
+      "reported_claim": "Autoría y consolidación de una obra autobiográfica con un título específico durante 2026.",
+      "conflicts_with": "No está registrada como proyecto confirmado en la matriz maestra.",
+      "status": "cuarentena_no_publicar",
+      "resolution_action": "Confirmar con manuscrito o declaración expresa del usuario; de lo contrario, tratar como mezcla de perfil."
+    },
+    {
+      "contradiction_id": "copilot-cora-protocol-description",
+      "topic": "proyecto",
+      "reported_claim": "CO•RA se describe como un protocolo centrado en recuperar la vista y un pipeline estético.",
+      "conflicts_with": "La definición vigente de CO•RA es un ecosistema cognitivo, de rastreo, memoria, agentes e integración de conocimiento.",
+      "status": "cuarentena_no_publicar",
+      "resolution_action": "No sustituir la definición canónica; conservar sólo si aparece como antecedente documental diferenciado."
+    }
+  ],
+  "claim_validation_queue": [
+    {
+      "claim_id": "gemini-role-scorp",
+      "topic": "trayectoria",
+      "claim": "Fundador y arquitecto de software de SCORP.INC desde 2026.",
+      "status": "pendiente_evidencia_primaria",
+      "suggested_evidence": "acta, sitio oficial, repositorio fechado, contrato o documento de constitución"
+    },
+    {
+      "claim_id": "gemini-icati-2026",
+      "topic": "trayectoria",
+      "claim": "Aspirante a instructor o capacitador de ICATI / EDAYO durante 2026.",
+      "status": "pendiente_evidencia_primaria",
+      "suggested_evidence": "convocatoria, constancia, correo institucional o nombramiento"
+    },
+    {
+      "claim_id": "gemini-tlatlaya-2022-2025",
+      "topic": "trayectoria",
+      "claim": "Consultoría externa para el Ayuntamiento de Tlatlaya entre 2022 y 2025.",
+      "status": "pendiente_evidencia_primaria",
+      "suggested_evidence": "contrato, entregable fechado, acuse o referencia institucional"
+    },
+    {
+      "claim_id": "gemini-sedesem-50000",
+      "topic": "resultado_cuantitativo",
+      "claim": "Extracción y procesamiento de más de 50,000 registros durante el trabajo en SEDESEM.",
+      "status": "pendiente_evidencia_primaria",
+      "suggested_evidence": "reporte, base sanitizada, bitácora o constancia institucional"
+    },
+    {
+      "claim_id": "gemini-traslado-adopcion",
+      "topic": "resultado_institucional",
+      "claim": "El sistema de Traslado de Dominio fue adoptado oficialmente en Tejupilco y San Simón de Guerrero.",
+      "status": "pendiente_evidencia_primaria",
+      "suggested_evidence": "oficio, versión operativa fechada, captura institucional o testimonio verificable"
+    },
+    {
+      "claim_id": "gemini-panteon-3d",
+      "topic": "proyecto",
+      "claim": "Levantamiento fotogramétrico y modelo 3D del Panteón Municipal de Tejupilco.",
+      "status": "pendiente_vincular_evidencia",
+      "suggested_evidence": "ortomosaico, proyecto Pix4D, modelo 3D, metadatos de vuelo o informe"
+    },
+    {
+      "claim_id": "gemini-web3-sbt",
+      "topic": "proyecto_potencial",
+      "claim": "Despliegue de tokens no transferibles en redes de prueba mediante Solidity, Remix y MetaMask.",
+      "status": "pendiente_confirmar_proyecto",
+      "suggested_evidence": "dirección de contrato, transacción de prueba, repositorio o captura reproducible"
+    },
+    {
+      "claim_id": "google-ai-electoral-historical",
+      "topic": "proyecto_potencial",
+      "claim": "Existe una línea histórica de análisis electoral y geoestadístico.",
+      "status": "pendiente_delimitar_y_vincular_evidencia",
+      "suggested_evidence": "informes, bases sanitizadas, mapas fechados, metodología o entregables públicos"
+    },
+    {
+      "claim_id": "google-ai-cora-tomo-zero",
+      "topic": "proyecto_potencial",
+      "claim": "CO•RA incluye una línea editorial o documental denominada Tomo 0.",
+      "status": "pendiente_confirmar_proyecto",
+      "suggested_evidence": "manuscrito, índice editorial, archivo maquetado o historial de versiones"
+    },
+    {
+      "claim_id": "google-ai-photogrammetry-infrastructure",
+      "topic": "proyecto_potencial",
+      "claim": "La experiencia de fotogrametría también contempla aplicaciones de infraestructura.",
+      "status": "pendiente_vincular_evidencia",
+      "suggested_evidence": "ortomosaico, modelo, proyecto GIS, informe técnico o metadatos del levantamiento"
+    }
+  ],
+  "duplicate_groups": [
+    {
+      "group_key": "macros_family",
+      "label": "MACROS / VBA",
+      "members": ["MACROS", "MACROS (1)", "MACROS 21-09-2022"],
+      "status": "duplicated_family"
+    },
+    {
+      "group_key": "curriculum_family",
+      "label": "CURRICULUM",
+      "members": ["CURRICULUM", "CURRICULUM (1)"],
+      "status": "duplicated_family"
+    },
+    {
+      "group_key": "pdl_territorial_family",
+      "label": "PDL territorial",
+      "members": ["pdl-territorial (3)", "pdl-territorial (4)"],
+      "status": "duplicated_family"
+    },
+    {
+      "group_key": "contact_zip_family",
+      "label": "Contactos por chat",
+      "members": ["+52 1 722 250 5783", "+52 1 722 391 1129", "+52 1 722 502 5293", "+52 1 722 555 7132", "Hermilo", "Nazario Tlatlaya", "Pedro", "TSR 6 PENDIENTE PENDIENTE PENDIENTE", "🌻🌻Miss Clau 🌻🌻"],
+      "status": "duplicated_family"
+    },
+    {
+      "group_key": "hanss_family",
+      "label": "CO-RA Hanss Historia Viva",
+      "members": ["CO-RA_Hanss_Historia_Viva", "CO-RA_Hanss_Historia_Viva_v2"],
+      "status": "variant_family"
+    },
+    {
+      "group_key": "pdl_presentation_family",
+      "label": "PDL Presentación Visual",
+      "members": ["PDL_Presentacion_Visual_v0.1.pdf", "PDL_Presentacion_Visual_v0.1.pptx"],
+      "status": "variant_family"
+    },
+    {
+      "group_key": "pdl_semblanza_family",
+      "label": "PDL Hoja Descriptiva",
+      "members": ["PDL_Hoja_Descriptiva_Semblanza_Estructura_v0.2.docx", "PDL_Hoja_Descriptiva_Semblanza_v0.4.docx", "PDL_Hoja_Descriptiva_Semblanza_v0.4.pdf", "PDL_Hoja_Descriptiva_Semblanza_v0.4.html"],
+      "status": "variant_family"
+    }
+  ],
+  "projects": [
+    {"id":"core-cora","name":"01_CORA","primary_category":"core_nucleus","layer":"layer_1","type":"folder","value":"muy_alto","status":"vivo","duplicate_state":"unique","relation":"CO•RA","associated_contact_or_project":"núcleo madre","confidence":"alta","source_hint":"carpeta principal de CO•RA","next_action":"Consolidar índices canónicos y referencias estables."},
+    {"id":"core-conversations","name":"02_CONVERSACIONES","primary_category":"core_nucleus","layer":"layer_1","type":"folder","value":"muy_alto","status":"vivo","duplicate_state":"unique","relation":"CO•RA","associated_contact_or_project":"rastreo de conversaciones","confidence":"alta","source_hint":"carpeta base de conversaciones","next_action":"Separar títulos, fuentes y localizadores."},
+    {"id":"core-pdl-gis","name":"03_PDL_GIS","primary_category":"core_nucleus","layer":"layer_1","type":"folder","value":"muy_alto","status":"vivo","duplicate_state":"unique","relation":"PDL","associated_contact_or_project":"PDL y análisis geoespacial","confidence":"alta","source_hint":"carpeta base territorial","next_action":"Vincular documentos, capas y entregables territoriales."},
+    {"id":"core-municipal","name":"05_MUNICIPAL","primary_category":"core_nucleus","layer":"layer_1","type":"folder","value":"alto","status":"vivo","duplicate_state":"unique","relation":"gestión municipal","associated_contact_or_project":"planeación y bando municipal","confidence":"alta","source_hint":"carpeta municipal principal","next_action":"Extraer proyectos, municipios y evidencias de mayor valor."},
+    {"id":"core-pdl-territorial","name":"pdl-territorial","primary_category":"core_nucleus","layer":"layer_1","type":"archive_or_folder","value":"alto","status":"vivo","duplicate_state":"variant","relation":"PDL","associated_contact_or_project":"Radar PDL","confidence":"alta","source_hint":"variantes del proyecto territorial","next_action":"Conservar versión canónica y registrar variantes."},
+    {"id":"project-radar-pdl","name":"Radar PDL","primary_category":"projects_vivos","layer":"layer_2","type":"project","value":"muy_alto","status":"vivo","duplicate_state":"unique","relation":"PDL","associated_contact_or_project":"proyecto priorizado","confidence":"alta","source_hint":"checklist, matriz y documentos PDL","next_action":"Cerrar piloto y convertir en tablero de seguimiento."},
+    {"id":"project-radar-red","name":"Radar de red profesional","primary_category":"projects_vivos","layer":"layer_2","type":"project","value":"alto","status":"vivo","duplicate_state":"unique","relation":"red profesional","associated_contact_or_project":"Samuel / Nazario / Hermilo / Hanss / Pedro","confidence":"alta","source_hint":"conversaciones y chats de contacto","next_action":"Separar contactos, estados y siguiente acción por persona."},
+    {"id":"project-gemelo-digital","name":"Gemelo digital municipal","primary_category":"projects_vivos","layer":"layer_2","type":"project","value":"muy_alto","status":"vivo","duplicate_state":"unique","relation":"PDL / GIS","associated_contact_or_project":"gemelo digital municipal","confidence":"alta","source_hint":"presentaciones, tesis, prototipos visuales","next_action":"Vincular activos 3D, mapas y fuentes institucionales."},
+    {"id":"project-portafolio-evidencia","name":"Portafolio profesional basado en evidencia","primary_category":"projects_vivos","layer":"layer_3","type":"project","value":"muy_alto","status":"vivo","duplicate_state":"unique","relation":"trayectoria","associated_contact_or_project":"CV, perfil maestro, entregables","confidence":"alta","source_hint":"CV, presentaciones y matrices","next_action":"Resolver fechas, métricas y soportes antes de publicar."},
+    {"id":"project-inventario-keep","name":"Inventario KEEP y deduplicación","primary_category":"projects_vivos","layer":"layer_2","type":"project","value":"alto","status":"vivo","duplicate_state":"unique","relation":"inventario y depuración","associated_contact_or_project":"KEEP / inventario físico","confidence":"alta","source_hint":"notas KEEP y familias físicas","next_action":"Unificar familias y mantener originales intactos."},
+    {"id":"project-macros-vba","name":"MACROS / VBA","primary_category":"projects_vivos","layer":"layer_5","type":"code_bundle","value":"alto","status":"vivo","duplicate_state":"duplicate_family","relation":"soporte técnico","associated_contact_or_project":"automatización, extracción y reportes","confidence":"alta","source_hint":"múltiples versiones del mismo conjunto","next_action":"Elegir versión maestra y documentar variantes."},
+    {"id":"project-luvianos","name":"LUVIANOS","primary_category":"evidence_profesional","layer":"layer_3","type":"document_family","value":"alto","status":"evidencia","duplicate_state":"unique","relation":"gestión municipal","associated_contact_or_project":"PDM / adecuación","confidence":"media_alta","source_hint":"documentación municipal","next_action":"Separar proyecto, evidencia y versión final."},
+    {"id":"project-amatepec","name":"AMATEPEC","primary_category":"evidence_profesional","layer":"layer_3","type":"document_family","value":"alto","status":"evidencia","duplicate_state":"unique","relation":"bando municipal","associated_contact_or_project":"actualización normativa","confidence":"media_alta","source_hint":"bando municipal y títulos legales","next_action":"Conservar fundamento legal y versión de referencia."},
+    {"id":"project-curriculum","name":"CURRICULUM","primary_category":"evidence_profesional","layer":"layer_3","type":"document_family","value":"alto","status":"evidencia","duplicate_state":"duplicate_family","relation":"trayectoria profesional","associated_contact_or_project":"CV y perfil consolidado","confidence":"alta","source_hint":"múltiples versiones del curriculum","next_action":"Conservar versión maestra y comparar diferencias."},
+    {"id":"project-pdl-presentation","name":"PDL Presentación Visual","primary_category":"evidence_profesional","layer":"layer_3","type":"presentation_family","value":"alto","status":"evidencia","duplicate_state":"variant_family","relation":"presentación del proyecto","associated_contact_or_project":"deck y pdf","confidence":"alta","source_hint":"versión PDF y PPTX","next_action":"Publicar una sola edición canónica para exposición."},
+    {"id":"project-pdl-semblanza","name":"PDL Hoja Descriptiva y Semblanza","primary_category":"evidence_profesional","layer":"layer_3","type":"document_family","value":"muy_alto","status":"evidencia","duplicate_state":"variant_family","relation":"semblanza del proyecto","associated_contact_or_project":"documento base de presentación","confidence":"alta","source_hint":"estructura, docx, pdf y html","next_action":"Cerrar versión maestra antes de ampliar."},
+    {"id":"contact-hanss","name":"Hanss","primary_category":"red_contactos","layer":"layer_4","type":"contact","value":"alto","status":"seguimiento","duplicate_state":"unique","relation":"Gobierno del Estado de México","associated_contact_or_project":"aliado institucional","confidence":"alta","source_hint":"chat y archivo de historia viva","next_action":"Registrar la siguiente interacción confirmada."},
+    {"id":"contact-samuel","name":"Samuel","primary_category":"red_contactos","layer":"layer_4","type":"contact","value":"alto","status":"activo","duplicate_state":"unique","relation":"Tesorería / San Simón","associated_contact_or_project":"contacto municipal","confidence":"alta","source_hint":"chat y red municipal","next_action":"Preparar ficha de propuesta técnica."},
+    {"id":"contact-nazario","name":"Nazario Tlatlaya","primary_category":"red_contactos","layer":"layer_4","type":"contact","value":"alto","status":"activo","duplicate_state":"unique","relation":"UIPPE / Tlatlaya","associated_contact_or_project":"contacto institucional","confidence":"alta","source_hint":"chat de seguimiento","next_action":"Cruzar con tablero de gestión municipal."},
+    {"id":"contact-hermilo","name":"Hermilo","primary_category":"red_contactos","layer":"layer_4","type":"contact","value":"alto","status":"seguimiento","duplicate_state":"unique","relation":"Transparencia / Tejupilco","associated_contact_or_project":"contacto de transparencia","confidence":"alta","source_hint":"chat y archivo de red","next_action":"Mantener seguimiento sin mezclarlo con proyectos."},
+    {"id":"support-focus-widget","name":"CO-RA Widget Foco Persistente","primary_category":"soporte_tecnico_multimedia","layer":"layer_5","type":"html_demo","value":"alto","status":"soporte","duplicate_state":"unique","relation":"foco y atención","associated_contact_or_project":"seguimiento de actividades","confidence":"alta","source_hint":"demo HTML local","next_action":"Reusar como widget de monitoreo y foco."},
+    {"id":"support-foco-actividades","name":"CO-RA Foco Todas Mis Actividades","primary_category":"soporte_tecnico_multimedia","layer":"layer_5","type":"html_demo","value":"alto","status":"soporte","duplicate_state":"unique","relation":"seguimiento operativo","associated_contact_or_project":"matriz de organización","confidence":"alta","source_hint":"demo HTML local","next_action":"Conectar con el tablero de actividades."},
+    {"id":"support-instaladores","name":"10_INSTALADORES","primary_category":"soporte_tecnico_multimedia","layer":"layer_5","type":"folder","value":"medio","status":"soporte","duplicate_state":"unique","relation":"instalación y despliegue","associated_contact_or_project":"instaladores y paquetes","confidence":"media","source_hint":"carpeta técnica","next_action":"Separar instaladores útiles de temporales."},
+    {"id":"temp-pendiente-revisar","name":"95_PENDIENTE_REVISAR","primary_category":"temporales_descartables","layer":"layer_6","type":"folder","value":"bajo","status":"temporal","duplicate_state":"unique","relation":"revisión","associated_contact_or_project":"pendiente de clasificar","confidence":"media","source_hint":"zona de cuarentena","next_action":"Revisar por lotes y mover a su capa final."},
+    {"id":"temp-eliminable","name":"99_TEMPORAL_ELIMINABLE","primary_category":"temporales_descartables","layer":"layer_6","type":"folder","value":"bajo","status":"descartable","duplicate_state":"unique","relation":"temporal","associated_contact_or_project":"limpieza","confidence":"alta","source_hint":"carpeta de descarte controlado","next_action":"Depurar sólo después de revisar evidencia."},
+    {"id":"temp-unmatched-folder","name":"}","primary_category":"temporales_descartables","layer":"layer_6","type":"folder","value":"bajo","status":"pendiente_revision","duplicate_state":"unique","relation":"sin clasificar","associated_contact_or_project":"carpeta rota o artefacto residual","confidence":"baja","source_hint":"nombre anómalo","next_action":"Revisar si es residuo de extracción o error de codificación."}
+  ]
+}

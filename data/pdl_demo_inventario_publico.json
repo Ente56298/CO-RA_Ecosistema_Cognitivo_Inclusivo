@@ -1,0 +1,256 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-08-27",
+  "purpose": "Inventario sanitizado de activos PDL localizados para decidir qué puede integrarse en un demostrador público sin copiar contenido privado.",
+  "scan_scope": {
+    "roots_reviewed": [
+      "Descargas: nombres y metadatos relacionados con PDL",
+      "Paquete pdl-territorial (5): estructura, código, documentación y distribución",
+      "Repositorio CO•RA: superficie Streamlit de presentación y analizador"
+    ],
+    "read_only": true,
+    "absolute_private_paths_published": false,
+    "file_contents_published": false
+  },
+  "canonical_demo_candidate": {
+    "name": "pdl-territorial (5)",
+    "project_version": "1.0.0",
+    "archive_sha256": "546074496AA021D11E6A0BC04DCCAFD3140ACB5BAC1E19790C92ABAE5FB3D3EF",
+    "archive_revision_count": 6,
+    "archive_size_mb": 0.26,
+    "unpacked_file_count": 121,
+    "unpacked_size_mb": 0.81,
+    "selection_reason": "Es la revisión local más reciente y reúne Atlas, indicadores, hub unificado, gaveta electoral, APIs, pruebas, documentación y deck de 14 módulos.",
+    "status": "candidato_canonico_provisional"
+  },
+  "verification": {
+    "directly_verified": [
+      "Se generó un paquete público determinista con 4 capas y 78 geometrías en EPSG:4326.",
+      "El piloto contiene 1 límite municipal, 14 localidades, 17 colonias y 46 secciones.",
+      "Las 14 localidades del mapa se vincularon con población agregada sin faltantes.",
+      "La contabilidad municipal de la fuente poblacional suma 79,282 habitantes.",
+      "Las propiedades fueron reducidas mediante listas blancas y no incluyen registros personales ni rutas absolutas.",
+      "El paquete declara cuatro rutas funcionales en client/src/App.tsx.",
+      "Existe un bundle de servidor en dist/index.js y su sintaxis JavaScript es válida.",
+      "El paquete contiene 121 archivos distribuidos entre interfaz, servidor, pruebas, documentación y deck.",
+      "No existe node_modules dentro de la copia local revisada.",
+      "No hay token INEGI configurado en el entorno de revisión."
+    ],
+    "documented_but_not_reexecuted": [
+      "Build de producción y pruebas Vitest reportados como satisfactorios.",
+      "Verificación interactiva de teclado, accesibilidad y navegación.",
+      "Disponibilidad HTTP de artefactos GeoJSON persistentes."
+    ],
+    "pending_before_public_release": [
+      "Fijar el localizador primario y licencia de cada geometría antes de presentarla como cartografía institucional.",
+      "Instalación reproducible de dependencias en una copia de trabajo.",
+      "Ejecución local de typecheck, pruebas y build.",
+      "Configuración segura de INEGI_API_TOKEN.",
+      "Revisión de URLs de almacenamiento externas y licencia de datos.",
+      "Verificación de que ninguna capa pública contenga datos personales."
+    ]
+  },
+  "live_demo_package": {
+    "status": "integrado_en_streamlit",
+    "crs": "EPSG:4326",
+    "population_reference": 79282,
+    "layers": [
+      {
+        "id": "limite_municipal",
+        "features": 1,
+        "evidence_state": "geometria_local_validada_fuente_primaria_pendiente"
+      },
+      {
+        "id": "localidades",
+        "features": 14,
+        "evidence_state": "geometria_derivada_fuente_primaria_pendiente"
+      },
+      {
+        "id": "colonias",
+        "features": 17,
+        "evidence_state": "geometria_derivada_fuente_primaria_pendiente"
+      },
+      {
+        "id": "secciones",
+        "features": 46,
+        "evidence_state": "archivo_local_identificado_como_oficial_localizador_pendiente"
+      }
+    ],
+    "interaction": "Selector de capas, toque sobre polígonos, ficha de localidad, métricas y trazabilidad.",
+    "cartographic_rule": "La población se muestra como atributo agregado; no se usa un coropleta de conteos brutos."
+  },
+  "surfaces": [
+    {
+      "id": "atlas",
+      "name": "Atlas territorial",
+      "route": "/",
+      "purpose": "Seleccionar municipio y abrir el recorrido territorial.",
+      "data_state": "Catálogo municipal documentado con fuente INEGI.",
+      "interaction": "Búsqueda, selección por teclado y navegación.",
+      "readiness": "alta"
+    },
+    {
+      "id": "indicators",
+      "name": "Dashboard municipal",
+      "route": "/indicadores",
+      "purpose": "Consultar indicadores y contexto municipal.",
+      "data_state": "Requiere token INEGI para datos vivos.",
+      "interaction": "Selector municipal, métricas, tendencia, alertas y capas.",
+      "readiness": "media_alta"
+    },
+    {
+      "id": "hub",
+      "name": "Hub PDL / CO•RA",
+      "route": "/hub",
+      "purpose": "Presentar la arquitectura de 14 módulos como una superficie unificada.",
+      "data_state": "Catálogo conceptual explícitamente diferenciado de los datos oficiales.",
+      "interaction": "Filtros por familia, gavetas, detalle activo y navegación accesible.",
+      "readiness": "alta_para_demo"
+    },
+    {
+      "id": "electoral",
+      "name": "Gaveta territorial-electoral",
+      "route": "/electoral",
+      "purpose": "Explorar capas INE/IEEM vinculadas mediante claves territoriales.",
+      "data_state": "Contrato documentado; mantener separado de información personal y de estrategias privadas.",
+      "interaction": "Municipio, capas, leyenda, sección activa, zoom y trazabilidad.",
+      "readiness": "media_con_revision_de_riesgo"
+    }
+  ],
+  "documented_data_contracts": [
+    {
+      "source": "INEGI",
+      "coverage": "125 municipios del Estado de México",
+      "join_key": "CVEGEO municipal",
+      "live_verification": false,
+      "note": "El catálogo y el flujo están documentados; los indicadores requieren credencial de entorno."
+    },
+    {
+      "source": "INE BGD",
+      "coverage": "2 polígonos municipales y 377 secciones: 46 de Tejupilco y 331 de Toluca",
+      "join_key": "CVEGEO INEGI relacionado con código municipal BGD",
+      "source_crs": "EPSG:32614",
+      "target_crs": "EPSG:4326",
+      "live_verification": false,
+      "note": "Las cifras proceden del manifiesto y documentos incluidos en el paquete; no se reconsultaron en vivo."
+    }
+  ],
+  "local_asset_families": [
+    {
+      "family": "Aplicación y código",
+      "examples": "React/Vite, Express, rutas Atlas, indicadores, hub y electoral",
+      "role": "demostrador funcional",
+      "deduplication": "usar pdl-territorial (5) como candidato provisional"
+    },
+    {
+      "family": "Geodatos",
+      "examples": "GeoJSON, Shapefile, límites, localidades, colonias y secciones",
+      "role": "capas territoriales",
+      "deduplication": "comparar hashes, CRS, atributos, fuente y fecha de corte"
+    },
+    {
+      "family": "Maestros tabulares",
+      "examples": "PDL Maestro, relaciones localidad-sección y catálogos",
+      "role": "estructura de variables y unidades territoriales",
+      "deduplication": "elegir versión maestra por esquema y cobertura"
+    },
+    {
+      "family": "Planeación municipal",
+      "examples": "PDM históricos, PDM vigente, guías metodológicas y análisis normativo",
+      "role": "fundamento documental",
+      "deduplication": "separar documento oficial, metodología y derivado"
+    },
+    {
+      "family": "Diagnósticos y fichas",
+      "examples": "fichas territoriales, catálogos de localidades, tableros y mapas de problemas",
+      "role": "contenido para el piloto por localidad",
+      "deduplication": "conservar versión canónica y registrar variantes"
+    },
+    {
+      "family": "Presentación y multimedia",
+      "examples": "semblanzas, deck, PPTX, HTML, capturas y video",
+      "role": "narrativa ejecutiva",
+      "deduplication": "publicar una edición aprobada y mantener originales privados"
+    }
+  ],
+  "development_opportunities": [
+    {
+      "priority": 1,
+      "name": "Demo ejecutivo PDL conectado",
+      "deliverable": "Recorrido Atlas → municipio → módulo → fuente → evidencia → siguiente acción.",
+      "reuse": "Hub de 14 módulos, Atlas y deck ya localizados.",
+      "first_pilot": "Tejupilco con información pública y metadatos de procedencia.",
+      "status": "iniciar_ahora"
+    },
+    {
+      "priority": 2,
+      "name": "Ficha territorial por localidad",
+      "deliverable": "Expediente consultable con población, servicios, infraestructura, problemas, documentos y capas.",
+      "reuse": "Maestros PDL, catálogos, fichas HTML y geodatos existentes.",
+      "first_pilot": "Una localidad con fuentes verificadas.",
+      "status": "alto_valor"
+    },
+    {
+      "priority": 3,
+      "name": "Transformador PDM → PDL",
+      "deliverable": "Matriz que desagrega objetivos, indicadores, acciones y evidencias del municipio hacia localidades.",
+      "reuse": "PDM históricos, PDM vigente y guías metodológicas.",
+      "first_pilot": "Un eje o programa del PDM.",
+      "status": "alto_valor"
+    },
+    {
+      "priority": 4,
+      "name": "Atlas de evidencia y procedencia",
+      "deliverable": "Visor que muestre qué dato existe, quién lo publica, su corte, cobertura, confiabilidad y localizador.",
+      "reuse": "Contratos INEGI/INE/IEEM y metodología de trazabilidad ya documentada.",
+      "first_pilot": "Población, límites municipales y secciones.",
+      "status": "base_transversal"
+    },
+    {
+      "priority": 5,
+      "name": "Dashboard municipal operativo",
+      "deliverable": "Indicadores, alertas, avance documental y tareas vinculadas con evidencia.",
+      "reuse": "Ruta de indicadores, tablero de actividades CO•RA y fichas diagnósticas.",
+      "first_pilot": "Cinco indicadores con fuente y regla de actualización.",
+      "status": "requiere_definir_usuario"
+    },
+    {
+      "priority": 6,
+      "name": "Mapa GIS por capas verificables",
+      "deliverable": "Mapa con límites, localidades, colonias y secciones, filtros y detalle de fuente.",
+      "reuse": "GeoJSON y Shapefiles locales más el contrato cartográfico documentado.",
+      "first_pilot": "Límite municipal y una familia de capas sin datos personales.",
+      "status": "requiere_auditoria_geodatos"
+    },
+    {
+      "priority": 7,
+      "name": "Gaveta de análisis electoral agregado",
+      "deliverable": "Lectura territorial agregada con fuentes, cortes y límites explícitos.",
+      "reuse": "Ruta electoral y contratos INE/IEEM existentes.",
+      "first_pilot": "Cartografía y agregados públicos, sin personas ni domicilios.",
+      "status": "sensible_revision_previa"
+    },
+    {
+      "priority": 8,
+      "name": "Memoria PDL conectada con CO•RA",
+      "deliverable": "Índice de conversaciones, documentos, decisiones, versiones y evidencias del proyecto.",
+      "reuse": "Analizador maestro, índice de conversaciones y estantería de proyectos.",
+      "first_pilot": "Vincular cada módulo con su documento, demo y siguiente acción.",
+      "status": "integracion_progresiva"
+    }
+  ],
+  "integration_decision": {
+    "streamlit_role": "Catálogo público, narrativa, mapa territorial interactivo y estado de preparación.",
+    "react_demo_role": "Aplicación interactiva territorial independiente para mapas y datos vivos.",
+    "current_action": "Validar el piloto cartográfico integrado y completar los localizadores primarios de las geometrías.",
+    "deferred_action": "Publicar o incrustar el demo React sólo después de reproducir build/pruebas y obtener una URL pública controlada.",
+    "reason": "Streamlit Community Cloud no puede leer las carpetas locales de Descargas y el paquete React requiere servidor, variables de entorno y recursos externos."
+  },
+  "public_privacy_rules": [
+    "No publicar rutas absolutas locales.",
+    "No copiar conversaciones, domicilios, personas ni registros individuales.",
+    "No mezclar análisis electoral agregado con seguimiento individual.",
+    "Diferenciar datos oficiales, derivados, conceptuales y pendientes.",
+    "Cada cifra pública debe incluir fuente, corte, cobertura y localizador."
+  ]
+}

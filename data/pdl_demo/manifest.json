@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0",
+  "generated_by": "scripts/preparar_demo_pdl.py",
+  "crs": "EPSG:4326",
+  "population": {
+    "rows": 155,
+    "population_sum": 79282,
+    "sources": [
+      "PDM Tejupilco 2025-2027, Cuadro 26 (Censo INEGI 2020)"
+    ],
+    "sha256": "365E68E4F05D76345D0301A97B3B49CA0C08F0C1002C8D5158A32289B1740F4B"
+  },
+  "layers": [
+    {
+      "id": "limite_municipal",
+      "file": "limite_municipal.geojson",
+      "features": 1,
+      "bbox": [
+        -100.53862,
+        18.759307,
+        -99.99107,
+        19.02229
+      ],
+      "evidence_state": "geometria_local_validada_fuente_primaria_pendiente",
+      "source_sha256": "0E589E86BF0836B4F0A2EEF05D63B652EA6C28B146AC73450DE6008B0CD512C3",
+      "output_sha256": "57DCA617C1C67121DD4FFE26F7E6EE4FE7C648D3FA48D48E96397F788FFD45CE",
+      "unmatched_population_labels": []
+    },
+    {
+      "id": "localidades",
+      "file": "localidades_poblacion.geojson",
+      "features": 14,
+      "bbox": [
+        -100.4325,
+        18.773668,
+        -100.043907,
+        18.990435
+      ],
+      "evidence_state": "geometria_derivada_fuente_primaria_pendiente",
+      "source_sha256": "404FC62CC138DC527565E05DAABA29341A1E207321AF36DC12B99FCE2A046FBA",
+      "output_sha256": "D714F5BD2AD6B3A63C957DCE4ABC20A63965342A5EB61F6C2C2C75EBE61A9B58",
+      "unmatched_population_labels": []
+    },
+    {
+      "id": "colonias",
+      "file": "colonias.geojson",
+      "features": 17,
+      "bbox": [
+        -100.432027,
+        18.773793,
+        -100.043907,
+        18.990435
+      ],
+      "evidence_state": "geometria_derivada_fuente_primaria_pendiente",
+      "source_sha256": "966A10D751ADE45C8C2B60FBD49EADFE1EF48499EAC6239A2C00A2208E71751A",
+      "output_sha256": "485C6BAFFB193F74027D9622736D78D6C5BEEC762BEE5B140A88C180317BD591",
+      "unmatched_population_labels": []
+    },
+    {
+      "id": "secciones",
+      "file": "secciones_46.geojson",
+      "features": 46,
+      "bbox": [
+        -100.537662,
+        18.759217,
+        -99.984377,
+        19.022306
+      ],
+      "evidence_state": "archivo_local_identificado_como_oficial_localizador_pendiente",
+      "source_sha256": "8126B10E3B1E937865734CBF1C192311C0F8591902112F26339B83B49C822C2B",
+      "output_sha256": "785082C656CAB38060759F1FBE9620BED2B82B65F84E9F14A31364DDE4ECF858",
+      "unmatched_population_labels": []
+    }
+  ],
+  "privacy": {
+    "personal_records": false,
+    "absolute_source_paths": false,
+    "property_whitelist_enforced": true
+  }
+}

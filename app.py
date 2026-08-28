@@ -3,6 +3,7 @@ CO•RA Tutor — Trayectoria Adaptativa de Aprendizaje
 Versión 2.2: Mapa de avances + Mapa abierto + Rastreo de contextos + GitHub Bridge
 """
 import streamlit as st
+import pydeck as pdk
 import requests
 import json
 import hashlib
@@ -264,6 +265,14 @@ def cargar_json_publico(ruta: str, valor_por_defecto):
         return valor_por_defecto
 
 
+def to_simple_table(rows, columns):
+    """Convierte una lista de dicts en una tabla plana para Streamlit."""
+    return [
+        {column: row.get(column, "") for column in columns}
+        for row in rows
+    ]
+
+
 @st.cache_data
 def generar_senal_foco(frecuencias=(660, 880), duracion=0.16, volumen=0.20):
     """Genera una señal WAV breve sin depender de archivos ni servicios externos."""
@@ -404,6 +413,317 @@ def render_widget_foco(actividades):
             "No se publica este registro."
         )
 
+
+@st.fragment(run_every=2)
+def render_presentacion_inmersiva(
+    proyectos,
+    actividades,
+    activos,
+    trayectoria,
+    indice_conversaciones,
+):
+    """Presentación interactiva en tiempo real con datos públicos y sanitizados."""
+    proyectos_por_id = {
+        item.get("id", ""): item for item in proyectos if item.get("id")
+    }
+    actividades_por_proyecto = {}
+    for actividad in actividades:
+        pid = actividad.get("project_id", "")
+        actividades_por_proyecto.setdefault(pid, []).append(actividad)
+
+    proyecto_ids = list(proyectos_por_id.keys())
+    if not proyecto_ids:
+        st.warning("No hay proyectos públicos cargados para la presentación.")
+        return
+
+    estado_general = {
+        "en_desarrollo": sum(1 for item in proyectos if item.get("estado") == "en_desarrollo"),
+        "prototipo": sum(1 for item in proyectos if item.get("estado") == "prototipo"),
+        "operativo": sum(1 for item in proyectos if item.get("estado") == "operativo"),
+    }
+    actividades_activas = [
+        item for item in actividades if item.get("state") in {"pendiente", "en_curso", "en_revision"}
+    ]
+    completadas = sum(1 for item in actividades if item.get("state") == "completada")
+    foco_id = next(
+        (item.get("id") for item in actividades if item.get("focus_default")),
+        actividades_activas[0].get("id") if actividades_activas else actividades[0].get("id"),
+    )
+
+    st.markdown(
+        """
+        <style>
+        .cora-stage {
+            padding: 1.35rem 1.2rem;
+            border-radius: 1.25rem;
+            background:
+                radial-gradient(circle at 15% 10%, rgba(121, 58, 242, 0.28), transparent 28%),
+                radial-gradient(circle at 80% 15%, rgba(41, 182, 246, 0.22), transparent 26%),
+                linear-gradient(135deg, #07101D 0%, #09192D 42%, #0C2340 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+            color: white;
+            margin-bottom: 1rem;
+        }
+        .cora-hero {
+            padding: 1.1rem 1.15rem 1rem 1.15rem;
+            border-radius: 1rem;
+            background: linear-gradient(135deg, rgba(31,77,120,0.95) 0%, rgba(13,35,60,0.92) 100%);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .cora-hero h1, .cora-hero h2, .cora-hero p {
+            color: white !important;
+        }
+        .cora-kicker {
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            font-size: 0.74rem;
+            color: rgba(255,255,255,0.72);
+            margin-bottom: 0.45rem;
+        }
+        .cora-chip {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            margin: 0.15rem 0.2rem 0.15rem 0;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.14);
+            color: white;
+            font-size: 0.82rem;
+        }
+        .cora-card {
+            padding: 0.95rem 1rem;
+            border-radius: 0.95rem;
+            background: rgba(10, 20, 36, 0.82);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: white;
+            min-height: 100%;
+        }
+        .cora-card h3, .cora-card h4, .cora-card p, .cora-card div, .cora-card span {
+            color: white !important;
+        }
+        .cora-badge {
+            display: inline-block;
+            padding: 0.18rem 0.5rem;
+            border-radius: 999px;
+            background: rgba(41,182,246,0.18);
+            border: 1px solid rgba(41,182,246,0.25);
+            color: #DDF4FF;
+            font-size: 0.78rem;
+            margin-right: 0.35rem;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    with st.container():
+        st.markdown(
+            """
+            <div class="cora-stage">
+              <div class="cora-kicker">CO•RA / PDL · PRESENTACION INMERSIVA</div>
+              <div class="cora-hero">
+                <h1>El futuro del proyecto, en tus manos</h1>
+                <p>Explora datos reales, proyectos vivos, activos y trayectoria en una lectura territorial interactiva, clara y trazable.</p>
+                <div>
+                  <span class="cora-chip">Datos reales</span>
+                  <span class="cora-chip">Relaciones vivas</span>
+                  <span class="cora-chip">Trayectoria</span>
+                  <span class="cora-chip">Activos</span>
+                  <span class="cora-chip">Evidencia</span>
+                </div>
+              </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        m1, m2, m3, m4, m5 = st.columns(5)
+        m1.metric("Proyectos", len(proyecto_ids))
+        m2.metric("Actividades activas", len(actividades_activas))
+        m3.metric("Completadas", completadas)
+        m4.metric("Activos públicos", len(activos))
+        m5.metric("Títulos indexados", len(indice_conversaciones))
+
+        st.caption(
+            "La presentación no reproduce contenido privado. Usa títulos, metadatos, estados y relaciones ya sanitizadas."
+        )
+
+        escena = st.radio(
+            "Recorrido visual",
+            [
+                "Portada",
+                "Proyectos vivos",
+                "Actividad y foco",
+                "Trayectoria",
+                "Activos y conversaciones",
+                "Cierre",
+            ],
+            horizontal=True,
+            key="presentacion_escena",
+        )
+
+        col_left, col_right = st.columns([1.08, 0.92])
+        with col_left:
+            if escena in {"Portada", "Proyectos vivos", "Actividad y foco"}:
+                seleccion = st.selectbox(
+                    "Proyecto a explorar",
+                    proyecto_ids,
+                    index=proyecto_ids.index("radar-pdl") if "radar-pdl" in proyecto_ids else 0,
+                    format_func=lambda pid: proyectos_por_id.get(pid, {}).get("nombre", pid),
+                    key="presentacion_proyecto_id",
+                )
+            else:
+                seleccion = st.session_state.get("presentacion_proyecto_id", "radar-pdl" if "radar-pdl" in proyecto_ids else proyecto_ids[0])
+            proyecto = proyectos_por_id[seleccion]
+            if escena == "Portada":
+                st.markdown(
+                    f"""
+                    <div class="cora-card">
+                      <h3>{proyecto.get('nombre', seleccion)}</h3>
+                      <p>{proyecto.get('ahora', '')}</p>
+                      <p><b>Siguiente:</b> {proyecto.get('siguiente', '')}</p>
+                      <div>
+                        <span class="cora-badge">Estado: {proyecto.get('estado', '')}</span>
+                        <span class="cora-badge">Confianza: {proyecto.get('confianza', '')}</span>
+                      </div>
+                      <p style="margin-top:0.5rem;">Fuentes: {", ".join(proyecto.get('fuentes', []))}</p>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+                st.markdown("#### Visión que se proyecta")
+                st.write(
+                    "Territorio, trayectoria, conversaciones, activos y actividades aparecen como capas conectadas."
+                )
+            elif escena == "Proyectos vivos":
+                st.markdown("#### Mapa de proyectos")
+                proyecto_tarjetas = st.columns(2)
+                for idx, pid in enumerate(proyecto_ids[:4]):
+                    p = proyectos_por_id[pid]
+                    with proyecto_tarjetas[idx % 2]:
+                        with st.container(border=True):
+                            st.markdown(f"**{p.get('nombre', pid)}**")
+                            st.caption(f"{p.get('estado', '')} · confianza {p.get('confianza', '')}")
+                            st.write(p.get("ahora", ""))
+                            st.write("**Siguiente:** " + p.get("siguiente", ""))
+                            st.caption("Fuentes: " + ", ".join(p.get("fuentes", [])))
+            elif escena == "Actividad y foco":
+                st.markdown("#### Foco operativo")
+                actividades_proyecto = actividades_por_proyecto.get(seleccion, [])
+                if actividades_proyecto:
+                    for item in sorted(actividades_proyecto, key=lambda x: (x.get("priority", "zzz"), x.get("id", ""))):
+                        with st.container(border=True):
+                            st.markdown(
+                                f"**{item.get('title', 'Actividad')}** · "
+                                f"{item.get('state', 'sin estado').replace('_', ' ')}"
+                            )
+                            st.caption(
+                                f"Capa {item.get('layer', 0)} · Prioridad {item.get('priority', '')} · Avance {item.get('progress', 0)}%"
+                            )
+                            st.progress(int(item.get("progress", 0)) / 100)
+                            st.write(item.get("next_action", ""))
+                            st.write("**Evidencia:** " + item.get("completion_evidence", ""))
+                else:
+                    st.info("No hay actividades asociadas directamente a este proyecto.")
+            elif escena == "Trayectoria":
+                st.markdown("#### Respaldo de trayectoria")
+                t1, t2, t3 = st.columns(3)
+                with t1:
+                    st.metric("Periodos", len(trayectoria.get("experience", [])))
+                with t2:
+                    st.metric("Dominios", len(trayectoria.get("capability_matrix", [])))
+                with t3:
+                    st.metric("Fuentes", len(trayectoria.get("source_layers", [])))
+                st.dataframe(
+                    [
+                        {
+                            "Periodo": item.get("period", ""),
+                            "Ambito": item.get("scope", ""),
+                            "Rol": item.get("role", ""),
+                            "Nivel": item.get("level", ""),
+                            "Estado": item.get("status", ""),
+                        }
+                        for item in trayectoria.get("experience", [])
+                    ],
+                    width="stretch",
+                    hide_index=True,
+                )
+            elif escena == "Activos y conversaciones":
+                st.markdown("#### Activos que sostienen la vision")
+                activos_mostrados = cols = st.columns(3)
+                for idx, item in enumerate(activos[:6]):
+                    with activos_mostrados[idx % 3]:
+                        with st.container(border=True):
+                            st.markdown(f"**{item.get('name', '')}**")
+                            st.caption(item.get("domain", "") + " · " + item.get("status", ""))
+                            st.write(item.get("relation", ""))
+                st.markdown("#### Títulos de conversaciones")
+                for titulo in [
+                    item.get("titulo", item.get("title", "Sin título"))
+                    for item in indice_conversaciones[:10]
+                ]:
+                    st.write(f"- {titulo}")
+            else:
+                st.markdown("#### Cierre de vision")
+                st.success("PDL convierte fragmentos dispersos en una lectura territorial trazable, viva y util para decidir.")
+                st.write("vision -> proyecto -> actividad -> activo -> evidencia -> decision")
+                st.write("Selecciona un proyecto para ver cómo cambia el sistema en vivo.")
+
+        with col_right:
+            st.markdown("#### Radar vivo")
+            foco_actual = next(
+                (item for item in actividades if item.get("id") == foco_id),
+                actividades[0] if actividades else {},
+            )
+            with st.container(border=True):
+                st.markdown(
+                    f"**{foco_actual.get('title', 'Sin foco actual')}**  \n"
+                    f"{foco_actual.get('project', 'Sin proyecto')} · "
+                    f"Capa {foco_actual.get('layer', 0)} · "
+                    f"{foco_actual.get('state', '').replace('_', ' ')}"
+                )
+                st.progress(int(foco_actual.get("progress", 0)) / 100 if foco_actual else 0)
+                st.caption("Foco actual que sostiene el ritmo de avance.")
+                st.write("**Siguiente acción:** " + foco_actual.get("next_action", ""))
+                st.write("**Evidencia de cierre:** " + foco_actual.get("completion_evidence", ""))
+
+            st.markdown("#### Una mirada al futuro")
+            st.write(
+                "La escena debe hacer sentir que el sistema ya está preparado para crecer: cada clic abre una capa, cada capa deja ver otra decisión."
+            )
+            future_cols = st.columns(2)
+            with future_cols[0]:
+                st.metric("Actividades en movimiento", len(actividades_activas))
+            with future_cols[1]:
+                st.metric("Vigencia de activos", len([a for a in activos if a.get("status") == "activo"]))
+
+            st.markdown("#### Descarga pública")
+            if st.button("Preparar instantanea", key="presentacion_snapshot_button"):
+                st.toast("Instantánea lista para descarga.")
+            st.download_button(
+                "⬇️ Descargar fotografía pública JSON",
+                data=json.dumps(
+                    {
+                        "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+                        "project_selected": seleccion,
+                        "project": proyecto,
+                        "focus_activity": foco_actual,
+                        "projects_count": len(proyectos),
+                        "active_activities": len(actividades_activas),
+                        "public_assets": len(activos),
+                        "conversation_titles": [
+                            item.get("titulo", item.get("title", "Sin título"))
+                            for item in indice_conversaciones[:10]
+                        ],
+                    },
+                    ensure_ascii=False,
+                    indent=2,
+                ),
+                file_name="cora_presentacion_inmersiva_snapshot.json",
+                mime="application/json",
+            )
+
 # ============================================
 # AMPLIAR ÁREAS DESDE CATÁLOGO EXTERNO
 # ============================================
@@ -413,6 +733,28 @@ AREAS_EXTRA = cargar_json_publico(
 )
 
 AREAS_CONOCIMIENTO.update(AREAS_EXTRA)
+
+PROYECTOS_PUBLICOS = cargar_json_publico(
+    "data/proyectos_actuales.json",
+    {"projects": []},
+).get("projects", [])
+
+ACTIVOS_PUBLICOS = cargar_json_publico(
+    "data/catalogo_activos_publico.json",
+    {"assets": []},
+).get("assets", [])
+
+TRAYECTORIA_PUBLICA = cargar_json_publico(
+    "data/matriz_trayectoria_evidencias_publico.json",
+    {},
+)
+
+INDICE_CONVERSACIONES_PUBLICO = cargar_conversaciones()
+
+ACTIVIDADES_PUBLICAS = cargar_json_publico(
+    "data/actividades_seguimiento.json",
+    {"activities": []},
+).get("activities", [])
 
 
 
@@ -460,7 +802,7 @@ with st.sidebar:
     render_widget_foco(actividades_foco)
 
 # Tabs principales
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
     "🎯 Trayectoria y proyectos",
     "📚 Conversaciones y registros",
     "🧠 Memoria y contexto",
@@ -468,7 +810,9 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
     "🧩 Plantillas y referencias",
     "🗃️ Activos y recursos",
     "💬 Mesa colaborativa",
-    "✅ Seguimiento de actividades"
+    "✅ Seguimiento de actividades",
+    "🎞️ Presentación inmersiva",
+    "🧮 Analizador maestro"
 ])
 
 # ============================================
@@ -2428,6 +2772,559 @@ with tab8:
             )
         else:
             st.warning("Los filtros actuales no devuelven actividades.")
+
+# ============================================
+# TAB 9: PRESENTACIÓN INMERSIVA
+# ============================================
+with tab9:
+    st.subheader("🎞️ Presentación inmersiva del proyecto")
+    st.caption(
+        "Una demo narrativa e interactiva que cruza proyectos, actividades, activos, trayectoria e índice de conversaciones para mostrar la visión en tiempo real."
+    )
+    render_presentacion_inmersiva(
+        PROYECTOS_PUBLICOS,
+        ACTIVIDADES_PUBLICAS,
+        ACTIVOS_PUBLICOS,
+        TRAYECTORIA_PUBLICA,
+        INDICE_CONVERSACIONES_PUBLICO,
+    )
+
+    st.divider()
+    st.subheader("🗺️ PDL localizado · demo y ruta de desarrollo")
+    st.caption(
+        "Esta vista usa únicamente metadatos sanitizados del rastreo local. "
+        "No intenta abrir carpetas privadas desde la aplicación pública."
+    )
+    inventario_pdl = cargar_json_publico(
+        "data/pdl_demo_inventario_publico.json",
+        {
+            "canonical_demo_candidate": {},
+            "verification": {},
+            "surfaces": [],
+            "documented_data_contracts": [],
+            "local_asset_families": [],
+            "development_opportunities": [],
+            "integration_decision": {},
+            "public_privacy_rules": [],
+        },
+    )
+
+    candidato_demo = inventario_pdl.get("canonical_demo_candidate", {})
+    superficies_pdl = inventario_pdl.get("surfaces", [])
+    oportunidades_pdl = inventario_pdl.get("development_opportunities", [])
+    verificacion_pdl = inventario_pdl.get("verification", {})
+
+    p1, p2, p3, p4 = st.columns(4)
+    p1.metric("Revisiones ZIP", candidato_demo.get("archive_revision_count", 0))
+    p2.metric("Archivos del candidato", candidato_demo.get("unpacked_file_count", 0))
+    p3.metric("Superficies", len(superficies_pdl))
+    p4.metric("Líneas desarrollables", len(oportunidades_pdl))
+    st.info(
+        "Candidato canónico provisional: "
+        + candidato_demo.get("name", "sin candidato")
+        + " · Estado: "
+        + candidato_demo.get("status", "sin estado").replace("_", " ")
+    )
+
+    pdl_tab1, pdl_tab2, pdl_tab3, pdl_tab4 = st.tabs(
+        [
+            "Recorrido del demo",
+            "Qué puedo desarrollar",
+            "Activos y fuentes",
+            "Verificación y publicación",
+        ]
+    )
+
+    with pdl_tab1:
+        paquete_pdl_dir = BASE_DIR / "data" / "pdl_demo"
+        manifiesto_demo = cargar_json_publico(
+            str(paquete_pdl_dir / "manifest.json"),
+            {"layers": [], "population": {}, "privacy": {}},
+        )
+        archivos_demo = {
+            "Límite municipal": "limite_municipal.geojson",
+            "Localidades": "localidades_poblacion.geojson",
+            "Colonias": "colonias.geojson",
+            "Secciones": "secciones_46.geojson",
+        }
+        capas_geojson = {
+            nombre: cargar_json_publico(
+                str(paquete_pdl_dir / archivo),
+                {"type": "FeatureCollection", "features": []},
+            )
+            for nombre, archivo in archivos_demo.items()
+        }
+
+        st.markdown("#### Territorio interactivo")
+        st.caption(
+            "Activa y desactiva capas, toca una geometría y compara su contexto. "
+            "La población se muestra como dato agregado, no como ubicación de personas."
+        )
+        capas_activas = st.multiselect(
+            "Capas visibles",
+            list(archivos_demo),
+            default=["Límite municipal", "Localidades", "Secciones"],
+            key="pdl_capas_visibles",
+        )
+
+        estilos_pdl = {
+            "Límite municipal": {
+                "fill": [12, 22, 35, 18],
+                "line": [72, 224, 196, 235],
+                "width": 4,
+            },
+            "Localidades": {
+                "fill": [24, 182, 155, 82],
+                "line": [111, 245, 218, 220],
+                "width": 2,
+            },
+            "Colonias": {
+                "fill": [244, 114, 182, 62],
+                "line": [249, 168, 212, 210],
+                "width": 2,
+            },
+            "Secciones": {
+                "fill": [56, 189, 248, 25],
+                "line": [125, 211, 252, 185],
+                "width": 1,
+            },
+        }
+        capas_deck = []
+        for nombre_capa in capas_activas:
+            estilo = estilos_pdl[nombre_capa]
+            capas_deck.append(
+                pdk.Layer(
+                    "GeoJsonLayer",
+                    data=capas_geojson[nombre_capa],
+                    id=f"pdl-{nombre_capa.lower().replace(' ', '-')}",
+                    pickable=nombre_capa != "Límite municipal",
+                    stroked=True,
+                    filled=True,
+                    get_fill_color=estilo["fill"],
+                    get_line_color=estilo["line"],
+                    get_line_width=estilo["width"],
+                    line_width_min_pixels=estilo["width"],
+                    auto_highlight=True,
+                    highlight_color=[255, 190, 80, 180],
+                )
+            )
+
+        if capas_deck:
+            st.pydeck_chart(
+                pdk.Deck(
+                    layers=capas_deck,
+                    initial_view_state=pdk.ViewState(
+                        latitude=18.89,
+                        longitude=-100.26,
+                        zoom=9.55,
+                        pitch=22,
+                        bearing=0,
+                    ),
+                    map_style="light",
+                    tooltip={
+                        "html": (
+                            "<b>{nombre}</b><br/>"
+                            "Población: {poblacion_total}<br/>"
+                            "Participación municipal: {pct_total_municipal}%<br/>"
+                            "Sección: {seccion}<br/>"
+                            "CP: {cp}<br/>"
+                            "Área: {area_ha} ha"
+                        ),
+                        "style": {
+                            "backgroundColor": "#0b1727",
+                            "color": "#f8fafc",
+                            "fontSize": "13px",
+                        },
+                    },
+                ),
+                use_container_width=True,
+                height=570,
+            )
+        else:
+            st.info("Selecciona al menos una capa para visualizar el territorio.")
+
+        st.markdown(
+            "**Leyenda:** 🟩 localidades · 🟦 secciones · 🩷 colonias · "
+            "borde turquesa: límite municipal"
+        )
+
+        localidades_demo = capas_geojson.get("Localidades", {}).get("features", [])
+        localidades_por_nombre = {
+            feature.get("properties", {}).get("nombre", "Sin nombre"): feature.get(
+                "properties", {}
+            )
+            for feature in localidades_demo
+        }
+        if localidades_por_nombre:
+            localidad_activa = st.selectbox(
+                "Toca los datos desde una localidad",
+                sorted(localidades_por_nombre),
+                key="pdl_localidad_activa",
+            )
+            ficha_localidad = localidades_por_nombre[localidad_activa]
+            f1, f2, f3 = st.columns(3)
+            f1.metric(
+                "Población registrada",
+                f"{int(ficha_localidad.get('poblacion_total', 0)):,}",
+            )
+            f2.metric(
+                "Participación municipal",
+                f"{float(ficha_localidad.get('pct_total_municipal', 0)):.2f}%",
+            )
+            f3.metric(
+                "Área del polígono",
+                f"{float(ficha_localidad.get('area_ha', 0)):.2f} ha",
+            )
+            with st.expander("Ver ficha y trazabilidad de la localidad"):
+                st.json(ficha_localidad)
+
+        resumen_capas = manifiesto_demo.get("layers", [])
+        m1, m2, m3 = st.columns(3)
+        m1.metric(
+            "Geometrías publicables",
+            sum(int(item.get("features", 0)) for item in resumen_capas),
+        )
+        m2.metric(
+            "Población municipal de referencia",
+            f"{int(manifiesto_demo.get('population', {}).get('population_sum', 0)):,}",
+        )
+        m3.metric("Sistema espacial", manifiesto_demo.get("crs", "Sin definir"))
+        st.warning(
+            "Estado de evidencia: las geometrías fueron validadas localmente y "
+            "sanitizadas, pero su localizador de fuente primaria aún debe fijarse "
+            "antes de una publicación institucional."
+        )
+
+        if superficies_pdl:
+            superficie_ids = [item.get("id", "") for item in superficies_pdl]
+            superficie_activa = st.selectbox(
+                "Superficie a explorar",
+                superficie_ids,
+                format_func=lambda surface_id: next(
+                    (
+                        item.get("name", surface_id)
+                        for item in superficies_pdl
+                        if item.get("id") == surface_id
+                    ),
+                    surface_id,
+                ),
+                key="pdl_superficie_demo",
+            )
+            detalle_superficie = next(
+                (
+                    item
+                    for item in superficies_pdl
+                    if item.get("id") == superficie_activa
+                ),
+                {},
+            )
+            with st.container(border=True):
+                st.markdown(f"### {detalle_superficie.get('name', 'Superficie PDL')}")
+                st.code(detalle_superficie.get("route", "/"), language=None)
+                st.write(detalle_superficie.get("purpose", ""))
+                st.write("**Interacción:** " + detalle_superficie.get("interaction", ""))
+                st.write("**Estado de datos:** " + detalle_superficie.get("data_state", ""))
+                st.caption(
+                    "Preparación: "
+                    + detalle_superficie.get("readiness", "sin estado").replace("_", " ")
+                )
+
+        st.markdown("#### Contratos de datos documentados")
+        st.dataframe(
+            to_simple_table(
+                inventario_pdl.get("documented_data_contracts", []),
+                ["source", "coverage", "join_key", "source_crs", "target_crs", "note"],
+            ),
+            use_container_width=True,
+            hide_index=True,
+        )
+
+    with pdl_tab2:
+        st.write(
+            "Las oportunidades se ordenan por capacidad de reutilizar lo ya localizado "
+            "y producir un piloto verificable con el menor esfuerzo adicional."
+        )
+        st.dataframe(
+            to_simple_table(
+                oportunidades_pdl,
+                [
+                    "priority",
+                    "name",
+                    "deliverable",
+                    "reuse",
+                    "first_pilot",
+                    "status",
+                ],
+            ),
+            use_container_width=True,
+            hide_index=True,
+        )
+
+    with pdl_tab3:
+        st.dataframe(
+            to_simple_table(
+                inventario_pdl.get("local_asset_families", []),
+                ["family", "examples", "role", "deduplication"],
+            ),
+            use_container_width=True,
+            hide_index=True,
+        )
+
+    with pdl_tab4:
+        v1, v2 = st.columns(2)
+        with v1:
+            st.markdown("#### Confirmado directamente")
+            for item in verificacion_pdl.get("directly_verified", []):
+                st.write(f"- {item}")
+            st.markdown("#### Documentado, no reejecutado")
+            for item in verificacion_pdl.get("documented_but_not_reexecuted", []):
+                st.write(f"- {item}")
+        with v2:
+            st.markdown("#### Pendiente antes de publicar")
+            for item in verificacion_pdl.get("pending_before_public_release", []):
+                st.write(f"- {item}")
+            st.markdown("#### Reglas de privacidad")
+            for item in inventario_pdl.get("public_privacy_rules", []):
+                st.write(f"- {item}")
+
+        decision_integracion = inventario_pdl.get("integration_decision", {})
+        st.warning(decision_integracion.get("deferred_action", ""))
+        st.write("**Ahora:** " + decision_integracion.get("current_action", ""))
+        st.caption(decision_integracion.get("reason", ""))
+
+    st.download_button(
+        "⬇️ Descargar inventario PDL sanitizado",
+        data=json.dumps(inventario_pdl, indent=2, ensure_ascii=False),
+        file_name="pdl_demo_inventario_publico.json",
+        mime="application/json",
+        key="descargar_inventario_pdl",
+    )
+
+# ============================================
+# TAB 10: ANALIZADOR MAESTRO DE PROYECTOS POTENCIALES
+# ============================================
+with tab10:
+    st.subheader("🧮 Analizador maestro de proyectos potenciales")
+    st.caption(
+        "Matriz sanitizada para separar núcleo madre, proyectos vivos, evidencia, "
+        "red de contactos, soporte técnico y temporales sin mezclar capas."
+    )
+    analizador = cargar_json_publico(
+        "data/analizador_proyectos_potenciales_publico.json",
+        {
+            "summary": {},
+            "layers": [],
+            "projects": [],
+            "duplicate_groups": [],
+            "ingested_sources": [],
+            "discovered_title_candidates": [],
+            "claim_validation_queue": [],
+            "contradiction_queue": [],
+        },
+    )
+
+    if analizador:
+        resumen_analizador = analizador.get("summary", {})
+        c1, c2, c3, c4, c5, c6 = st.columns(6)
+        c1.metric("Núcleo", resumen_analizador.get("core_nucleus", 0))
+        c2.metric("Vivos", resumen_analizador.get("projects_vivos", 0))
+        c3.metric("Evidencia", resumen_analizador.get("evidence_profesional", 0))
+        c4.metric("Contactos", resumen_analizador.get("red_contactos", 0))
+        c5.metric("Soporte", resumen_analizador.get("soporte_tecnico_multimedia", 0))
+        c6.metric("Temporales", resumen_analizador.get("temporales_descartables", 0))
+
+        st.markdown("#### Resumen ejecutivo")
+        st.write(
+            "Vale la pena seguir: CO•RA, PDL/GIS, Radar PDL, red profesional, "
+            "portafolio basado en evidencia, inventario KEEP y el material de soporte."
+        )
+        st.write(
+            "Duplicados principales: familias MACROS, CURRICULUM, PDL territorial, "
+            "variantes de semblanza/presentación y paquetes de contactos por chat."
+        )
+        st.write(
+            "Evidencia: presentaciones, semblanzas, CV, documentos PDL, material municipal "
+            "y archivos que prueban trayectoria o entregables."
+        )
+        st.write(
+            "Soporte: demos HTML, widgets, instaladores, capturas y material multimedia."
+        )
+        st.write(
+            "Temporales: pendientes de revisión y contenedores de descarte controlado."
+        )
+
+        st.markdown("#### Capas")
+        st.dataframe(
+            to_simple_table(
+                analizador.get("layers", []),
+                ["id", "name", "description"],
+            ),
+            use_container_width=True,
+            hide_index=True,
+        )
+
+        con_filtro1, con_filtro2, con_filtro3 = st.columns(3)
+        with con_filtro1:
+            filtro_categoria = st.multiselect(
+                "Categoría principal",
+                sorted({item.get("primary_category", "sin_categoria") for item in analizador.get("projects", [])}),
+                default=[],
+                key="filtro_analizador_categoria",
+            )
+        with con_filtro2:
+            filtro_estado = st.multiselect(
+                "Estado",
+                sorted({item.get("status", "sin_estado") for item in analizador.get("projects", [])}),
+                default=[],
+                key="filtro_analizador_estado",
+            )
+        with con_filtro3:
+            filtro_relacion = st.text_input(
+                "Filtrar por relación",
+                placeholder="CO•RA, PDL, contacto, evidencia...",
+                key="filtro_analizador_relacion",
+            ).strip().lower()
+
+        proyectos_analizador = analizador.get("projects", [])
+        if filtro_categoria:
+            proyectos_analizador = [
+                item for item in proyectos_analizador
+                if item.get("primary_category") in filtro_categoria
+            ]
+        if filtro_estado:
+            proyectos_analizador = [
+                item for item in proyectos_analizador
+                if item.get("status") in filtro_estado
+            ]
+        if filtro_relacion:
+            proyectos_analizador = [
+                item for item in proyectos_analizador
+                if filtro_relacion in " ".join([
+                    str(item.get("name", "")),
+                    str(item.get("relation", "")),
+                    str(item.get("associated_contact_or_project", "")),
+                    str(item.get("source_hint", "")),
+                    str(item.get("next_action", "")),
+                ]).lower()
+            ]
+
+        st.metric("Entradas visibles", len(proyectos_analizador))
+        st.dataframe(
+            to_simple_table(
+                proyectos_analizador,
+                [
+                    "name",
+                    "primary_category",
+                    "layer",
+                    "type",
+                    "value",
+                    "status",
+                    "duplicate_state",
+                    "relation",
+                    "associated_contact_or_project",
+                    "next_action",
+                    "confidence",
+                ],
+            ),
+            use_container_width=True,
+            hide_index=True,
+        )
+
+        st.markdown("#### Duplicados y familias")
+        st.dataframe(
+            to_simple_table(
+                analizador.get("duplicate_groups", []),
+                ["group_key", "label", "members", "status"],
+            ),
+            use_container_width=True,
+            hide_index=True,
+        )
+
+        st.markdown("#### Fuentes incorporadas")
+        st.caption(
+            "Una conversación de IA ayuda a descubrir candidatos, pero se conserva "
+            "como fuente derivada hasta relacionarla con documentos o entregables verificables."
+        )
+        st.dataframe(
+            to_simple_table(
+                analizador.get("ingested_sources", []),
+                [
+                    "title",
+                    "source_type",
+                    "captured_at",
+                    "evidence_level",
+                    "privacy",
+                    "use",
+                ],
+            ),
+            use_container_width=True,
+            hide_index=True,
+        )
+
+        candidatos_titulo = analizador.get("discovered_title_candidates", [])
+        st.markdown("#### Títulos rastreados por confirmar")
+        st.caption(
+            "El título demuestra que existe una referencia localizable, pero no confirma "
+            "todavía el contenido, alcance ni estado del proyecto."
+        )
+        st.metric("Títulos candidatos", len(candidatos_titulo))
+        st.dataframe(
+            to_simple_table(
+                candidatos_titulo,
+                [
+                    "display_title",
+                    "candidate_type",
+                    "relation",
+                    "status",
+                    "confidence",
+                    "next_action",
+                ],
+            ),
+            use_container_width=True,
+            hide_index=True,
+        )
+
+        st.markdown("#### Cola de validación")
+        st.caption(
+            "Estas afirmaciones no se publican como hechos confirmados hasta vincular "
+            "la evidencia primaria sugerida."
+        )
+        st.dataframe(
+            to_simple_table(
+                analizador.get("claim_validation_queue", []),
+                ["topic", "claim", "status", "suggested_evidence"],
+            ),
+            use_container_width=True,
+            hide_index=True,
+        )
+
+        st.markdown("#### Contradicciones en cuarentena")
+        st.caption(
+            "Las mezclas de perfil o afirmaciones incompatibles quedan aisladas y no "
+            "modifican la trayectoria canónica."
+        )
+        st.dataframe(
+            to_simple_table(
+                analizador.get("contradiction_queue", []),
+                [
+                    "topic",
+                    "reported_claim",
+                    "conflicts_with",
+                    "status",
+                    "resolution_action",
+                ],
+            ),
+            use_container_width=True,
+            hide_index=True,
+        )
+
+        st.download_button(
+            "⬇️ Descargar matriz maestra de proyectos potenciales",
+            data=json.dumps(analizador, indent=2, ensure_ascii=False),
+            file_name="analizador_proyectos_potenciales_publico.json",
+            mime="application/json",
+            use_container_width=False,
+        )
 
 # ============================================
 # FOOTER

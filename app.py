@@ -734,10 +734,14 @@ AREAS_EXTRA = cargar_json_publico(
 
 AREAS_CONOCIMIENTO.update(AREAS_EXTRA)
 
-PROYECTOS_PUBLICOS = cargar_json_publico(
+_proyectos_publicos_payload = cargar_json_publico(
     "data/proyectos_actuales.json",
-    {"projects": []},
-).get("projects", [])
+    {"proyectos": []},
+)
+PROYECTOS_PUBLICOS = _proyectos_publicos_payload.get(
+    "proyectos",
+    _proyectos_publicos_payload.get("projects", []),
+)
 
 ACTIVOS_PUBLICOS = cargar_json_publico(
     "data/catalogo_activos_publico.json",

@@ -1,0 +1,261 @@
+{
+  "schema_version": "1.0",
+  "municipio": {
+    "nombre": "Tejupilco",
+    "cvegeo_inegi": "15082",
+    "cve_ent": "15",
+    "cve_mun": "082",
+    "referencia": "INEGI, Catálogo Único de Claves Geoestadísticas",
+    "referencia_url": "https://www.inegi.org.mx/servicios/catalogounico.html"
+  },
+  "marco_electoral": {
+    "institucion": "INE",
+    "secciones_en_capa_local": 46,
+    "tipos": {
+      "Mixta": 2,
+      "Rural": 32,
+      "Urbana": 12
+    },
+    "referencia": "INE, SIGE 8 y descriptivo de distritación electoral",
+    "referencia_url": "https://cartografia.ine.mx/sige8/",
+    "corroboracion_46_secciones_url": "https://repositoriodocumental.ine.mx/xmlui/bitstream/handle/123456789/141325/CGex202208-22-ap-1-1-a3b.pdf",
+    "estado": "cantidad corroborada; corte y localizador exacto de la geometria local pendientes"
+  },
+  "crosswalk": [
+    {
+      "localidad": "ALMOLOYA DE LAS GRANADAS",
+      "poblacion_localidad": 887,
+      "fuente_poblacion": "PDM Tejupilco 2025-2027, Cuadro 26 (Censo INEGI 2020)",
+      "secciones_intersectadas": [
+        "4325"
+      ],
+      "cantidad_secciones": 1,
+      "seccion_mayor_interseccion": "4325",
+      "tipos_seccion": [
+        "Rural"
+      ],
+      "metodo": "interseccion_geometrica; orden por mayor superficie compartida"
+    },
+    {
+      "localidad": "SAN MIGUEL IXTAPAN",
+      "poblacion_localidad": 1496,
+      "fuente_poblacion": "PDM Tejupilco 2025-2027, Cuadro 26 (Censo INEGI 2020)",
+      "secciones_intersectadas": [
+        "4309"
+      ],
+      "cantidad_secciones": 1,
+      "seccion_mayor_interseccion": "4309",
+      "tipos_seccion": [
+        "Rural"
+      ],
+      "metodo": "interseccion_geometrica; orden por mayor superficie compartida"
+    },
+    {
+      "localidad": "PUERTO DEL AIRE",
+      "poblacion_localidad": 576,
+      "fuente_poblacion": "PDM Tejupilco 2025-2027, Cuadro 26 (Censo INEGI 2020)",
+      "secciones_intersectadas": [
+        "4304"
+      ],
+      "cantidad_secciones": 1,
+      "seccion_mayor_interseccion": "4304",
+      "tipos_seccion": [
+        "Rural"
+      ],
+      "metodo": "interseccion_geometrica; orden por mayor superficie compartida"
+    },
+    {
+      "localidad": "TEJUPILCO DE HIDALGO",
+      "poblacion_localidad": 30967,
+      "fuente_poblacion": "PDM Tejupilco 2025-2027, Cuadro 26 (Censo INEGI 2020)",
+      "secciones_intersectadas": [
+        "6677",
+        "4259",
+        "6678",
+        "4256",
+        "4265",
+        "4264",
+        "4257",
+        "4262",
+        "4263",
+        "4260",
+        "4261",
+        "4323",
+        "4294",
+        "6649",
+        "4283"
+      ],
+      "cantidad_secciones": 15,
+      "seccion_mayor_interseccion": "6677",
+      "tipos_seccion": [
+        "Mixta",
+        "Rural",
+        "Urbana"
+      ],
+      "metodo": "interseccion_geometrica; orden por mayor superficie compartida"
+    },
+    {
+      "localidad": "ZACATEPEC",
+      "poblacion_localidad": 3220,
+      "fuente_poblacion": "PDM Tejupilco 2025-2027, Cuadro 26 (Censo INEGI 2020)",
+      "secciones_intersectadas": [
+        "4294",
+        "4265",
+        "4291",
+        "4264"
+      ],
+      "cantidad_secciones": 4,
+      "seccion_mayor_interseccion": "4294",
+      "tipos_seccion": [
+        "Mixta",
+        "Rural",
+        "Urbana"
+      ],
+      "metodo": "interseccion_geometrica; orden por mayor superficie compartida"
+    },
+    {
+      "localidad": "RINCON DE UGARTE",
+      "poblacion_localidad": 823,
+      "fuente_poblacion": "PDM Tejupilco 2025-2027, Cuadro 26 (Censo INEGI 2020)",
+      "secciones_intersectadas": [
+        "6649",
+        "4256"
+      ],
+      "cantidad_secciones": 2,
+      "seccion_mayor_interseccion": "6649",
+      "tipos_seccion": [
+        "Rural",
+        "Urbana"
+      ],
+      "metodo": "interseccion_geometrica; orden por mayor superficie compartida"
+    },
+    {
+      "localidad": "PASO DE GUAYABAL",
+      "poblacion_localidad": 235,
+      "fuente_poblacion": "PDM Tejupilco 2025-2027, Cuadro 26 (Censo INEGI 2020)",
+      "secciones_intersectadas": [
+        "4313"
+      ],
+      "cantidad_secciones": 1,
+      "seccion_mayor_interseccion": "4313",
+      "tipos_seccion": [
+        "Rural"
+      ],
+      "metodo": "interseccion_geometrica; orden por mayor superficie compartida"
+    },
+    {
+      "localidad": "LA LABOR DE ZARAGOZA",
+      "poblacion_localidad": 975,
+      "fuente_poblacion": "PDM Tejupilco 2025-2027, Cuadro 26 (Censo INEGI 2020)",
+      "secciones_intersectadas": [
+        "4298"
+      ],
+      "cantidad_secciones": 1,
+      "seccion_mayor_interseccion": "4298",
+      "tipos_seccion": [
+        "Rural"
+      ],
+      "metodo": "interseccion_geometrica; orden por mayor superficie compartida"
+    },
+    {
+      "localidad": "RINCON DE JAIMES",
+      "poblacion_localidad": 1077,
+      "fuente_poblacion": "PDM Tejupilco 2025-2027, Cuadro 26 (Censo INEGI 2020)",
+      "secciones_intersectadas": [
+        "4323",
+        "4261"
+      ],
+      "cantidad_secciones": 2,
+      "seccion_mayor_interseccion": "4323",
+      "tipos_seccion": [
+        "Rural",
+        "Urbana"
+      ],
+      "metodo": "interseccion_geometrica; orden por mayor superficie compartida"
+    },
+    {
+      "localidad": "SAN ANDRES OCOTEPEC",
+      "poblacion_localidad": 1826,
+      "fuente_poblacion": "PDM Tejupilco 2025-2027, Cuadro 26 (Censo INEGI 2020)",
+      "secciones_intersectadas": [
+        "4292"
+      ],
+      "cantidad_secciones": 1,
+      "seccion_mayor_interseccion": "4292",
+      "tipos_seccion": [
+        "Rural"
+      ],
+      "metodo": "interseccion_geometrica; orden por mayor superficie compartida"
+    },
+    {
+      "localidad": "RINCON DE AGUIRRE",
+      "poblacion_localidad": 1700,
+      "fuente_poblacion": "PDM Tejupilco 2025-2027, Cuadro 26 (Censo INEGI 2020)",
+      "secciones_intersectadas": [
+        "4294",
+        "4265",
+        "4291"
+      ],
+      "cantidad_secciones": 3,
+      "seccion_mayor_interseccion": "4294",
+      "tipos_seccion": [
+        "Mixta",
+        "Rural",
+        "Urbana"
+      ],
+      "metodo": "interseccion_geometrica; orden por mayor superficie compartida"
+    },
+    {
+      "localidad": "TENERIA",
+      "poblacion_localidad": 1481,
+      "fuente_poblacion": "PDM Tejupilco 2025-2027, Cuadro 26 (Censo INEGI 2020)",
+      "secciones_intersectadas": [
+        "4275"
+      ],
+      "cantidad_secciones": 1,
+      "seccion_mayor_interseccion": "4275",
+      "tipos_seccion": [
+        "Rural"
+      ],
+      "metodo": "interseccion_geometrica; orden por mayor superficie compartida"
+    },
+    {
+      "localidad": "ACAMUCHITLAN",
+      "poblacion_localidad": 189,
+      "fuente_poblacion": "PDM Tejupilco 2025-2027, Cuadro 26 (Censo INEGI 2020)",
+      "secciones_intersectadas": [
+        "4305"
+      ],
+      "cantidad_secciones": 1,
+      "seccion_mayor_interseccion": "4305",
+      "tipos_seccion": [
+        "Rural"
+      ],
+      "metodo": "interseccion_geometrica; orden por mayor superficie compartida"
+    },
+    {
+      "localidad": "BEJUCOS",
+      "poblacion_localidad": 2437,
+      "fuente_poblacion": "PDM Tejupilco 2025-2027, Cuadro 26 (Censo INEGI 2020)",
+      "secciones_intersectadas": [
+        "4315",
+        "4314"
+      ],
+      "cantidad_secciones": 2,
+      "seccion_mayor_interseccion": "4315",
+      "tipos_seccion": [
+        "Mixta",
+        "Urbana"
+      ],
+      "metodo": "interseccion_geometrica; orden por mayor superficie compartida"
+    }
+  ],
+  "methodology": {
+    "relation": "localidad_poligono intersecta seccion_poligono",
+    "crs": "EPSG:4326 para la prueba topologica",
+    "dominant_rule": "seccion con mayor superficie compartida en la capa común",
+    "population_assignment": false,
+    "individual_records": false,
+    "warning": "La población pertenece a la localidad agregada. No representa padrón, lista nominal, intención de voto ni habitantes asignados a una sección."
+  }
+}

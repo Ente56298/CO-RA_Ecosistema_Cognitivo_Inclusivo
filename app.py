@@ -2826,9 +2826,10 @@ with tab9:
         + candidato_demo.get("status", "sin estado").replace("_", " ")
     )
 
-    pdl_tab1, pdl_tab2, pdl_tab3, pdl_tab4 = st.tabs(
+    pdl_tab1, pdl_tab_cruce, pdl_tab2, pdl_tab3, pdl_tab4 = st.tabs(
         [
             "Recorrido del demo",
+            "Cruce INEGI–INE",
             "Qué puedo desarrollar",
             "Activos y fuentes",
             "Verificación y publicación",
@@ -3038,6 +3039,78 @@ with tab9:
             use_container_width=True,
             hide_index=True,
         )
+
+    with pdl_tab_cruce:
+        cruce_inegi_ine = cargar_json_publico(
+            str(BASE_DIR / "data" / "pdl_demo" / "cruce_inegi_ine.json"),
+            {"municipio": {}, "marco_electoral": {}, "crosswalk": [], "methodology": {}},
+        )
+        municipio_cruce = cruce_inegi_ine.get("municipio", {})
+        marco_electoral = cruce_inegi_ine.get("marco_electoral", {})
+        metodologia_cruce = cruce_inegi_ine.get("methodology", {})
+        enlaces_cruce = cruce_inegi_ine.get("crosswalk", [])
+
+        st.markdown("#### Puente territorial entre marcos institucionales")
+        st.write(
+            "El cruce conserva las claves geoestadísticas de INEGI y relaciona "
+            "las localidades del piloto con secciones electorales del INE mediante "
+            "intersección geométrica."
+        )
+        x1, x2, x3, x4 = st.columns(4)
+        x1.metric("CVEGEO INEGI", municipio_cruce.get("cvegeo_inegi", "—"))
+        x2.metric("Localidades piloto", len(enlaces_cruce))
+        x3.metric("Secciones INE", marco_electoral.get("secciones_en_capa_local", 0))
+        x4.metric(
+            "Tipos",
+            len(marco_electoral.get("tipos", {})),
+        )
+
+        if enlaces_cruce:
+            nombres_cruce = [item.get("localidad", "Sin nombre") for item in enlaces_cruce]
+            nombre_cruce = st.selectbox(
+                "Localidad para cruzar",
+                nombres_cruce,
+                key="pdl_cruce_localidad",
+            )
+            ficha_cruce = next(
+                (item for item in enlaces_cruce if item.get("localidad") == nombre_cruce),
+                {},
+            )
+            c1, c2, c3 = st.columns(3)
+            c1.metric("Población agregada", f"{int(ficha_cruce.get('poblacion_localidad', 0)):,}")
+            c2.metric("Secciones intersectadas", ficha_cruce.get("cantidad_secciones", 0))
+            c3.metric(
+                "Mayor intersección",
+                ficha_cruce.get("seccion_mayor_interseccion") or "Sin cruce",
+            )
+            st.write(
+                "**Secciones relacionadas:** "
+                + ", ".join(ficha_cruce.get("secciones_intersectadas", []))
+            )
+            st.caption("Método: " + ficha_cruce.get("metodo", ""))
+
+        st.dataframe(
+            to_simple_table(
+                enlaces_cruce,
+                [
+                    "localidad",
+                    "poblacion_localidad",
+                    "cantidad_secciones",
+                    "seccion_mayor_interseccion",
+                    "secciones_intersectadas",
+                    "tipos_seccion",
+                ],
+            ),
+            use_container_width=True,
+            hide_index=True,
+        )
+        st.error(metodologia_cruce.get("warning", ""))
+        st.markdown(
+            "Fuentes institucionales: "
+            "[Catálogo geoestadístico INEGI](https://www.inegi.org.mx/servicios/catalogounico.html) · "
+            "[SIGE 8 del INE](https://cartografia.ine.mx/sige8/)"
+        )
+        st.caption("Estado: " + marco_electoral.get("estado", "pendiente"))
 
     with pdl_tab2:
         st.write(

@@ -30,6 +30,7 @@
       "Las 14 localidades del mapa se vincularon con población agregada sin faltantes.",
       "La contabilidad municipal de la fuente poblacional suma 79,282 habitantes.",
       "Las propiedades fueron reducidas mediante listas blancas y no incluyen registros personales ni rutas absolutas.",
+      "El cruce INEGI-INE relaciona 14 localidades con 46 secciones mediante intersección geométrica, sin asignar habitantes ni electores.",
       "El paquete declara cuatro rutas funcionales en client/src/App.tsx.",
       "Existe un bundle de servidor en dist/index.js y su sintaxis JavaScript es válida.",
       "El paquete contiene 121 archivos distribuidos entre interfaz, servidor, pruebas, documentación y deck.",
@@ -76,7 +77,7 @@
         "evidence_state": "archivo_local_identificado_como_oficial_localizador_pendiente"
       }
     ],
-    "interaction": "Selector de capas, toque sobre polígonos, ficha de localidad, métricas y trazabilidad.",
+    "interaction": "Selector de capas, toque sobre polígonos, ficha de localidad, cruce INEGI-INE, métricas y trazabilidad.",
     "cartographic_rule": "La población se muestra como atributo agregado; no se usa un coropleta de conteos brutos."
   },
   "surfaces": [

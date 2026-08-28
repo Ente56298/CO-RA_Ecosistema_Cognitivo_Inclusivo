@@ -97,7 +97,22 @@ def main() -> int:
         feature["properties"].get("fuente_poblacion")
         for feature in locality_payload["features"]
     )
-    print("PDL demo verified: 4 layers, 78 geometries, privacy whitelist clean.")
+    crosswalk = json.loads((data_dir / "cruce_inegi_ine.json").read_text(encoding="utf-8"))
+    assert crosswalk["municipio"]["cvegeo_inegi"] == "15082"
+    assert crosswalk["marco_electoral"]["secciones_en_capa_local"] == 46
+    assert crosswalk["marco_electoral"]["tipos"] == {
+        "Mixta": 2,
+        "Rural": 32,
+        "Urbana": 12,
+    }
+    assert len(crosswalk["crosswalk"]) == 14
+    assert all(item["cantidad_secciones"] >= 1 for item in crosswalk["crosswalk"])
+    assert crosswalk["methodology"]["population_assignment"] is False
+    assert crosswalk["methodology"]["individual_records"] is False
+    print(
+        "PDL demo verified: 4 layers, 78 geometries, "
+        "14 INEGI-INE links, privacy whitelist clean."
+    )
     return 0
 
 

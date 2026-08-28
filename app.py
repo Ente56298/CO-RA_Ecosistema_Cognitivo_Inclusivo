@@ -2826,10 +2826,11 @@ with tab9:
         + candidato_demo.get("status", "sin estado").replace("_", " ")
     )
 
-    pdl_tab1, pdl_tab_cruce, pdl_tab2, pdl_tab3, pdl_tab4 = st.tabs(
+    pdl_tab1, pdl_tab_cruce, pdl_tab_trayectoria, pdl_tab2, pdl_tab3, pdl_tab4 = st.tabs(
         [
             "Recorrido del demo",
             "Cruce INEGI–INE",
+            "Trayectoria que sostiene PDL",
             "Qué puedo desarrollar",
             "Activos y fuentes",
             "Verificación y publicación",
@@ -3111,6 +3112,47 @@ with tab9:
             "[SIGE 8 del INE](https://cartografia.ine.mx/sige8/)"
         )
         st.caption("Estado: " + marco_electoral.get("estado", "pendiente"))
+
+    with pdl_tab_trayectoria:
+        puentes_trayectoria = TRAYECTORIA_PUBLICA.get("pdl_trajectory_bridges", [])
+        st.markdown("#### Del recorrido profesional a la arquitectura PDL")
+        st.write(
+            "PDL no aparece como una idea aislada: reúne capacidades construidas "
+            "en gestión municipal, datos regionales, automatización, planeación, "
+            "territorio y arquitectura de conocimiento."
+        )
+        t1, t2, t3 = st.columns(3)
+        t1.metric("Etapas conectadas", len(puentes_trayectoria))
+        t2.metric("Dominios de capacidad", len(TRAYECTORIA_PUBLICA.get("capability_matrix", [])))
+        t3.metric("Proyectos estrella", len(TRAYECTORIA_PUBLICA.get("star_projects", [])))
+
+        for puente in puentes_trayectoria:
+            with st.expander(
+                f"{puente.get('period', '')} · {puente.get('pdl_component', '')}",
+                expanded=puente.get("evidence_level") == "primaria_verificada",
+            ):
+                st.write("**Experiencia:** " + puente.get("experience", ""))
+                st.write("**Aporte a PDL:** " + puente.get("contribution_to_pdl", ""))
+                st.caption(
+                    "Evidencia: "
+                    + puente.get("evidence_level", "pendiente").replace("_", " ")
+                    + " · Siguiente validación: "
+                    + puente.get("verification", "")
+                )
+
+        st.markdown("#### Matriz de capacidades transferidas")
+        st.dataframe(
+            to_simple_table(
+                TRAYECTORIA_PUBLICA.get("capability_matrix", []),
+                ["domain", "capabilities", "evidence", "status"],
+            ),
+            use_container_width=True,
+            hide_index=True,
+        )
+        st.info(
+            "La trayectoria se presenta con niveles de evidencia. Las cifras o "
+            "resultados todavía pendientes no se convierten en logros certificados."
+        )
 
     with pdl_tab2:
         st.write(

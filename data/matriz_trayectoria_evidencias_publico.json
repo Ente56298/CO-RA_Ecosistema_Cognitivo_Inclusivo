@@ -37,6 +37,48 @@
     {"domain": "Gobierno digital", "capabilities": ["PbR", "MIR", "PAE", "PDM", "indicadores", "TdR"], "evidence": "Expediente municipal por vincular", "status": "consolidacion_derivada"},
     {"domain": "IA y conocimiento", "capabilities": ["IA generativa", "LLM locales", "agentes", "automatización", "memoria contextual"], "evidence": "Repositorio CO•RA e inventario local", "status": "primaria_verificada_en_prototipos"}
   ],
+  "pdl_trajectory_bridges": [
+    {
+      "period": "2015–2019",
+      "experience": "Catastro, Predial, recaudación e informática municipal",
+      "contribution_to_pdl": "Comprensión operativa de expedientes, territorio, recaudación y procesos administrativos.",
+      "pdl_component": "Base territorial, catastro y gestión municipal",
+      "evidence_level": "documentada_local",
+      "verification": "Validar cargo, periodo y entregables"
+    },
+    {
+      "period": "2019–2022",
+      "experience": "Gestión, depuración y análisis regional de información",
+      "contribution_to_pdl": "Criterios para normalizar, revisar calidad y comparar información de varios municipios.",
+      "pdl_component": "Integración de fuentes y control de calidad",
+      "evidence_level": "consolidacion_derivada",
+      "verification": "Validar nombramiento y cobertura reportada"
+    },
+    {
+      "period": "2021–vigencia por confirmar",
+      "experience": "Automatización municipal con VBA y Excel",
+      "contribution_to_pdl": "Diseño de puentes entre formatos existentes y procesos digitales reutilizables.",
+      "pdl_component": "Automatización y seguimiento operativo",
+      "evidence_level": "documentada_local",
+      "verification": "Vincular evidencia de adquisición y uso"
+    },
+    {
+      "period": "2022–2025",
+      "experience": "Planeación, evaluación, PDM, PAE, PbR y MIR",
+      "contribution_to_pdl": "Conexión entre diagnóstico territorial, objetivos, indicadores, acciones y evidencias.",
+      "pdl_component": "Planeación y evaluación desde la localidad",
+      "evidence_level": "consolidacion_derivada",
+      "verification": "Vincular entregables públicos y autoría"
+    },
+    {
+      "period": "2023–actualidad",
+      "experience": "Arquitectura de soluciones, CO•RA y gestión del conocimiento",
+      "contribution_to_pdl": "Articulación de mapas, datos, documentos, conversaciones, agentes y trazabilidad.",
+      "pdl_component": "Arquitectura integradora y memoria del proyecto",
+      "evidence_level": "primaria_verificada",
+      "verification": "Delimitar resultados por proyecto"
+    }
+  ],
   "star_projects": [
     {"project": "Gemelo Digital Municipal / CO•RA", "problem": "Información territorial fragmentada", "architecture": "Visores, GeoJSON, datos institucionales e índice contextual", "result": "Prototipos y evolución documental recuperados", "evidence": "Artefactos de 2016–2017, Leaflet y Three.js", "status": "prototipo_verificado_alcance_por_delimitar"},
     {"project": "COBRA y Traslado de Dominio", "problem": "Procesos administrativos y de recaudación manuales", "architecture": "Sistema de recaudación y automatización VBA/Excel", "result": "Uso y mejoras reportados", "evidence": "CV histórico y consolidación; faltan constancias de uso", "status": "documentado_pendiente_impacto"},

@@ -144,6 +144,18 @@
         "project-radar-pdl",
         "project-gemelo-digital"
       ]
+    },
+    {
+      "source_id": "scorp-public-portfolio-derived-2026-08-27",
+      "source_type": "public_portfolio_and_user_summary",
+      "title": "SCORP.INC / CO•RA PRO: portafolio y desglose proporcionado por el usuario",
+      "captured_at": "2026-08-27",
+      "provenance": "Sitio público revisado y texto de clasificación proporcionado por el usuario.",
+      "evidence_level": "derived_unverified_mixed",
+      "privacy": "sanitized_metadata_only",
+      "content_retention": "No se copian teléfonos, correos, domicilio ni documentos personales enlazados.",
+      "use": "Descubrir productos, prototipos, casos y conceptos independientes sin certificar métricas ni estados de despliegue.",
+      "linked_project_ids": ["core-cora", "project-portafolio-evidencia"]
     }
   ],
   "discovered_title_candidates": [
@@ -168,7 +180,17 @@
     {"candidate_id":"kimi-pdm-pdl","display_title":"Adaptación PDM a PDL","candidate_type":"project_or_method","relation":"planeación municipal / PDL","status":"candidato_fuerte","confidence":"alta","next_action":"Localizar documento metodológico y municipios de aplicación."},
     {"candidate_id":"deepai-project-organization","display_title":"Organización de proyectos y trayectoria profesional","candidate_type":"chat_or_task","relation":"portafolio / matriz maestra","status":"titulo_localizado","confidence":"alta","next_action":"Vincular con el analizador maestro y evitar duplicar la matriz canónica."},
     {"candidate_id":"deepai-historical-research","display_title":"Investigación histórica: caso criminológico de 1942","candidate_type":"research_chat","relation":"investigación / criminología","status":"titulo_sanitizado_pendiente_revision","confidence":"media","next_action":"Determinar si es investigación académica, conversación aislada o evidencia de formación."},
-    {"candidate_id":"deepai-urban-development-program","display_title":"Programa de Desarrollo Urbano: objetivos, metas y justificación","candidate_type":"research_or_document","relation":"planeación urbana / municipal","status":"candidato","confidence":"media_alta","next_action":"Localizar contenido, municipio, periodo y documento fuente antes de conectarlo con PDL."}
+    {"candidate_id":"deepai-urban-development-program","display_title":"Programa de Desarrollo Urbano: objetivos, metas y justificación","candidate_type":"research_or_document","relation":"planeación urbana / municipal","status":"candidato","confidence":"media_alta","next_action":"Localizar contenido, municipio, periodo y documento fuente antes de conectarlo con PDL."},
+    {"candidate_id":"scorp-inc-umbrella","display_title":"SCORP.INC","candidate_type":"brand_or_organization","relation":"propiedad intelectual / estructura empresarial","status":"candidato_pendiente_naturaleza_juridica","confidence":"media","next_action":"Separar marca, organización, repositorios, productos y evidencia de constitución."},
+    {"candidate_id":"cora-pro-36","display_title":"CO•RA PRO v3.6","candidate_type":"software_version_or_demo","relation":"CO•RA / producto propio","status":"candidato_fuerte_version_por_verificar","confidence":"media_alta","next_action":"Localizar código, historial de versiones, ejecutable o publicación fechada."},
+    {"candidate_id":"scorp-forensics","display_title":"SCORP.INC Forensics","candidate_type":"product_or_concept","relation":"auditoría / trazabilidad","status":"pendiente_revision","confidence":"media","next_action":"Distinguir motor funcional, demostrador narrativo y concepto de producto."},
+    {"candidate_id":"cora-evaluador-pbr","display_title":"CO•RA Evaluador PbR","candidate_type":"software_or_method","relation":"PbR / MIR / evaluación","status":"candidato_fuerte","confidence":"media_alta","next_action":"Localizar reglas, código, casos de prueba y resultados reproducibles."},
+    {"candidate_id":"simuladores-presupuestarios","display_title":"Simuladores presupuestarios","candidate_type":"product_line","relation":"planeación / MIR","status":"candidato","confidence":"media","next_action":"Separar cada simulador, usuario, entrada, salida y evidencia funcional."},
+    {"candidate_id":"salvame-pwa","display_title":"Sálvame PWA","candidate_type":"web_application","relation":"asistencia vial / georreferenciación","status":"pendiente_revision","confidence":"media","next_action":"Localizar repositorio, compilación, alcance y datos utilizados."},
+    {"candidate_id":"cora-sandbox-console","display_title":"CO•RA Sandbox y Console 3.6","candidate_type":"interactive_demo","relation":"CO•RA / demostración","status":"demostrador_reportado","confidence":"media_alta","next_action":"Separar interfaz demostrativa de motores y resultados institucionales reales."},
+    {"candidate_id":"grafito-graphrag","display_title":"grafito · adaptación GraphRAG","candidate_type":"fork_or_codebase","relation":"grafos / RAG","status":"pendiente_verificar_repositorio","confidence":"media","next_action":"Vincular fork, licencia, commits propios y diferencias respecto al upstream."},
+    {"candidate_id":"transformadores-hf","display_title":"transformadores · adaptación Hugging Face","candidate_type":"fork_or_codebase","relation":"LLM / inferencia local","status":"pendiente_verificar_repositorio","confidence":"media","next_action":"Vincular fork, licencia, commits propios y función dentro de CO•RA."},
+    {"candidate_id":"metrica-iq-omega","display_title":"Métrica iQ proporcional a raíz de Omega","candidate_type":"concept_or_method","relation":"propiedad intelectual / evaluación","status":"nodo_por_documentar","confidence":"baja","next_action":"Definir variables, unidades, fundamento, método de cálculo y validación."}
   ],
   "contradiction_queue": [
     {

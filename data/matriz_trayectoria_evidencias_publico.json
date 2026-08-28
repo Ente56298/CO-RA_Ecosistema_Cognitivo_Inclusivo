@@ -20,7 +20,8 @@
     {"layer": "CV histórico", "kind": "documentada_local", "use": "Cronología y funciones declaradas", "limitation": "Incluye texto repetido y narrativas generadas; no equivale a constancia laboral."},
     {"layer": "Perfil maestro consolidado", "kind": "consolidacion_derivada", "use": "Normalización de experiencia, educación, habilidades y proyectos", "limitation": "Cruza CV, perfil web y entrevista; conserva afirmaciones que necesitan evidencia primaria."},
     {"layer": "Expediente técnico local", "kind": "primaria_verificada", "use": "Probar existencia, fecha y contenido de propuestas, código y prototipos", "limitation": "La existencia de un archivo no demuestra automáticamente adopción, impacto o autoría exclusiva."},
-    {"layer": "Presentación ejecutiva", "kind": "consolidacion_derivada", "use": "Comunicación y selección de proyectos", "limitation": "Debe heredar el estado de verificación de la matriz, no sustituirlo."}
+    {"layer": "Presentación ejecutiva", "kind": "consolidacion_derivada", "use": "Comunicación y selección de proyectos", "limitation": "Debe heredar el estado de verificación de la matriz, no sustituirlo."},
+    {"layer": "Portafolio web público", "kind": "consolidacion_derivada", "use": "Posicionamiento profesional, cronología candidata y selección visual de capacidades", "limitation": "Contiene datos de contacto, métricas y estados de producto que no se replican ni certifican sin evidencia primaria."}
   ],
   "experience": [
     {"period": "2000–2015", "scope": "Experiencia temprana privada y social", "role": "Administración, atención, cobranza, captura y promoción social", "projects": "Antecedentes agrupados por privacidad", "evidence": "CV histórico local", "level": "documentada_local", "status": "revisar_periodos_y_constancias"},
@@ -79,6 +80,56 @@
       "verification": "Delimitar resultados por proyecto"
     }
   ],
+  "expanded_capability_map": [
+    {
+      "family": "Arquitectura, software y datos",
+      "capabilities": ["arquitectura de soluciones", "desarrollo web", "bases de datos", "APIs", "automatización", "ingeniería de datos", "dashboards"],
+      "pdl_value": "Convierte fuentes y procesos dispersos en componentes modulares y consultables.",
+      "evidence_state": "inventario_inferido_validar_por_proyecto"
+    },
+    {
+      "family": "Territorio, GIS y geoestadística",
+      "capabilities": ["georreferenciación", "cartografía", "cruce espacial", "análisis por localidad", "fotogrametría", "modelos territoriales"],
+      "pdl_value": "Permite observar relaciones territoriales desde la localidad y conservar su contexto espacial.",
+      "evidence_state": "mixta_por_proyecto"
+    },
+    {
+      "family": "Gobierno, planeación y evaluación",
+      "capabilities": ["PDM", "PbR", "MIR", "PAE", "indicadores", "diagnóstico", "gestión municipal", "catastro"],
+      "pdl_value": "Conecta el dato territorial con objetivos, programas, seguimiento y decisión pública.",
+      "evidence_state": "consolidacion_derivada_vincular_entregables"
+    },
+    {
+      "family": "IA y sistemas cognitivos",
+      "capabilities": ["agentes", "memoria", "recuperación contextual", "grafos", "routers", "handoff", "evaluación de respuestas"],
+      "pdl_value": "Aporta búsqueda contextual, explicación, procedencia y colaboración humano-IA.",
+      "evidence_state": "primaria_verificada_en_prototipos"
+    },
+    {
+      "family": "Investigación, auditoría y trazabilidad",
+      "capabilities": ["matrices de evidencia", "cronologías", "hashes", "análisis documental", "riesgos", "procedencia", "gestión documental"],
+      "pdl_value": "Distingue fuente, transformación, inferencia, conflicto y evidencia antes de publicar.",
+      "evidence_state": "mixta_por_caso"
+    },
+    {
+      "family": "Infraestructura y soporte técnico",
+      "capabilities": ["redes", "hardware", "seguridad de sistemas", "CCTV", "electrónica", "CAD", "infraestructura eléctrica"],
+      "pdl_value": "Conecta el territorio digital con activos, redes y condiciones físicas de operación.",
+      "evidence_state": "inventario_inferido_validar_por_proyecto"
+    },
+    {
+      "family": "Comunicación, diseño y formación",
+      "capabilities": ["diseño visual", "presentaciones", "multimedia", "material didáctico", "capacitación tecnológica"],
+      "pdl_value": "Traduce complejidad técnica en recorridos comprensibles para distintos usuarios.",
+      "evidence_state": "mixta_por_entregable"
+    },
+    {
+      "family": "Consultoría y gestión de proyectos",
+      "capabilities": ["diagnóstico", "diseño de fases", "priorización", "riesgos", "seguimiento", "documentación", "metodologías"],
+      "pdl_value": "Convierte la visión territorial en pilotos, decisiones y rutas de implementación.",
+      "evidence_state": "consolidacion_derivada_validar_por_encargo"
+    }
+  ],
   "star_projects": [
     {"project": "Gemelo Digital Municipal / CO•RA", "problem": "Información territorial fragmentada", "architecture": "Visores, GeoJSON, datos institucionales e índice contextual", "result": "Prototipos y evolución documental recuperados", "evidence": "Artefactos de 2016–2017, Leaflet y Three.js", "status": "prototipo_verificado_alcance_por_delimitar"},
     {"project": "COBRA y Traslado de Dominio", "problem": "Procesos administrativos y de recaudación manuales", "architecture": "Sistema de recaudación y automatización VBA/Excel", "result": "Uso y mejoras reportados", "evidence": "CV histórico y consolidación; faltan constancias de uso", "status": "documentado_pendiente_impacto"},
@@ -97,6 +148,7 @@
     "Publicar capacidades y proyectos, no domicilios, teléfonos, correos ni rutas locales.",
     "Toda cifra debe enlazar con fuente, método y fecha antes de convertirse en logro certificado.",
     "Una consolidación orienta la búsqueda; una evidencia primaria sostiene la afirmación.",
-    "Las contradicciones permanecen visibles hasta resolverse; no se elige la versión más favorable."
+    "Las contradicciones permanecen visibles hasta resolverse; no se elige la versión más favorable.",
+    "Que un dato personal ya sea público no obliga a replicarlo en CO•RA; el demo mantiene la minimización de datos."
   ]
 }

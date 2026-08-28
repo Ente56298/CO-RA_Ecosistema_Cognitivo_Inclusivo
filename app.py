@@ -3153,6 +3153,16 @@ with tab9:
             use_container_width=True,
             hide_index=True,
         )
+        st.markdown("#### Mapa ampliado de capacidades")
+        capacidades_ampliadas = TRAYECTORIA_PUBLICA.get("expanded_capability_map", [])
+        for familia in capacidades_ampliadas:
+            with st.expander(familia.get("family", "Familia de capacidades")):
+                st.write(" · ".join(familia.get("capabilities", [])))
+                st.write("**Valor para PDL:** " + familia.get("pdl_value", ""))
+                st.caption(
+                    "Estado: "
+                    + familia.get("evidence_state", "pendiente").replace("_", " ")
+                )
         st.info(
             "La trayectoria se presenta con niveles de evidencia. Las cifras o "
             "resultados todavía pendientes no se convierten en logros certificados."
